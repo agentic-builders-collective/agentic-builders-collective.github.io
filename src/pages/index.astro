@@ -29,7 +29,8 @@ function injectGlyphsSequential(
 }
 
 function wrapAsciiLineByLine(html: string): { html: string; asciiEndSec: number } {
-  const lines = html.trim().split("\n");
+  /** trimEnd only: export HTML keeps a leading space on row 1; full trim() strips it and misaligns the grid. */
+  const lines = html.replace(/\r\n/g, "\n").trimEnd().split("\n");
   let cursor = 0;
   const parts = lines.map((line, idx) => {
     const { html: inner, cursorSec } = injectGlyphsSequential(line, cursor, GLYPH_GAP_SEC);
