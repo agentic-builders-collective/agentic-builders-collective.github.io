@@ -94,7 +94,7 @@ const { html: asciiAnimatedHtml, asciiEndSec } = wrapAsciiLineByLine(decorateAsc
 const ruleRevealDelaySec = asciiEndSec + AFTER_ASCII_PAUSE_SEC;
 const taglineStartSec = ruleRevealDelaySec + RULE_DRAW_SEC + AFTER_RULE_PAUSE_SEC;
 
-const { html: taglineAnimatedHtml } = injectGlyphsSequential(
+const { html: taglineAnimatedHtml, cursorSec: taglineEndSec } = injectGlyphsSequential(
   decorateTaglineHtml(taglineHtml),
   taglineStartSec,
   TAGLINE_GLYPH_GAP_SEC
@@ -111,7 +111,8 @@ const { html: taglineAnimatedHtml } = injectGlyphsSequential(
       define:vars={{
         glyphAnimSec: `${GLYPH_ANIM_SEC.toFixed(3)}s`,
         taglineGlyphAnimSec: `${TAGLINE_GLYPH_ANIM_SEC.toFixed(3)}s`,
-        ruleDurFallback: `${RULE_DRAW_SEC.toFixed(3)}s`
+        ruleDurFallback: `${RULE_DRAW_SEC.toFixed(3)}s`,
+        contactFadeDelaySec: `${taglineEndSec.toFixed(3)}s`
       }}
     >
       @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap');
@@ -206,6 +207,58 @@ const { html: taglineAnimatedHtml } = injectGlyphsSequential(
         line-height: 1.6;
       }
 
+      .contact-link {
+        align-items: center;
+        animation: contactFadeIn 0.5s ease forwards;
+        animation-delay: var(--contactFadeDelaySec);
+        bottom: 28px;
+        display: inline-flex;
+        font-family: 'Space Mono', 'Courier New', monospace;
+        font-size: 15px;
+        left: 50%;
+        letter-spacing: 0.08em;
+        opacity: 0;
+        position: fixed;
+        text-decoration: none;
+        transform: translateX(-50%);
+        white-space: nowrap;
+      }
+
+      .contact-link-icon {
+        color: #777;
+        display: inline-block;
+        font-size: 2em;
+        line-height: 1;
+        margin-right: 10px;
+        transform: translateY(-3px);
+      }
+
+      .contact-link-greeting {
+        color: var(--logo-gradient-start, #e0eafc);
+      }
+
+      .contact-link-at {
+        color: #777;
+      }
+
+      .contact-link-host {
+        color: rgba(224, 234, 252, 0.88);
+      }
+
+      .contact-link:hover,
+      .contact-link:focus-visible {
+        outline: none;
+      }
+
+      @keyframes contactFadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
       .tagline :global(.logo-glyph) {
         animation-duration: var(--taglineGlyphAnimSec);
       }
@@ -223,6 +276,11 @@ const { html: taglineAnimatedHtml } = injectGlyphsSequential(
           opacity: 0.4 !important;
           clip-path: none !important;
         }
+
+        .contact-link {
+          animation: none !important;
+          opacity: 1 !important;
+        }
       }
     </style>
   </head>
@@ -239,6 +297,11 @@ const { html: taglineAnimatedHtml } = injectGlyphsSequential(
       </div>
       <div class="tagline" set:html={taglineAnimatedHtml}></div>
     </div>
+
+    <a class="contact-link" href="mailto:hello@agenticbuilders.sg">
+      <span class="contact-link-icon" aria-hidden="true">✉</span>
+      <span class="contact-link-greeting">hello</span><span class="contact-link-at">@</span><span class="contact-link-host">agenticbuilders.sg</span>
+    </a>
 
     <script>
       import "../scripts/logo-gradient";
