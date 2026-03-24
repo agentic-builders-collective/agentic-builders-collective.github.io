@@ -1,0 +1,3 @@
+[submodule "logo-generator"]
+	path = logo-generator
+	url = ../abc-logo-generator
