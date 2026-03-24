@@ -1,4 +1,45 @@
 ---
+/** Scales base timings (0.8 then ×0.75 ≈ another 25% faster). */
+const SPEED = 0.6;
+/** Seconds between each block (glyph) reveal; tuned so ASCII + rule + tagline land in ~5–10s. */
+const GLYPH_GAP_SEC = 0.041 * SPEED;
+/** Extra pause after each ASCII row before the next line begins. */
+const LINE_PAUSE_SEC = 0.13 * SPEED;
+const RULE_DRAW_SEC = 0.55 * SPEED;
+const AFTER_ASCII_PAUSE_SEC = 0.14 * SPEED;
+const AFTER_RULE_PAUSE_SEC = 0.38 * SPEED;
+const GLYPH_ANIM_SEC = 0.38 * SPEED;
+/** Tagline reveal: 1.5× = 50% slower than ASCII cadence. */
+const TAGLINE_SLOW_MULT = 1.5;
+const TAGLINE_GLYPH_GAP_SEC = GLYPH_GAP_SEC * TAGLINE_SLOW_MULT;
+const TAGLINE_GLYPH_ANIM_SEC = GLYPH_ANIM_SEC * TAGLINE_SLOW_MULT;
+
+function injectGlyphsSequential(
+  html: string,
+  startSec: number,
+  gapSec: number = GLYPH_GAP_SEC
+): { html: string; cursorSec: number } {
+  let t = startSec;
+  const out = html.replace(/<span style="([^"]*)"/g, (_, styles) => {
+    const delay = t;
+    t += gapSec;
+    return `<span class="logo-glyph" style="${styles};--logo-del:${delay.toFixed(3)}s"`;
+  });
+  return { html: out, cursorSec: t };
+}
+
+function wrapAsciiLineByLine(html: string): { html: string; asciiEndSec: number } {
+  const lines = html.trim().split("\n");
+  let cursor = 0;
+  const parts = lines.map((line, idx) => {
+    const { html: inner, cursorSec } = injectGlyphsSequential(line, cursor, GLYPH_GAP_SEC);
+    cursor = cursorSec;
+    if (idx < lines.length - 1) cursor += LINE_PAUSE_SEC;
+    return `<div class="ascii-line">${inner}</div>`;
+  });
+  return { html: parts.join(""), asciiEndSec: cursor };
+}
+
 const asciiHtml = ` <span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#5a5e65">╗</span>  <span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#5a5e65">╗</span><span style="color:#5a5e65"> </span>  <span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#e0eafc">█</span><span style="color:#5a5e65">╗</span>
 <span style="color:#dde8fa">█</span><span style="color:#dde8fa">█</span><span style="color:#585d64">╔</span><span style="color:#585d64">═</span><span style="color:#585d64">═</span><span style="color:#dde8fa">█</span><span style="color:#dde8fa">█</span><span style="color:#585d64">╗</span> <span style="color:#dde8fa">█</span><span style="color:#dde8fa">█</span><span style="color:#585d64">╔</span><span style="color:#585d64">═</span><span style="color:#585d64">═</span><span style="color:#dde8fa">█</span><span style="color:#dde8fa">█</span><span style="color:#585d64">╗</span> <span style="color:#dde8fa">█</span><span style="color:#dde8fa">█</span><span style="color:#585d64">╔</span><span style="color:#585d64">═</span><span style="color:#585d64">═</span><span style="color:#585d64">═</span><span style="color:#585d64">═</span><span style="color:#585d64">╝</span>
 <span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#575c63">║</span> <span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#575c63">╔</span><span style="color:#575c63">╝</span> <span style="color:#d9e5f8">█</span><span style="color:#d9e5f8">█</span><span style="color:#575c63">║</span><span style="color:#575c63"> </span><span style="color:#575c63"> </span><span style="color:#575c63"> </span><span style="color:#575c63"> </span><span style="color:#575c63"> </span>
@@ -7,6 +48,17 @@ const asciiHtml = ` <span style="color:#e0eafc">█</span><span style="color:#e0
 <span style="color:#535961">╚</span><span style="color:#535961">═</span><span style="color:#535961">╝</span><span style="color:#535961"> </span><span style="color:#535961"> </span><span style="color:#535961">╚</span><span style="color:#535961">═</span><span style="color:#535961">╝</span> <span style="color:#535961">╚</span><span style="color:#535961">═</span><span style="color:#535961">═</span><span style="color:#535961">═</span><span style="color:#535961">═</span><span style="color:#535961">═</span><span style="color:#535961">╝</span><span style="color:#535961"> </span> <span style="color:#535961"> </span><span style="color:#535961">╚</span><span style="color:#535961">═</span><span style="color:#535961">═</span><span style="color:#535961">═</span><span style="color:#535961">═</span><span style="color:#535961">═</span><span style="color:#535961">╝</span>`;
 
 const taglineHtml = `<span style="color:#e0eafc">a</span><span style="color:#dfeafc">g</span><span style="color:#dfe9fb">e</span><span style="color:#dee9fb">n</span><span style="color:#dde8fb">t</span><span style="color:#dde8fa">i</span><span style="color:#dce7fa">c</span> <span style="color:#dbe6f9">b</span><span style="color:#dae6f9">u</span><span style="color:#d9e5f9">i</span><span style="color:#d9e5f8">l</span><span style="color:#d8e4f8">d</span><span style="color:#d8e4f8">e</span><span style="color:#d7e4f7">r</span><span style="color:#d6e3f7">s</span> <span style="color:#d5e2f6">c</span><span style="color:#d4e2f6">o</span><span style="color:#d4e1f5">l</span><span style="color:#d3e1f5">l</span><span style="color:#d2e0f5">e</span><span style="color:#d2e0f4">c</span><span style="color:#d1dff4">t</span><span style="color:#d0dff4">i</span><span style="color:#d0def3">v</span><span style="color:#cfdef3">e</span>`;
+
+const { html: asciiAnimatedHtml, asciiEndSec } = wrapAsciiLineByLine(asciiHtml);
+
+const ruleRevealDelaySec = asciiEndSec + AFTER_ASCII_PAUSE_SEC;
+const taglineStartSec = ruleRevealDelaySec + RULE_DRAW_SEC + AFTER_RULE_PAUSE_SEC;
+
+const { html: taglineAnimatedHtml } = injectGlyphsSequential(
+  taglineHtml,
+  taglineStartSec,
+  TAGLINE_GLYPH_GAP_SEC
+);
 ---
 
 <!DOCTYPE html>
@@ -15,7 +67,13 @@ const taglineHtml = `<span style="color:#e0eafc">a</span><span style="color:#dfe
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ABC Logo</title>
-    <style>
+    <style
+      define:vars={{
+        glyphAnimSec: `${GLYPH_ANIM_SEC.toFixed(3)}s`,
+        taglineGlyphAnimSec: `${TAGLINE_GLYPH_ANIM_SEC.toFixed(3)}s`,
+        ruleDurFallback: `${RULE_DRAW_SEC.toFixed(3)}s`
+      }}
+    >
       @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap');
 
       * {
@@ -43,10 +101,37 @@ const taglineHtml = `<span style="color:#e0eafc">a</span><span style="color:#dfe
         font-size: 26px;
         line-height: 1.25;
         font-weight: 800;
-        white-space: pre;
         margin-bottom: 8px;
         display: inline-block;
         transform: skewX(-18deg);
+      }
+
+      /*
+       * Injected markup from set:html has no data-astro-cid; scoped selectors would not match.
+       */
+      :global(.ascii-line) {
+        display: block;
+        white-space: pre;
+      }
+
+      :global(.logo-glyph) {
+        display: inline;
+        opacity: 0;
+        animation: logoGlyphIn var(--glyphAnimSec) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation-delay: var(--logo-del, 0s);
+      }
+
+      @keyframes logoGlyphIn {
+        from {
+          opacity: 0;
+          transform: translateY(0.22em) scale(0.82);
+          filter: blur(4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
       }
 
       .rule {
@@ -54,7 +139,20 @@ const taglineHtml = `<span style="color:#e0eafc">a</span><span style="color:#dfe
         font-size: 26px;
         white-space: pre;
         margin-bottom: 8px;
-        opacity: 0.4;
+      }
+
+      .logo-rule {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+        animation: logoRuleIn var(--logo-rule-dur, var(--ruleDurFallback)) ease forwards;
+        animation-delay: var(--logo-del, 0s);
+      }
+
+      @keyframes logoRuleIn {
+        to {
+          opacity: 0.4;
+          clip-path: inset(0 0 0 0);
+        }
       }
 
       .tagline {
@@ -67,13 +165,37 @@ const taglineHtml = `<span style="color:#e0eafc">a</span><span style="color:#dfe
         white-space: nowrap;
         line-height: 1.6;
       }
+
+      .tagline :global(.logo-glyph) {
+        animation-duration: var(--taglineGlyphAnimSec);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        :global(.logo-glyph) {
+          animation: none !important;
+          opacity: 1 !important;
+          transform: none !important;
+          filter: none !important;
+        }
+
+        .logo-rule {
+          animation: none !important;
+          opacity: 0.4 !important;
+          clip-path: none !important;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="logo">
-      <div class="ascii" set:html={asciiHtml}></div>
-      <div class="rule" style="color:#d8e4f8">┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄</div>
-      <div class="tagline" set:html={taglineHtml}></div>
+      <div class="ascii" set:html={asciiAnimatedHtml}></div>
+      <div
+        class="rule logo-rule"
+        style={`color:#d8e4f8;--logo-del:${ruleRevealDelaySec.toFixed(3)}s;--logo-rule-dur:${RULE_DRAW_SEC}s`}
+      >
+        ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+      </div>
+      <div class="tagline" set:html={taglineAnimatedHtml}></div>
     </div>
   </body>
 </html>
