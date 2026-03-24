@@ -1,0 +1,64 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Agentic Builders Collective" } = Astro.props;
+
+const navigation = [
+  { href: "/", label: "Home" },
+  { href: "/people/", label: "People" },
+  { href: "/resources/", label: "Resources" },
+  { href: "/shares/", label: "Shares" },
+  { href: "/meetups/", label: "Meetups" },
+  { href: "/tips/", label: "Tips" }
+];
+
+const isCurrent = (href: string) => {
+  if (href === "/") {
+    return Astro.url.pathname === "/";
+  }
+
+  return Astro.url.pathname.startsWith(href);
+};
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="site-header">
+        <a class="brand" href="/">
+          <span class="brand-mark">ABC</span>
+          <span class="brand-copy">
+            <strong>Agentic Builders Collective</strong>
+            <span>Builders creating with AI coding tools</span>
+          </span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary">
+          {
+            navigation.map((item) => (
+              <a href={item.href} class:list={{ current: isCurrent(item.href) }}>
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+      </header>
+
+      <main class="page">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>

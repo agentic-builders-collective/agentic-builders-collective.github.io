@@ -1,0 +1,129 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { formatDateTime } from "../../lib/format";
+
+const meetups = await getCollection("meetups");
+const now = Date.now();
+
+const upcoming = meetups
+  .filter((meetup) => meetup.data.startsAt.getTime() >= now && meetup.data.status !== "cancelled")
+  .sort((left, right) => left.data.startsAt.getTime() - right.data.startsAt.getTime());
+
+const archive = meetups
+  .filter((meetup) => meetup.data.startsAt.getTime() < now || meetup.data.status !== "planned")
+  .sort((left, right) => right.data.startsAt.getTime() - left.data.startsAt.getTime());
+---
+
+<BaseLayout
+  title="Meetups | Agentic Builders Collective"
+  description="Upcoming and past meetups for the Agentic Builders Collective."
+>
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Events</p>
+        <h1>Meetups</h1>
+        <p>
+          Event metadata is stored in YAML so the site can sort, group, and present meetups
+          consistently.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <div>
+        <h2>Upcoming</h2>
+        <p>Planned events with registration and host details where available.</p>
+      </div>
+    </div>
+
+    {
+      upcoming.length > 0 ? (
+        <div class="list">
+          {upcoming.map((meetup) => (
+            <article class="list-item">
+              <div class="list-item-header">
+                <strong class="list-item-title">{meetup.data.title}</strong>
+                <div class="card-meta">
+                  <span>{formatDateTime(meetup.data.startsAt)}</span>
+                  {meetup.data.city && <span>{meetup.data.city}</span>}
+                  {meetup.data.venue && <span>{meetup.data.venue}</span>}
+                  <span>{meetup.data.status}</span>
+                </div>
+              </div>
+
+              {meetup.data.summary && <p>{meetup.data.summary}</p>}
+
+              {meetup.data.hosts.length > 0 && (
+                <p>Hosts: {meetup.data.hosts.join(", ")}</p>
+              )}
+
+              {meetup.data.registrationUrl && (
+                <p>
+                  <a
+                    class="muted-link"
+                    href={meetup.data.registrationUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Registration
+                  </a>
+                </p>
+              )}
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <p>No upcoming meetups yet. Add a YAML entry under <code>src/data/meetups/</code>.</p>
+        </div>
+      )
+    }
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <div>
+        <h2>Archive</h2>
+        <p>Past meetups and completed event records.</p>
+      </div>
+    </div>
+
+    {
+      archive.length > 0 ? (
+        <div class="list">
+          {archive.map((meetup) => (
+            <article class="list-item">
+              <div class="list-item-header">
+                <strong class="list-item-title">{meetup.data.title}</strong>
+                <div class="card-meta">
+                  <span>{formatDateTime(meetup.data.startsAt)}</span>
+                  {meetup.data.city && <span>{meetup.data.city}</span>}
+                  <span>{meetup.data.status}</span>
+                </div>
+              </div>
+
+              {meetup.data.summary && <p>{meetup.data.summary}</p>}
+
+              {meetup.data.notesUrl && (
+                <p>
+                  <a class="muted-link" href={meetup.data.notesUrl} target="_blank" rel="noreferrer">
+                    Notes
+                  </a>
+                </p>
+              )}
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <p>The archive is empty for now.</p>
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>

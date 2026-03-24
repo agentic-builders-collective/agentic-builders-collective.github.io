@@ -1,0 +1,76 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const people = (await getCollection("people")).sort((left, right) =>
+  left.data.name.localeCompare(right.data.name)
+);
+---
+
+<BaseLayout
+  title="People | Agentic Builders Collective"
+  description="Profiles of builders in the Agentic Builders Collective."
+>
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Directory</p>
+        <h1>People</h1>
+        <p>
+          This directory is powered by one YAML file per person so profiles are straightforward to
+          submit and review.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {
+    people.length > 0 ? (
+      <section class="grid columns-2">
+        {people.map((person) => (
+          <article class="card">
+            <div class="card-header">
+              <h3>{person.data.name}</h3>
+              <div class="card-meta">
+                {person.data.role && <span>{person.data.role}</span>}
+                {person.data.organisation && <span>{person.data.organisation}</span>}
+                {person.data.location && <span>{person.data.location}</span>}
+              </div>
+            </div>
+
+            {person.data.bio && <p>{person.data.bio}</p>}
+
+            {person.data.topics.length > 0 && (
+              <ul class="tag-list" aria-label={`Topics for ${person.data.name}`}>
+                {person.data.topics.map((topic) => (
+                  <li class="tag">{topic}</li>
+                ))}
+              </ul>
+            )}
+
+            {person.data.links && (
+              <ul class="link-list" aria-label={`Links for ${person.data.name}`}>
+                {Object.entries(person.data.links).map(([label, url]) =>
+                  url ? (
+                    <li>
+                      <a class="muted-link" href={url} target="_blank" rel="noreferrer">
+                        {label}
+                      </a>
+                    </li>
+                  ) : null
+                )}
+              </ul>
+            )}
+          </article>
+        ))}
+      </section>
+    ) : (
+      <section class="empty-state">
+        <p>
+          No people are listed yet. Add one YAML file per person under <code>src/data/people/</code>.
+        </p>
+      </section>
+    )
+  }
+</BaseLayout>
