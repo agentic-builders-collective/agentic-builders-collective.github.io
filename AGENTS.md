@@ -4,6 +4,7 @@ This repo is an Astro site for the Agentic Builders Collective. Keep durable beh
 
 ## Repo map
 
+- `.github/workflows/` contains deployment automation for GitHub Pages.
 - `src/data/` contains structured YAML entries intended for small, reviewable pull requests.
 - `src/content/` contains Markdown content where prose matters.
 - `src/pages/` contains Astro routes and collection-driven index pages.

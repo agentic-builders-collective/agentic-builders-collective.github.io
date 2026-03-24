@@ -38,6 +38,19 @@ pnpm build
 pnpm check
 ```
 
+## GitHub Pages deployment
+
+This repo is configured to deploy to GitHub Pages via [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml) and expects the canonical site URL to be `https://agentic-builders-collective.github.io/`.
+
+For that URL to work as the root `github.io` site, the GitHub repository itself must be named `agentic-builders-collective.github.io`. If the repository stays named `website`, GitHub Pages will publish it as a project site at `https://agentic-builders-collective.github.io/website/` instead.
+
+After the repository name is correct:
+
+1. Open the repository on GitHub.
+2. Go to `Settings` -> `Pages`.
+3. Set `Source` to `GitHub Actions`.
+4. Push to `main` to trigger the deployment workflow.
+
 ## Notes
 
 - `logo-generator/` is a Git submodule for logo and brand experiments.
