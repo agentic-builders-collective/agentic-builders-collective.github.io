@@ -17,12 +17,7 @@ const tips = (await getCollection("tips", ({ data }) => !data.draft)).sort(
   <section class="panel">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Editorial notes</p>
-        <h1>Tips</h1>
-        <p>
-          This section is intentionally Markdown-first. Use it for content that needs narrative
-          structure, code snippets, or more than a short summary.
-        </p>
+        <h1 class="page-title">Tips</h1>
       </div>
     </div>
   </section>
@@ -56,9 +51,7 @@ const tips = (await getCollection("tips", ({ data }) => !data.draft)).sort(
       </section>
     ) : (
       <section class="empty-state">
-        <p>
-          No tips yet. Add a Markdown file under <code>src/content/tips/</code> to publish one.
-        </p>
+        <p>Nothing here yet.</p>
       </section>
     )
   }

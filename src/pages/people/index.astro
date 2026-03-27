@@ -15,12 +15,7 @@ const people = (await getCollection("people")).sort((left, right) =>
   <section class="panel">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Directory</p>
-        <h1>People</h1>
-        <p>
-          This directory is powered by one YAML file per person so profiles are straightforward to
-          submit and review.
-        </p>
+        <h1 class="page-title">People</h1>
       </div>
     </div>
   </section>
@@ -67,9 +62,7 @@ const people = (await getCollection("people")).sort((left, right) =>
       </section>
     ) : (
       <section class="empty-state">
-        <p>
-          No people are listed yet. Add one YAML file per person under <code>src/data/people/</code>.
-        </p>
+        <p>Nothing here yet.</p>
       </section>
     )
   }

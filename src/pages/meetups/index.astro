@@ -37,12 +37,7 @@ const archive = meetups
   <section class="panel">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Events</p>
-        <h1>Meetups</h1>
-        <p>
-          Event metadata is stored in YAML so the site can sort, group, and present meetups
-          consistently.
-        </p>
+        <h1 class="page-title">Meetups</h1>
       </div>
     </div>
   </section>
@@ -51,7 +46,6 @@ const archive = meetups
     <div class="section-heading">
       <div>
         <h2>Calendar</h2>
-        <p>Browse events by month. Click a highlighted date to see details.</p>
       </div>
     </div>
     <EventsCalendar events={calendarEvents} />
@@ -61,7 +55,6 @@ const archive = meetups
     <div class="section-heading">
       <div>
         <h2>Upcoming</h2>
-        <p>Planned events with registration and host details where available.</p>
       </div>
     </div>
 
@@ -103,7 +96,7 @@ const archive = meetups
         </div>
       ) : (
         <div class="empty-state">
-          <p>No upcoming meetups yet. Add a YAML entry under <code>src/data/meetups/</code>.</p>
+          <p>No upcoming meetups scheduled.</p>
         </div>
       )
     }
@@ -113,7 +106,6 @@ const archive = meetups
     <div class="section-heading">
       <div>
         <h2>Archive</h2>
-        <p>Past meetups and completed event records.</p>
       </div>
     </div>
 

@@ -34,10 +34,10 @@
 
 html {
   background:
-    radial-gradient(circle at 0% 12%, rgba(130, 163, 255, 0.24), transparent 36%),
-    radial-gradient(circle at 98% 15%, rgba(255, 180, 90, 0.16), transparent 38%),
-    radial-gradient(circle at 52% 108%, rgba(35, 54, 100, 0.24), transparent 46%),
-    linear-gradient(180deg, #050717 0%, var(--bg) 55%, #04070f 100%);
+    radial-gradient(circle at 0% 12%, rgba(130, 163, 255, 0.14), transparent 36%),
+    radial-gradient(circle at 98% 15%, rgba(255, 180, 90, 0.08), transparent 38%),
+    radial-gradient(circle at 52% 108%, rgba(35, 54, 100, 0.16), transparent 46%),
+    linear-gradient(180deg, #020410 0%, #030509 55%, #010204 100%);
   background-attachment: fixed;
   color: var(--text);
   color-scheme: dark;
@@ -60,28 +60,23 @@ a {
 .shell {
   margin: 0 auto;
   max-width: 1120px;
-  padding: 64px 20px 64px;
+  padding: 64px 20px 80px;
 }
 
-/* ── Header ── */
-
-.site-header {
-  align-items: center;
-  display: flex;
-  gap: 20px;
-  padding: 16px 0;
-  position: relative;
-  z-index: 10;
-}
+/* ── Brand (pinned top-left) ── */
 
 .brand {
   align-items: center;
   display: inline-flex;
   gap: 4px;
-  text-decoration: none;
   font-size: 1.1rem;
   font-weight: 700;
+  left: 20px;
   letter-spacing: 0.12em;
+  position: fixed;
+  text-decoration: none;
+  top: 28px;
+  z-index: 20;
 }
 
 .brand-prompt {
@@ -153,21 +148,20 @@ a {
   color: var(--menu-link-active);
 }
 
-/* ── Footer email ── */
+/* ── Fixed email (pinned bottom-center) ── */
 
-.site-footer {
-  border-top: 1px dashed var(--line);
-  margin-top: 48px;
-  padding-top: 24px;
-  text-align: center;
-}
-
-.footer-email {
+.fixed-email {
+  bottom: 28px;
   color: var(--muted);
   font-family: var(--font-sans);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
+  left: 50%;
   letter-spacing: 0.08em;
+  position: fixed;
   text-decoration: none;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 20;
 }
 
 .footer-email-user {
@@ -182,7 +176,7 @@ a {
   color: var(--muted);
 }
 
-.footer-email:hover .footer-email-host {
+.fixed-email:hover .footer-email-host {
   color: var(--text);
 }
 
@@ -251,6 +245,23 @@ a {
   content: "// ";
   color: var(--muted);
   opacity: 0.5;
+}
+
+/* ── Page title: // Title ── */
+
+.page-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.7rem, 4.6vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.page-title::before {
+  content: "// ";
+  color: var(--muted);
+  opacity: 0.4;
 }
 
 /* ── Typography ── */

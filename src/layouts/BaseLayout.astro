@@ -8,8 +8,7 @@ interface Props {
 
 const { title, description = "Agentic Builders Collective" } = Astro.props;
 
-const footerLinks = [
-  { href: "/", label: "home" },
+const navLinks = [
   { href: "/people/", label: "people" },
   { href: "/resources/", label: "links" },
   { href: "/shares/", label: "shares" },
@@ -43,10 +42,16 @@ const isCurrent = (href: string) => {
     <title>{title}</title>
   </head>
   <body>
+    <a class="brand" href="/">
+      <span class="brand-prompt">&gt;</span>
+      <span class="brand-mark" data-logo-cycle>ABC</span>
+      <span class="brand-cursor">_</span>
+    </a>
+
     <nav class="site-top-menu" aria-label="Primary">
       <div class="site-top-links">
         {
-          footerLinks.map((item) => (
+          navLinks.map((item) => (
             <a href={item.href} class:list={{ current: isCurrent(item.href) }}>
               {item.label}
             </a>
@@ -56,24 +61,14 @@ const isCurrent = (href: string) => {
     </nav>
 
     <div class="shell">
-      <header class="site-header">
-        <a class="brand" href="/">
-          <span class="brand-prompt">&gt;</span>
-          <span class="brand-mark" data-logo-cycle>ABC</span>
-          <span class="brand-cursor">_</span>
-        </a>
-      </header>
-
       <main class="page">
         <slot />
       </main>
-
-      <footer class="site-footer">
-        <a class="footer-email" href="mailto:hello@agenticbuilders.sg">
-          <span class="footer-email-user">hello</span><span class="footer-email-at">@</span><span class="footer-email-host">agenticbuilders.sg</span>
-        </a>
-      </footer>
     </div>
+
+    <a class="fixed-email" href="mailto:hello@agenticbuilders.sg">
+      <span class="footer-email-user">hello</span><span class="footer-email-at">@</span><span class="footer-email-host">agenticbuilders.sg</span>
+    </a>
 
     <script>
       import "../scripts/logo-gradient";

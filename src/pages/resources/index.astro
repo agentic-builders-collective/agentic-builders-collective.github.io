@@ -15,12 +15,7 @@ const resources = (await getCollection("resources")).sort((left, right) =>
   <section class="panel">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Shared references</p>
-        <h1>Resources</h1>
-        <p>
-          Use YAML here for anything that behaves like a structured link: guides, tools,
-          repositories, videos, or event references.
-        </p>
+        <h1 class="page-title">Resources</h1>
       </div>
     </div>
   </section>
@@ -55,9 +50,7 @@ const resources = (await getCollection("resources")).sort((left, right) =>
       </section>
     ) : (
       <section class="empty-state">
-        <p>
-          No resources are listed yet. Add one YAML file per item under <code>src/data/resources/</code>.
-        </p>
+        <p>Nothing here yet.</p>
       </section>
     )
   }

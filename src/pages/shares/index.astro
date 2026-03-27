@@ -16,12 +16,7 @@ const shares = (await getCollection("shares")).sort(
   <section class="panel">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Logbook</p>
-        <h1>Shares</h1>
-        <p>
-          This collection tracks what was shared with the group and when, without forcing
-          contributors into a single large file.
-        </p>
+        <h1 class="page-title">Shares</h1>
       </div>
     </div>
   </section>
@@ -62,9 +57,7 @@ const shares = (await getCollection("shares")).sort(
       </section>
     ) : (
       <section class="empty-state">
-        <p>
-          No share log entries yet. Add one YAML file per share under <code>src/data/shares/</code>.
-        </p>
+        <p>Nothing here yet.</p>
       </section>
     )
   }

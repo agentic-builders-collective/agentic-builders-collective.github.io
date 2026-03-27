@@ -101,7 +101,6 @@ const { html: taglineAnimatedHtml, cursorSec: taglineEndSec } = injectGlyphsSequ
 );
 
 const navLinks = [
-  { href: "/", label: "home" },
   { href: "/people/", label: "people" },
   { href: "/resources/", label: "links" },
   { href: "/shares/", label: "shares" },
@@ -149,10 +148,10 @@ const isCurrent = (href: string) => {
 
       html {
         background:
-          radial-gradient(circle at 0% 12%, rgba(130, 163, 255, 0.24), transparent 36%),
-          radial-gradient(circle at 98% 15%, rgba(255, 180, 90, 0.16), transparent 38%),
-          radial-gradient(circle at 52% 108%, rgba(35, 54, 100, 0.24), transparent 46%),
-          linear-gradient(180deg, #050717 0%, #040611 55%, #04070f 100%);
+          radial-gradient(circle at 0% 12%, rgba(130, 163, 255, 0.14), transparent 36%),
+          radial-gradient(circle at 98% 15%, rgba(255, 180, 90, 0.08), transparent 38%),
+          radial-gradient(circle at 52% 108%, rgba(35, 54, 100, 0.16), transparent 46%),
+          linear-gradient(180deg, #020410 0%, #030509 55%, #010204 100%);
         background-attachment: fixed;
         min-height: 100%;
       }
