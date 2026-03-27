@@ -2,10 +2,24 @@
 import { getCollection } from "astro:content";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import EventsCalendar from "../../components/EventsCalendar.astro";
 import { formatDateTime } from "../../lib/format";
 
 const meetups = await getCollection("meetups");
 const now = Date.now();
+
+const calendarEvents = meetups.map((m) => ({
+  id: m.id,
+  title: m.data.title,
+  startsAt: m.data.startsAt.toISOString(),
+  endsAt: m.data.endsAt?.toISOString(),
+  status: m.data.status,
+  city: m.data.city,
+  venue: m.data.venue,
+  registrationUrl: m.data.registrationUrl,
+  summary: m.data.summary,
+  hosts: m.data.hosts,
+}));
 
 const upcoming = meetups
   .filter((meetup) => meetup.data.startsAt.getTime() >= now && meetup.data.status !== "cancelled")
@@ -31,6 +45,16 @@ const archive = meetups
         </p>
       </div>
     </div>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <div>
+        <h2>Calendar</h2>
+        <p>Browse events by month. Click a highlighted date to see details.</p>
+      </div>
+    </div>
+    <EventsCalendar events={calendarEvents} />
   </section>
 
   <section>
