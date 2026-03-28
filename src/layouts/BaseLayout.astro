@@ -40,6 +40,11 @@ const isCurrent = (href: string) => {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <title>{title}</title>
+    <style>
+      html { background: #020410; color: #d9e7ff; }
+      body { margin: 0; min-height: 100vh; opacity: 0; }
+      body.ready { opacity: 1; transition: opacity 80ms ease; }
+    </style>
   </head>
   <body>
     <a class="brand" href="/">
@@ -78,6 +83,7 @@ const isCurrent = (href: string) => {
       }
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
+      document.body.classList.add('ready');
     </script>
 
     <script>
