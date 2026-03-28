@@ -27,36 +27,34 @@ const people = (await getCollection("people")).sort((left, right) =>
           <article class="card">
             <div class="card-header">
               <h3>{person.data.name}</h3>
-              <div class="card-meta">
-                {person.data.role && <span>{person.data.role}</span>}
-                {person.data.organisation && <span>{person.data.organisation}</span>}
-                {person.data.location && <span>{person.data.location}</span>}
-              </div>
             </div>
 
-            {person.data.bio && <p>{person.data.bio}</p>}
-
-            {person.data.topics.length > 0 && (
-              <ul class="tag-list" aria-label={`Topics for ${person.data.name}`}>
-                {person.data.topics.map((topic) => (
-                  <li class="tag">{topic}</li>
+            {person.data.interests.length > 0 && (
+              <ul class="tag-list" aria-label={`Interests for ${person.data.name}`}>
+                {person.data.interests.map((interest) => (
+                  <li class="tag">{interest}</li>
                 ))}
               </ul>
             )}
 
-            {person.data.links && (
-              <ul class="link-list" aria-label={`Links for ${person.data.name}`}>
-                {Object.entries(person.data.links).map(([label, url]) =>
-                  url ? (
-                    <li>
-                      <a class="muted-link" href={url} target="_blank" rel="noreferrer">
-                        {label}
-                      </a>
-                    </li>
-                  ) : null
-                )}
-              </ul>
-            )}
+            {person.data.notes && <p>{person.data.notes}</p>}
+
+            <ul class="link-list" aria-label={`Links for ${person.data.name}`}>
+              {person.data.linkedin && (
+                <li>
+                  <a class="muted-link" href={person.data.linkedin} target="_blank" rel="noreferrer">
+                    linkedin
+                  </a>
+                </li>
+              )}
+              {person.data.website && (
+                <li>
+                  <a class="muted-link" href={person.data.website} target="_blank" rel="noreferrer">
+                    website
+                  </a>
+                </li>
+              )}
+            </ul>
           </article>
         ))}
       </section>

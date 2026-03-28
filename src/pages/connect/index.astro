@@ -1,0 +1,163 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { formatDateTime } from "../../lib/format";
+
+const entries = await getCollection("connect");
+const now = Date.now();
+
+const upcoming = entries
+  .filter((e) => e.data.startsAt.getTime() >= now && e.data.status !== "cancelled")
+  .sort((a, b) => a.data.startsAt.getTime() - b.data.startsAt.getTime());
+
+const upcomingMeetups = upcoming.filter((e) => e.data.kind === "meetup");
+const upcomingEvents = upcoming.filter((e) => e.data.kind === "event");
+
+const archive = entries
+  .filter((e) => e.data.startsAt.getTime() < now || e.data.status === "completed")
+  .sort((a, b) => b.data.startsAt.getTime() - a.data.startsAt.getTime());
+---
+
+<BaseLayout
+  title="Connect | Agentic Builders Collective"
+  description="Meetups, events, and ways to connect with the collective."
+>
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <h1 class="page-title">Connect</h1>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Upcoming meetups</p>
+
+    {
+      upcomingMeetups.length > 0 ? (
+        <div class="list">
+          {upcomingMeetups.map((item) => (
+            <article class="list-item">
+              <div class="list-item-header">
+                <strong class="list-item-title">{item.data.title}</strong>
+                <div class="card-meta">
+                  <span>{formatDateTime(item.data.startsAt)}</span>
+                  {item.data.venue && <span>{item.data.venue}</span>}
+                  {item.data.city && <span>{item.data.city}</span>}
+                </div>
+              </div>
+
+              {item.data.registrationUrl && (
+                <p>
+                  <a
+                    class="muted-link"
+                    href={item.data.registrationUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Register
+                  </a>
+                </p>
+              )}
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <p>No upcoming meetups scheduled.</p>
+        </div>
+      )
+    }
+  </section>
+
+  <section>
+    <p class="section-label">Events</p>
+
+    {
+      upcomingEvents.length > 0 ? (
+        <div class="list">
+          {upcomingEvents.map((item) => (
+            <article class="list-item">
+              <div class="list-item-header">
+                <strong class="list-item-title">{item.data.title}</strong>
+                <div class="card-meta">
+                  <span>{formatDateTime(item.data.startsAt)}</span>
+                  {item.data.venue && <span>{item.data.venue}</span>}
+                  {item.data.city && <span>{item.data.city}</span>}
+                </div>
+              </div>
+
+              {item.data.registrationUrl && (
+                <p>
+                  <a
+                    class="muted-link"
+                    href={item.data.registrationUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Details
+                  </a>
+                </p>
+              )}
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <p>No upcoming events.</p>
+        </div>
+      )
+    }
+  </section>
+
+  <section>
+    <p class="section-label">Archive</p>
+
+    {
+      archive.length > 0 ? (
+        <div class="list">
+          {archive.map((item) => (
+            <article class="list-item">
+              <div class="list-item-header">
+                <strong class="list-item-title">{item.data.title}</strong>
+                <div class="card-meta">
+                  <span>{formatDateTime(item.data.startsAt)}</span>
+                  <span>{item.data.kind}</span>
+                  {item.data.venue && <span>{item.data.venue}</span>}
+                </div>
+              </div>
+
+              {(item.data.speakers.length > 0 || item.data.topics.length > 0) && (
+                <div class="card-meta">
+                  {item.data.speakers.map((s) => (
+                    <span>{s}</span>
+                  ))}
+                  {item.data.topics.map((t) => (
+                    <span>{t}</span>
+                  ))}
+                </div>
+              )}
+
+              {item.data.notes && <p>{item.data.notes}</p>}
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <p>Nothing in the archive yet.</p>
+        </div>
+      )
+    }
+  </section>
+
+  <section>
+    <p class="section-label">Get in touch</p>
+    <div class="empty-state">
+      <p>
+        Want to speak, host, or suggest an event?
+        <a class="muted-link" href="mailto:hello@agenticbuilders.sg">Drop us a line</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

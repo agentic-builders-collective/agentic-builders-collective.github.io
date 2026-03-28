@@ -1,0 +1,71 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const items = (await getCollection("showcase")).sort(
+  (left, right) =>
+    (right.data.updated?.getTime() ?? 0) - (left.data.updated?.getTime() ?? 0)
+);
+---
+
+<BaseLayout
+  title="Showcase | Agentic Builders Collective"
+  description="Projects and builds from the Agentic Builders Collective."
+>
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <h1 class="page-title">Showcase</h1>
+      </div>
+    </div>
+  </section>
+
+  {
+    items.length > 0 ? (
+      <section class="grid columns-2">
+        {items.map((item) => (
+          <article class="card">
+            {item.data.image && (
+              <img
+                src={item.data.image.startsWith("/") ? item.data.image : `/showcase/${item.data.image}`}
+                alt={item.data.name}
+                loading="lazy"
+                class="showcase-image"
+              />
+            )}
+
+            <div class="card-header">
+              <h3>
+                <a class="list-item-title" href={item.data.link} target="_blank" rel="noreferrer">
+                  {item.data.name}
+                </a>
+              </h3>
+              {item.data.by && (
+                <div class="card-meta">
+                  <span>by {item.data.by}</span>
+                </div>
+              )}
+            </div>
+
+            {item.data.about && <p>{item.data.about}</p>}
+          </article>
+        ))}
+      </section>
+    ) : (
+      <section class="empty-state">
+        <p>Nothing here yet.</p>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .showcase-image {
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--line);
+    display: block;
+    object-fit: cover;
+    width: 100%;
+  }
+</style>
