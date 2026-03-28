@@ -51,8 +51,18 @@ function handleLogoCycleClick(event: MouseEvent): void {
     return;
   }
 
-  event.preventDefault();
-  event.stopPropagation();
+  // On subpages the brand-mark sits inside an <a href="/"> link.
+  // Cycle the gradient without blocking navigation — only prevent default
+  // on elements that are NOT inside a link to "/".
+  const anchor = event.target.closest("a[href]") as HTMLAnchorElement | null;
+  const isHomeLink =
+    anchor && (anchor.getAttribute("href") === "/" || anchor.pathname === "/");
+
+  if (!isHomeLink) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   applyNextLogoGradient();
   restartAnimatedLogos();
   applyLogoGradient(window.__abcLogoGradientIndex ?? 0);
@@ -84,7 +94,23 @@ function getInitialLogoGradientIndex(): number {
     return FIRST_LOAD_GRADIENT_INDEX;
   }
 
-  return Math.floor(Math.random() * logoGradients.length);
+  // Each subpage gets a consistent gradient
+  const path = window.location.pathname.replace(/\/$/, "") || "/";
+  const pageGradients: Record<string, string> = {
+    "/about": "ocean",
+    "/people": "mint",
+    "/showcase": "sunset",
+    "/learning": "forest",
+    "/connect": "nebula"
+  };
+
+  const key = pageGradients[path];
+  if (key) {
+    const idx = logoGradients.findIndex((g) => g.key === key);
+    if (idx >= 0) return idx;
+  }
+
+  return FIRST_LOAD_GRADIENT_INDEX;
 }
 
 function boot(): void {

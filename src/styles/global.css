@@ -268,8 +268,9 @@ a {
 /* ── Page title: // Title ── */
 
 .page-title {
+  color: var(--text);
   font-family: var(--font-serif);
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1.4;
@@ -295,20 +296,26 @@ h3 {
 }
 
 h1 {
-  font-size: 1rem;
+  color: var(--text);
+  font-size: 0.92rem;
 }
 
 h2 {
-  font-size: 1rem;
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 500;
 }
 
 h3 {
-  font-size: 1rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 500;
 }
 
 p {
   color: var(--muted);
   font-size: 0.92rem;
+  font-weight: 400;
   line-height: 1.75;
   margin: 0;
 }
@@ -433,11 +440,11 @@ p {
   color: var(--muted);
   display: block;
   font-family: var(--font-sans);
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   font-weight: 400;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   margin: 0 0 14px;
-  padding-left: 2.6ch;
+  opacity: 0.7;
 }
 
 /* ── Grid ── */
