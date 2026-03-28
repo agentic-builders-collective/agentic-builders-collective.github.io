@@ -95,7 +95,12 @@ a {
 
 .brand-cursor {
   color: var(--logo-gradient-start);
+  opacity: 0.4;
+}
+
+.brand:hover .brand-cursor {
   animation: blink 1s step-end infinite;
+  opacity: 1;
 }
 
 @keyframes blink {
