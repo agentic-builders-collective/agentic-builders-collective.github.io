@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const allResources = await getCollection("resources");
+
+const categoryLabels: Record<string, string> = {
+  "claude-code": "Claude Code & Core Workflow",
+  mcp: "MCP Servers & Tooling",
+  skills: "Skills & Agent Orchestration",
+  "alternative-tools": "Alternative Tools",
+  philosophy: "Philosophy & Culture",
+  performance: "Performance & Reliability",
+};
+
+const categoryOrder = Object.keys(categoryLabels);
+
+const grouped = new Map<string, typeof allResources>();
+for (const r of allResources) {
+  const cat = r.data.category;
+  if (!grouped.has(cat)) grouped.set(cat, []);
+  grouped.get(cat)!.push(r);
+}
+
+for (const [, items] of grouped) {
+  items.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+}
+---
+
+<BaseLayout title="Resources — ABC">
+  <h1 class="sr-only">Resources</h1>
+  <h2 class="page-title">Resources</h2>
+
+  {categoryOrder.map((cat) => {
+    const items = grouped.get(cat);
+    if (!items || items.length === 0) return null;
+    return (
+      <section>
+        <h2 class="section-label">{categoryLabels[cat] ?? cat}</h2>
+        <div class="list">
+          {items.map((r) => (
+            <div class="list-item">
+              <div class="list-item-header">
+                <a class="list-item-title" href={r.data.url} target="_blank" rel="noopener">
+                  {r.data.title}
+                </a>
+                <div class="card-meta">
+                  {r.data.contributor && <span>{r.data.contributor}</span>}
+                  <span>{new Date(r.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short" })}</span>
+                </div>
+              </div>
+              {r.data.description && <p>{r.data.description}</p>}
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  })}
+</BaseLayout>

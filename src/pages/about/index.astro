@@ -1,14 +1,90 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const organisers = await getCollection("organisers");
+const sponsors = await getCollection("sponsors");
 ---
 
-<BaseLayout
-  title="About | Agentic Builders Collective"
-  description="About the Agentic Builders Collective."
->
-  <h1 class="page-title">About</h1>
+<BaseLayout title="About — ABC">
+  <h1 class="sr-only">About</h1>
+  <h2 class="page-title">About</h2>
 
-  <section class="empty-state">
-    <p>Nothing here yet.</p>
+  <section>
+    <h2 class="section-label">What is ABC</h2>
+    <p>
+      The Agentic Builders Collective (ABC) is a Singapore-based community of developers, builders, and tinkerers exploring agentic coding — building software with AI tools like Claude Code, Codex, Cursor, and beyond.
+    </p>
+    <p style="margin-top: 12px;">
+      We started as "Claude Code Club SG" in September 2025 — a WhatsApp group for Claude Code users in Singapore. As the tool landscape exploded and members adopted Codex, Cursor, Lovable, OpenCode, and more, we rebranded to reflect the broader scope.
+    </p>
+    <p style="margin-top: 12px;">
+      Today we're 80+ active members sharing projects, tips, and experiments in a WhatsApp group chat and at monthly meetups around Singapore.
+    </p>
+  </section>
+
+  <section>
+    <h2 class="section-label">What We Do</h2>
+    <div class="grid columns-3">
+      <div class="card">
+        <h3>WhatsApp Chat</h3>
+        <p>Daily tips, tool news, troubleshooting, and project sharing in our active group chat.</p>
+      </div>
+      <div class="card">
+        <h3>Monthly Meetups</h3>
+        <p>Talks, demos, and hands-on workshops at venues around Singapore — Google, Lorong AI, Tinkercademy, and more.</p>
+      </div>
+      <div class="card">
+        <h3>Open Resources</h3>
+        <p>Community-curated links, project showcases, workshop materials, and blog posts — all open source.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-label">Organisers</h2>
+    <div class="list">
+      {organisers.map((o) => (
+        <div class="list-item">
+          <div class="list-item-header">
+            <span class="list-item-title">{o.data.name}</span>
+            <div class="card-meta">
+              <span>{o.data.role}</span>
+              {o.data.company && <span>{o.data.company}</span>}
+            </div>
+          </div>
+          {o.data.tagline && <p>{o.data.tagline}</p>}
+          {o.data.linkedin && (
+            <a class="muted-link" href={o.data.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {sponsors.length > 0 && (
+    <section>
+      <h2 class="section-label">Venue & Event Sponsors</h2>
+      <div class="list">
+        {sponsors.map((s) => (
+          <div class="list-item">
+            <span class="list-item-title">
+              {s.data.url ? (
+                <a href={s.data.url} target="_blank" rel="noopener">{s.data.name}</a>
+              ) : (
+                s.data.name
+              )}
+            </span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section>
+    <h2 class="section-label">Community Guidelines</h2>
+    <div class="card">
+      <p>Be polite and respectful. Help others when you can. Don't share private or sensitive information. Keep discussions relevant to agentic coding and building. When contributing to the website, keep changes additive and localised — one file per entry, one PR per change.</p>
+    </div>
   </section>
 </BaseLayout>

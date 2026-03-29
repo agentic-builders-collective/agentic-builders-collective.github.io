@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const whatsappUrl = "https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn";
+---
+
+<BaseLayout title="Contact — ABC">
+  <h1 class="sr-only">Contact</h1>
+  <h2 class="page-title">Contact</h2>
+
+  <section>
+    <h2 class="section-label">Get In Touch</h2>
+    <div class="card">
+      <p>Want to speak at a meetup, sponsor an event, partner with us, or just say hello? Reach out to us directly.</p>
+      <p style="margin-top: 12px;">
+        <a class="muted-link" href="mailto:yjsoon@tk.sg">yjsoon@tk.sg</a>
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-label">Other Ways to Connect</h2>
+    <div class="list">
+      <div class="list-item">
+        <a class="list-item-title" href={whatsappUrl} target="_blank" rel="noopener">WhatsApp Group Chat</a>
+        <p>The main hub — daily tips, tool news, troubleshooting, and project sharing.</p>
+      </div>
+      <div class="list-item">
+        <a class="list-item-title" href="https://linkedin.com/in/yjsoon" target="_blank" rel="noopener">YJ Soon — LinkedIn</a>
+        <p>Co-organiser, Tinkercademy</p>
+      </div>
+      <div class="list-item">
+        <a class="list-item-title" href="https://www.linkedin.com/in/cpecaut/" target="_blank" rel="noopener">Chris Pecaut — LinkedIn</a>
+        <p>Co-organiser</p>
+      </div>
+      <div class="list-item">
+        <a class="list-item-title" href="https://www.linkedin.com/in/logan-goh-67267a3/" target="_blank" rel="noopener">Logan Goh — LinkedIn</a>
+        <p>Co-organiser</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

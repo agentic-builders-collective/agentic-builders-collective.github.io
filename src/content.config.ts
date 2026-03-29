@@ -1,63 +1,124 @@
 import { defineCollection } from "astro:content";
-import { glob } from "astro/loaders";
+import { file, glob } from "astro/loaders";
 import { z } from "astro/zod";
 
 const people = defineCollection({
-  loader: glob({ pattern: "**/*.{yaml,yml}", base: "./src/data/people" }),
+  loader: file("src/content/people/people.yaml"),
   schema: z.object({
     name: z.string(),
-    interests: z.array(z.string()).default([]),
-    linkedin: z.url().optional(),
-    website: z.url().optional(),
-    notes: z.string().optional(),
-    updated: z.coerce.date().optional()
-  })
+    tagline: z.string().optional().default(""),
+    company: z.string().optional().default(""),
+    linkedin: z.string().optional().default(""),
+    github: z.string().optional().default(""),
+    featured: z.boolean().default(false),
+  }),
+});
+
+const organisers = defineCollection({
+  loader: file("src/content/organisers/organisers.yaml"),
+  schema: z.object({
+    name: z.string(),
+    role: z.string(),
+    company: z.string().optional().default(""),
+    tagline: z.string().optional().default(""),
+    linkedin: z.string().optional().default(""),
+    github: z.string().optional().default(""),
+    website: z.string().optional().default(""),
+    email: z.string().optional().default(""),
+    photo: z.string().optional().default(""),
+  }),
+});
+
+const sponsors = defineCollection({
+  loader: file("src/content/sponsors/sponsors.yaml"),
+  schema: z.object({
+    name: z.string(),
+    logo: z.string().optional().default(""),
+    url: z.string().optional().default(""),
+  }),
+});
+
+const blog = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    author: z.string().optional().default(""),
+    summary: z.string().optional().default(""),
+    tags: z.array(z.string()).default([]),
+  }),
 });
 
 const showcase = defineCollection({
-  loader: glob({ pattern: "**/*.{yaml,yml}", base: "./src/data/showcase" }),
-  schema: z.object({
-    name: z.string(),
-    link: z.url(),
-    about: z.string().optional(),
-    by: z.string().optional(),
-    image: z.string().optional(),
-    updated: z.coerce.date().optional()
-  })
-});
-
-const learning = defineCollection({
-  loader: glob({ pattern: "**/*.{yaml,yml}", base: "./src/data/learning" }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/showcase" }),
   schema: z.object({
     title: z.string(),
-    link: z.url(),
-    platform: z.string().optional(),
-    tags: z.array(z.string()).default([]),
-    by: z.string().optional(),
-    updated: z.coerce.date().optional()
-  })
+    author: z.string().optional().default(""),
+    url: z.string().optional().default(""),
+    github: z.string().optional().default(""),
+    screenshot: z.string().optional().default(""),
+    builtWith: z.array(z.string()).default([]),
+    featured: z.boolean().default(false),
+    summary: z.string().optional().default(""),
+    date: z.coerce.date(),
+  }),
 });
 
-const connect = defineCollection({
-  loader: glob({ pattern: "**/*.{yaml,yml}", base: "./src/data/connect" }),
+const events = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/events" }),
   schema: z.object({
     title: z.string(),
-    startsAt: z.coerce.date(),
-    endsAt: z.coerce.date().optional(),
-    kind: z.enum(["meetup", "event"]).default("meetup"),
-    venue: z.string().optional(),
-    city: z.string().optional(),
-    registrationUrl: z.url().optional(),
+    date: z.coerce.date(),
+    time: z.string().optional().default(""),
+    venue: z.string().optional().default(""),
+    registrationUrl: z.string().optional().default(""),
+    attendance: z.number().optional().default(0),
     speakers: z.array(z.string()).default([]),
-    topics: z.array(z.string()).default([]),
-    notes: z.string().optional(),
-    status: z.enum(["planned", "completed", "cancelled"]).default("planned")
-  })
+    tags: z.array(z.string()).default([]),
+    status: z.enum(["upcoming", "past"]).default("past"),
+  }),
+});
+
+const resources = defineCollection({
+  loader: file("src/content/resources/resources.yaml"),
+  schema: z.object({
+    title: z.string(),
+    url: z.string(),
+    category: z.string(),
+    contributor: z.string().optional().default(""),
+    date: z.coerce.date(),
+    description: z.string().optional().default(""),
+  }),
+});
+
+const articles = defineCollection({
+  loader: file("src/content/articles/articles.yaml"),
+  schema: z.object({
+    title: z.string(),
+    author: z.string(),
+    url: z.string(),
+    publication: z.string().optional().default(""),
+    date: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
+  }),
+});
+
+const faq = defineCollection({
+  loader: file("src/content/faq/faq.yaml"),
+  schema: z.object({
+    question: z.string(),
+    answer: z.string(),
+  }),
 });
 
 export const collections = {
   people,
+  organisers,
+  sponsors,
+  blog,
   showcase,
-  learning,
-  connect
+  events,
+  resources,
+  articles,
+  faq,
 };

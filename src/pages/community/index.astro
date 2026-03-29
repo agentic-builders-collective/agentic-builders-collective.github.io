@@ -1,0 +1,98 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const allPeople = await getCollection("people");
+const organisers = await getCollection("organisers");
+const allBlog = await getCollection("blog");
+
+const sortedBlog = allBlog.sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const orgNames = new Set(organisers.map((o) => o.data.name));
+const featuredPeople = allPeople.filter((p) => p.data.featured || orgNames.has(p.data.name));
+const otherPeople = allPeople.filter((p) => !p.data.featured && !orgNames.has(p.data.name));
+---
+
+<BaseLayout title="Community — ABC">
+  <h1 class="sr-only">Community</h1>
+  <h2 class="page-title">Community</h2>
+
+  <section>
+    <h2 class="section-label">Organisers</h2>
+    <div class="list">
+      {organisers.map((person) => (
+        <div class="list-item">
+          <div class="list-item-header">
+            <span class="list-item-title">{person.data.name}</span>
+            <div class="card-meta">
+              <span>{person.data.role}</span>
+              {person.data.company && <span>{person.data.company}</span>}
+            </div>
+          </div>
+          {person.data.tagline && <p>{person.data.tagline}</p>}
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            {person.data.linkedin && (
+              <a class="muted-link" href={person.data.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+            )}
+            {person.data.github && (
+              <a class="muted-link" href={person.data.github} target="_blank" rel="noopener">GitHub</a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-label">Members</h2>
+    <div class="list">
+      {[...featuredPeople, ...otherPeople].map((person) => (
+        <div class="list-item">
+          <div class="list-item-header">
+            <span class="list-item-title">{person.data.name}</span>
+          </div>
+          {person.data.tagline && <p>{person.data.tagline}</p>}
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            {person.data.linkedin && (
+              <a class="muted-link" href={person.data.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+            )}
+            {person.data.github && (
+              <a class="muted-link" href={person.data.github} target="_blank" rel="noopener">GitHub</a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-label">Blog / Updates</h2>
+    {sortedBlog.length === 0 ? (
+      <p>No posts yet.</p>
+    ) : (
+      <div class="list">
+        {sortedBlog.map((post) => (
+          <div class="list-item">
+            <div class="list-item-header">
+              <span class="list-item-title">{post.data.title}</span>
+              <div class="card-meta">
+                <span>{new Date(post.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
+                {post.data.author && <span>{post.data.author}</span>}
+              </div>
+            </div>
+            {post.data.summary && <p>{post.data.summary}</p>}
+            {post.data.tags.length > 0 && (
+              <ul class="tag-list">
+                {post.data.tags.map((tag) => (
+                  <li class="tag">{tag}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+</BaseLayout>

@@ -1,0 +1,62 @@
+- id: "jensen-loke"
+  name: "Jensen Loke"
+  tagline: "Infrastructure, MCP servers, Claude Code power user"
+  github: "https://github.com/diet103"
+  linkedin: ""
+  featured: false
+- id: "yu-xi"
+  name: "Yu-Xi"
+  tagline: "Skills & agent orchestration"
+  featured: false
+- id: "gijs"
+  name: "Gijs"
+  tagline: "System prompts, CLI tools"
+  featured: false
+- id: "ha-my"
+  name: "Hà My"
+  tagline: "Skills & memory workflows"
+  featured: false
+- id: "william-hooi"
+  name: "William Hooi"
+  tagline: "Structured workflows"
+  featured: false
+- id: "sweekiat"
+  name: "Sweekiat"
+  tagline: "Desktop app builder"
+  featured: false
+- id: "shiyan"
+  name: "Shiyan"
+  tagline: "Agent reliability"
+  featured: false
+- id: "ws-chioh"
+  name: "WS Chioh"
+  tagline: "Alternative AI tools explorer"
+  featured: false
+- id: "indraneel-sg"
+  name: "Indraneel SG"
+  tagline: "Built MoovMyWay"
+  featured: false
+- id: "jelle-van-der-tas"
+  name: "Jelle Van Der Tas"
+  tagline: "AIVAS"
+  featured: false
+- id: "kenneth"
+  name: "Kenneth"
+  tagline: "Claude for Excel"
+  featured: false
+- id: "olivia"
+  name: "Olivia"
+  tagline: ""
+  featured: false
+- id: "david"
+  name: "David"
+  tagline: ""
+  featured: false
+- id: "jon"
+  name: "Jon"
+  tagline: "Beginner AI coding, Lorong AI"
+  featured: false
+- id: "stef-sy"
+  name: "Stef Sy"
+  tagline: ""
+  featured: false

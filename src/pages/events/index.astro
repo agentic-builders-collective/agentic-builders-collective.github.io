@@ -1,0 +1,72 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const allEvents = await getCollection("events");
+const now = new Date();
+
+const upcoming = allEvents
+  .filter((e) => e.data.status === "upcoming" || new Date(e.data.date) >= now)
+  .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime());
+
+const past = allEvents
+  .filter((e) => e.data.status === "past" && new Date(e.data.date) < now)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+---
+
+<BaseLayout title="Events — ABC">
+  <h1 class="sr-only">Events</h1>
+  <h2 class="page-title">Events</h2>
+
+  <section>
+    <h2 class="section-label">Upcoming</h2>
+    {upcoming.length === 0 ? (
+      <div class="card">
+        <p>No upcoming events — <a href="https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn" target="_blank" rel="noopener" style="color:var(--accent);">join the WhatsApp chat</a> for announcements.</p>
+      </div>
+    ) : (
+      <div class="list">
+        {upcoming.map((event) => (
+          <div class="list-item">
+            <div class="list-item-header">
+              <span class="list-item-title">{event.data.title}</span>
+              <div class="card-meta">
+                <span>{new Date(event.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
+                {event.data.time && <span>{event.data.time}</span>}
+                {event.data.venue && <span>{event.data.venue}</span>}
+              </div>
+            </div>
+            {event.data.registrationUrl && (
+              <a class="button button-primary" href={event.data.registrationUrl} target="_blank" rel="noopener">Register →</a>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <section>
+    <h2 class="section-label">Past Events</h2>
+    {past.length === 0 ? (
+      <p>No past events yet.</p>
+    ) : (
+      <div class="list">
+        {past.map((event) => (
+          <div class="list-item">
+            <div class="list-item-header">
+              <span class="list-item-title">{event.data.title}</span>
+              <div class="card-meta">
+                <span>{new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
+                {event.data.venue && <span>{event.data.venue}</span>}
+                {event.data.attendance > 0 && <span>{event.data.attendance} attendees</span>}
+              </div>
+            </div>
+            {event.data.speakers.length > 0 && (
+              <p>Speakers: {event.data.speakers.join(", ")}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+</BaseLayout>

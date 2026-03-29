@@ -98,10 +98,11 @@ function getInitialLogoGradientIndex(): number {
   const path = window.location.pathname.replace(/\/$/, "") || "/";
   const pageGradients: Record<string, string> = {
     "/about": "ocean",
-    "/people": "mint",
+    "/community": "mint",
     "/showcase": "sunset",
-    "/learning": "forest",
-    "/connect": "nebula"
+    "/resources": "forest",
+    "/events": "nebula",
+    "/contact": "coral"
   };
 
   const key = pageGradients[path];

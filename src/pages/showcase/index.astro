@@ -1,57 +1,134 @@
 ---
 import { getCollection } from "astro:content";
-
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const items = (await getCollection("showcase")).sort(
-  (left, right) =>
-    (right.data.updated?.getTime() ?? 0) - (left.data.updated?.getTime() ?? 0)
+const allProjects = await getCollection("showcase");
+const articles = await getCollection("articles");
+
+const featured = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const others = allProjects
+  .filter((p) => !p.data.featured)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const sortedArticles = articles.sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 ---
 
-<BaseLayout
-  title="Showcase | Agentic Builders Collective"
-  description="Projects and builds from the Agentic Builders Collective."
->
-  <h1 class="page-title">Showcase</h1>
+<BaseLayout title="Showcase — ABC">
+  <h1 class="sr-only">Showcase</h1>
+  <h2 class="page-title">Showcase</h2>
 
-  {
-    items.length > 0 ? (
-      <section class="grid columns-2">
-        {items.map((item) => (
-          <article class="card">
-            {item.data.image && (
+  {featured.length > 0 && (
+    <section>
+      <h2 class="section-label">Featured Projects</h2>
+      <div class="list">
+        {featured.map((project) => (
+          <article class="list-item">
+            {project.data.screenshot && (
               <img
-                src={item.data.image.startsWith("/") ? item.data.image : `/showcase/${item.data.image}`}
-                alt={item.data.name}
+                src={project.data.screenshot}
+                alt={project.data.title}
                 loading="lazy"
                 class="showcase-image"
               />
             )}
-
-            <div class="card-header">
-              <h3>
-                <a class="list-item-title" href={item.data.link} target="_blank" rel="noreferrer">
-                  {item.data.name}
-                </a>
-              </h3>
-              {item.data.by && (
-                <div class="card-meta">
-                  <span>by {item.data.by}</span>
-                </div>
+            <div class="list-item-header">
+              <span class="list-item-title">
+                {project.data.url ? (
+                  <a href={project.data.url} target="_blank" rel="noopener">{project.data.title}</a>
+                ) : (
+                  project.data.title
+                )}
+              </span>
+              <div class="card-meta">
+                {project.data.author && <span>{project.data.author}</span>}
+                <span>{new Date(project.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short" })}</span>
+              </div>
+            </div>
+            {project.data.summary && <p>{project.data.summary}</p>}
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              {project.data.url && (
+                <a class="muted-link" href={project.data.url} target="_blank" rel="noopener">Live site</a>
+              )}
+              {project.data.github && (
+                <a class="muted-link" href={project.data.github} target="_blank" rel="noopener">GitHub</a>
               )}
             </div>
-
-            {item.data.about && <p>{item.data.about}</p>}
+            {project.data.builtWith.length > 0 && (
+              <ul class="tag-list">
+                {project.data.builtWith.map((tool) => (
+                  <li class="tag">{tool}</li>
+                ))}
+              </ul>
+            )}
           </article>
         ))}
-      </section>
+      </div>
+    </section>
+  )}
+
+  <section>
+    <h2 class="section-label">All Projects</h2>
+    {others.length === 0 && featured.length === 0 ? (
+      <p>No projects yet. Submit yours via PR!</p>
     ) : (
-      <section class="empty-state">
-        <p>Nothing here yet.</p>
-      </section>
-    )
-  }
+      <div class="list">
+        {others.map((project) => (
+          <article class="list-item">
+            <div class="list-item-header">
+              <span class="list-item-title">
+                {project.data.url ? (
+                  <a href={project.data.url} target="_blank" rel="noopener">{project.data.title}</a>
+                ) : project.data.github ? (
+                  <a href={project.data.github} target="_blank" rel="noopener">{project.data.title}</a>
+                ) : (
+                  project.data.title
+                )}
+              </span>
+              <div class="card-meta">
+                {project.data.author && <span>{project.data.author}</span>}
+                <span>{new Date(project.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short" })}</span>
+              </div>
+            </div>
+            {project.data.summary && <p>{project.data.summary}</p>}
+            {project.data.builtWith.length > 0 && (
+              <ul class="tag-list">
+                {project.data.builtWith.map((tool) => (
+                  <li class="tag">{tool}</li>
+                ))}
+              </ul>
+            )}
+          </article>
+        ))}
+      </div>
+    )}
+  </section>
+
+  {sortedArticles.length > 0 && (
+    <section>
+      <h2 class="section-label">Articles by Members</h2>
+      <div class="list">
+        {sortedArticles.map((article) => (
+          <div class="list-item">
+            <div class="list-item-header">
+              <a class="list-item-title" href={article.data.url} target="_blank" rel="noopener">
+                {article.data.title}
+              </a>
+              <div class="card-meta">
+                <span>{article.data.author}</span>
+                {article.data.publication && <span>{article.data.publication}</span>}
+                <span>{new Date(article.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short" })}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
 </BaseLayout>
 
 <style>
