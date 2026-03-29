@@ -152,6 +152,7 @@ a {
 .site-top-menu a,
 .home-top-links a,
 .home-top-menu a {
+  align-items: center;
   color: var(--menu-link);
   display: inline-flex;
   font-family: var(--font-sans);
@@ -159,6 +160,13 @@ a {
   letter-spacing: 0.08em;
   text-decoration: none;
   white-space: nowrap;
+}
+
+.site-top-links a + a::before,
+.home-top-links a + a::before {
+  color: #555;
+  content: "/";
+  margin-right: 10px;
 }
 
 .site-top-links .current,
