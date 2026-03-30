@@ -307,6 +307,12 @@ a {
 }
 
 @media (max-width: 1100px) {
+  .brand,
+  .site-top-menu,
+  .home-top-menu {
+    position: absolute;
+  }
+
   .site-top-menu,
   .home-top-menu {
     display: flex !important;
