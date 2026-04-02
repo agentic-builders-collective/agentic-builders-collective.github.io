@@ -10,23 +10,19 @@
   order: 3
   question: "Is this only about Claude Code?"
   answer: "Not at all. Members actively use and discuss Cursor, Codex, OpenCode, Lovable, v0, Kilo Code, Google Antigravity, MiniMax, GLM, and more. We're tool-agnostic — if it helps you build, it belongs here."
-- id: "which-tool-should-i-start-with"
-  order: 4
-  question: "Which tool should I start with?"
-  answer: "Claude Code and Codex are the most popular in our community. Claude Code has a free web tier with $250 credits. Codex has a free tier as well. Cursor is another popular option with a visual IDE. See our Resources page for setup guides."
 - id: "how-much-does-it-cost"
-  order: 5
+  order: 4
   question: "How much does it cost?"
   answer: "The community is completely free. AI tool subscriptions vary — there are free tiers, pay-as-you-go options (like Kilo Code), and subscription plans. Members often share deals and promotions in the chat."
 - id: "how-do-i-attend-a-meetup"
-  order: 6
+  order: 5
   question: "How do I attend a meetup?"
   answer: "We announce events in the WhatsApp chat and on Luma. RSVPs are typically through Luma. Meetups happen roughly monthly at venues around Singapore — past hosts include Google, Lorong AI, Tinkercademy, and Lifelong Learning Institute."
 - id: "how-can-i-contribute-to-the-website"
-  order: 7
+  order: 6
   question: "How can I contribute to the website?"
   answer: "Submit a pull request. You can add yourself to the People directory, submit a project to Showcase, add a resource link, or write a blog post. See CONTRIBUTING.md in the repo for details."
 - id: "wasnt-this-called-claude-code-club"
-  order: 8
+  order: 7
   question: "Wasn't this called Claude Code Club?"
   answer: "Yes. We started as Claude Code Club SG in September 2025. As members began using a wider range of tools — Codex, Cursor, Lovable, OpenCode, Google Antigravity, and more — we rebranded to Agentic Builders Collective (ABC) to reflect the broader scope."
