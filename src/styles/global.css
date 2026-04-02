@@ -5,6 +5,7 @@
   --bg-alt: #090f22;
   --panel: rgba(16, 26, 49, 0.74);
   --panel-strong: rgba(16, 26, 46, 0.9);
+  --box-bg: rgba(30, 30, 40, 0.45);
   --line: rgba(174, 201, 244, 0.2);
   --text: #d9e7ff;
   --muted: #a6b8d9;
@@ -833,7 +834,7 @@ p {
 /* ── Person cards (ASCII-like boxes for Community page) ── */
 
 .person-card {
-  background: rgba(16, 26, 49, 0.45);
+  background: var(--box-bg);
   display: grid;
   gap: 12px;
   padding: 20px;
