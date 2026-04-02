@@ -2,7 +2,6 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
-const organisers = await getCollection("organisers");
 const sponsors = await getCollection("sponsors");
 ---
 
@@ -15,48 +14,37 @@ const sponsors = await getCollection("sponsors");
       The Agentic Builders Collective (ABC) is a Singapore-based community of developers, builders, and tinkerers exploring agentic coding — building software with AI tools like Claude Code, Codex, Antigravity, and beyond.
     </p>
     <p style="margin-top: 12px;">
-      We started as "Claude Code Club SG" in September 2025 — a WhatsApp group for Claude Code users in Singapore. As the tool landscape exploded and members adopted Codex, Antigravity, Lovable, OpenCode, and more, we rebranded to reflect the broader scope.
+      We started as "Claude Code Club SG" in September 2025 — a WhatsApp group for Claude Code users in Singapore. As the tool landscape exploded and members adopted Codex, Antigravity, OpenCode, GLM, Kimi, and more, we rebranded to reflect the broader scope.
     </p>
     <p style="margin-top: 12px;">
-      Today we're 80+ active members sharing projects, tips, and experiments in a WhatsApp group chat and at monthly meetups around Singapore.
+      Today we're 400+ <a href="/community/">active members</a> sharing projects, tips, and experiments in a WhatsApp group chat and at monthly meetups around Singapore.
     </p>
   </section>
 
   <section>
     <h3 class="section-label">What We Do</h3>
     <div class="grid columns-3">
-      <div class="card">
+      <div class="person-card">
         <h3>WhatsApp Chat</h3>
-        <p>Daily tips, tool news, troubleshooting, and project sharing in our active group chat.</p>
-      </div>
-      <div class="card">
-        <h3>Monthly Meetups</h3>
-        <p>Talks, demos, and hands-on workshops at venues around Singapore — Google, Lorong AI, Tinkercademy, and more.</p>
-      </div>
-      <div class="card">
-        <h3>Open Resources</h3>
-        <p>Community-curated links, project showcases, workshop materials, and blog posts — all open source.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h3 class="section-label">Organisers</h3>
-    <div class="list">
-      {organisers.map((o) => (
-        <div class="list-item">
-          <div class="list-item-header">
-            <span class="list-item-title">{o.data.name}</span>
-            <div class="card-meta">
-              <span>{o.data.role}</span>
-              {o.data.company && <span>{o.data.company}</span>}
-            </div>
-          </div>
-          {o.data.linkedin && (
-            <a class="muted-link" href={o.data.linkedin} target="_blank" rel="noopener">LinkedIn</a>
-          )}
+        <p class="person-card-tagline">Daily tips, tool news, troubleshooting, and project sharing in our active group chat.</p>
+        <div class="person-card-links">
+          <a class="muted-link" href="/community/">See the community</a>
         </div>
-      ))}
+      </div>
+      <div class="person-card">
+        <h3>Monthly Meetups</h3>
+        <p class="person-card-tagline">Talks, demos, and hands-on workshops at venues around Singapore — Google, Lorong AI, Tinkercademy, and more.</p>
+        <div class="person-card-links">
+          <a class="muted-link" href="/events/">See events</a>
+        </div>
+      </div>
+      <div class="person-card">
+        <h3>Open Resources</h3>
+        <p class="person-card-tagline">Community-curated links, project showcases, workshop materials, and blog posts — all open source.</p>
+        <div class="person-card-links">
+          <a class="muted-link" href="/resources/">Browse resources</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -81,8 +69,19 @@ const sponsors = await getCollection("sponsors");
 
   <section>
     <h3 class="section-label">Community Guidelines</h3>
-    <div class="card">
-      <p>Be polite and respectful. Help others when you can. Don't share private or sensitive information. Keep discussions relevant to agentic coding and building. When contributing to the website, keep changes additive and localised — one file per entry, one PR per change.</p>
+    <div class="list">
+      <div class="list-item">
+        <p>Be polite, respectful, and helpful.</p>
+      </div>
+      <div class="list-item">
+        <p>Keep discussions relevant to agentic coding and building.</p>
+      </div>
+      <div class="list-item">
+        <p>Feel free to share and showcase your personal projects. For commercial work and events, <a href="/contact/">please check</a>.</p>
+      </div>
+      <div class="list-item">
+        <p>Please <a href="https://github.com/agentic-builders-collective/agentic-builders-collective.github.io" target="_blank" rel="noopener">contribute to the website</a>. When doing so, keep changes additive and localised — one file per entry, one PR per change.</p>
+      </div>
     </div>
   </section>
 </BaseLayout>

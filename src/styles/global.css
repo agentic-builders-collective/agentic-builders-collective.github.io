@@ -834,6 +834,7 @@ p {
 /* ── Person cards (ASCII-like boxes for Community page) ── */
 
 .person-card {
+  align-content: start;
   background: var(--box-bg);
   display: grid;
   gap: 12px;
@@ -884,10 +885,10 @@ p {
 
 .person-card-tagline {
   color: var(--text);
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.5;
   margin: 0;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .person-card-links {
@@ -897,7 +898,7 @@ p {
 }
 
 .person-card-links .muted-link {
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .person-card-header {
@@ -935,10 +936,10 @@ p {
 
 .person-card-tagline {
   color: var(--text);
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.5;
   margin: 0;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .person-card-links {
