@@ -18,3 +18,12 @@ This repo is an Astro site for the Agentic Builders Collective. Keep durable beh
 - Use Markdown for `tips`.
 - Prefer kebab-case filenames because Astro uses filenames as stable ids.
 - Keep contributor changes additive and localised to a single collection where possible.
+
+## Visual design
+
+- Terminal-like theme uses **consistent font sizes** throughout.
+- Do not vary font sizes for hierarchy; instead, differentiate using:
+  - **Brighter colours** for headers/important elements (e.g., `--accent`)
+  - **Bold weight** for emphasis
+  - **Slightly dimmed opacity** for body/secondary text
+- Standard sizes: `0.92rem` for primary text, `0.82rem` for secondary/meta text.
