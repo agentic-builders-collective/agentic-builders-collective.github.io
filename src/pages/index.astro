@@ -213,6 +213,18 @@ const isCurrent = (href: string) => {
         animation-delay: calc(var(--logo-del, 0s) * var(--logo-reveal-speed));
       }
 
+      :global(.logo-glyph.no-animation) {
+        animation: none;
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+
+      /* Show pointer cursor on colored/interactive logo bits */
+      :global([data-logo-cycle]) {
+        cursor: pointer;
+      }
+
       @keyframes logoGlyphIn {
         from {
           opacity: 0;
@@ -238,6 +250,12 @@ const isCurrent = (href: string) => {
         clip-path: inset(0 100% 0 0);
         animation: logoRuleIn calc(var(--logo-rule-dur, var(--ruleDurFallback)) * var(--logo-reveal-speed)) ease forwards;
         animation-delay: calc(var(--logo-del, 0s) * var(--logo-reveal-speed));
+      }
+
+      .logo-rule.no-animation {
+        animation: none;
+        opacity: 0.4;
+        clip-path: inset(0 0 0 0);
       }
 
       @keyframes logoRuleIn {
@@ -540,18 +558,20 @@ const isCurrent = (href: string) => {
         const FAST_SPEED_MULTIPLIER = 0.2;
         const root = document.documentElement;
 
-        function getRevealDurationMs() {
-          const logo = document.querySelector("[data-logo-reveal-duration]");
-          const value = (logo as HTMLElement | null)?.dataset.logoRevealDuration;
-          const parsed = Number.parseFloat(value ?? "");
-          if (!Number.isFinite(parsed)) {
-            return 12000;
-          }
-          return Math.max(parsed * 1000, 900);
-        }
-
         function setRevealSpeed(speed: number) {
           root.style.setProperty("--logo-reveal-speed", String(speed));
+        }
+
+        function skipAnimation() {
+          document.querySelectorAll<HTMLElement>(".logo-glyph, .logo-rule").forEach((el) => {
+            el.classList.add("no-animation");
+          });
+        }
+
+        function resetAnimation() {
+          document.querySelectorAll<HTMLElement>(".logo-glyph, .logo-rule").forEach((el) => {
+            el.classList.remove("no-animation");
+          });
         }
 
         let hasSeen = false;
@@ -560,17 +580,24 @@ const isCurrent = (href: string) => {
         } catch {}
 
         if (hasSeen) {
-          setRevealSpeed(FAST_SPEED_MULTIPLIER);
+          // Skip animation on subsequent loads
+          skipAnimation();
         } else {
-          setRevealSpeed(1);
+          // First run: fast animation
+          setRevealSpeed(FAST_SPEED_MULTIPLIER);
           try {
             window.localStorage.setItem(STORAGE_KEY, "true");
           } catch {}
-
-          window.setTimeout(() => {
-            setRevealSpeed(FAST_SPEED_MULTIPLIER);
-          }, getRevealDurationMs());
         }
+
+        // Handle logo click to trigger fast animation
+        document.querySelector<HTMLElement>("[data-logo-reanimate]")?.addEventListener("click", (e) => {
+          // Only trigger if clicking on logo elements, not the whole container
+          if ((e.target as HTMLElement).closest("[data-logo-cycle], .logo-glyph")) {
+            resetAnimation();
+            setRevealSpeed(FAST_SPEED_MULTIPLIER);
+          }
+        });
       })();
     </script>
 
