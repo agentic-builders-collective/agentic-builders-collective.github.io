@@ -884,13 +884,13 @@ p {
   display: flex;
   flex-wrap: wrap;
   font-size: 1rem;
-  gap: 8px;
+  gap: 4px;
   opacity: 0.8;
 }
 
 .person-card-meta span::before {
   content: "·";
-  margin-right: 4px;
+  margin: 0 6px;
   opacity: 0.4;
 }
 
@@ -914,6 +914,14 @@ p {
 
 .person-card-links .muted-link {
   font-size: 1rem;
+}
+
+.person-card-meta .muted-link {
+  font-size: 1rem;
+}
+
+.person-card-meta .muted-link::after {
+  content: none;
 }
 
 /* ── Responsive ── */

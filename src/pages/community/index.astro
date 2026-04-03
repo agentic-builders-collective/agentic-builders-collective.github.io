@@ -28,9 +28,9 @@ const otherPeople = allPeople.filter((p) => !p.data.featured && !orgNames.has(p.
             <div class="person-card-meta">
               <span>{person.data.role}</span>
               {person.data.company && (
-                <span>
+                <span class="company-span">
                   {person.data.companyUrl ? (
-                    <a href={person.data.companyUrl} target="_blank" rel="noopener" style="color: var(--muted); text-decoration: none;">{person.data.company}</a>
+                    <a href={person.data.companyUrl} target="_blank" rel="noopener" class="muted-link">{person.data.company}</a>
                   ) : (
                     person.data.company
                   )}
