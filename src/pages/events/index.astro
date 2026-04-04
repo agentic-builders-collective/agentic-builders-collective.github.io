@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import QRCode from "../../components/QRCode.astro";
 import { getCollection } from "astro:content";
 
 const allEvents = await getCollection("events");
@@ -26,6 +27,67 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
 
     .events-register {
       justify-self: start;
+    }
+
+    .survey-section {
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--box-bg, rgba(30, 30, 40, 0.45));
+      border-radius: 12px;
+      border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+    }
+
+    .survey-title {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .survey-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .survey-link:hover {
+      color: var(--accent);
+    }
+
+    .feedback-section {
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--box-bg, rgba(30, 30, 40, 0.45));
+      border-radius: 12px;
+      border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+    }
+
+    .feedback-rating {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .feedback-highlight {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+    }
+
+    .feedback-highlight:last-child {
+      border-bottom: none;
+    }
+
+    .qr-section {
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .qr-label {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-top: 12px;
     }
   </style>
 
@@ -65,6 +127,21 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
             {event.data.registrationUrl && (
               <a class="button button-primary events-register" href={event.data.registrationUrl} target="_blank" rel="noopener">Register <span class="inline-arrow" aria-hidden="true">▶</span></a>
             )}
+            
+            {/* Pre-event survey */}
+            {event.data.preEventSurvey?.url && (
+              <div class="survey-section">
+                <div class="survey-title">📋 Help shape this event</div>
+                <a class="survey-link" href={event.data.preEventSurvey.url} target="_blank" rel="noopener">
+                  Share topic suggestions →
+                </a>
+                {event.data.preEventSurvey.closesAt && (
+                  <div style="font-size: 0.875rem; color: var(--muted); margin-top: 4px;">
+                    Closes {new Date(event.data.preEventSurvey.closesAt).toLocaleDateString("en-SG", { month: "short", day: "numeric" })}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -100,6 +177,39 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
                 )}
               </div>
             </div>
+            
+            {/* Post-event survey with QR */}
+            {event.data.postEventSurvey?.url && event.data.postEventSurvey?.qrEnabled && (
+              <div class="survey-section">
+                <div class="survey-title">📱 Share your feedback</div>
+                <div class="qr-section">
+                  <QRCode url={event.data.postEventSurvey.url} size={150} />
+                  <div class="qr-label">Scan to rate this event</div>
+                </div>
+                <a class="survey-link" href={event.data.postEventSurvey.url} target="_blank" rel="noopener" style="margin-top: 12px;">
+                  Open survey →
+                </a>
+              </div>
+            )}
+            
+            {/* Feedback results */}
+            {event.data.feedback && (
+              <div class="feedback-section">
+                <div class="feedback-rating">
+                  ★ {event.data.feedback.rating.toFixed(1)} 
+                  <span style="font-size: 0.875rem; font-weight: 400; color: var(--muted);">
+                    ({event.data.feedback.responses} responses)
+                  </span>
+                </div>
+                {event.data.feedback.highlights && event.data.feedback.highlights.length > 0 && (
+                  <div>
+                    {event.data.feedback.highlights.map((highlight) => (
+                      <div class="feedback-highlight">"{highlight}"</div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -135,6 +245,39 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
                 )}
               </div>
             </div>
+            
+            {/* Post-event survey with QR */}
+            {event.data.postEventSurvey?.url && event.data.postEventSurvey?.qrEnabled && (
+              <div class="survey-section">
+                <div class="survey-title">📱 Share your feedback</div>
+                <div class="qr-section">
+                  <QRCode url={event.data.postEventSurvey.url} size={150} />
+                  <div class="qr-label">Scan to rate this event</div>
+                </div>
+                <a class="survey-link" href={event.data.postEventSurvey.url} target="_blank" rel="noopener" style="margin-top: 12px;">
+                  Open survey →
+                </a>
+              </div>
+            )}
+            
+            {/* Feedback results */}
+            {event.data.feedback && (
+              <div class="feedback-section">
+                <div class="feedback-rating">
+                  ★ {event.data.feedback.rating.toFixed(1)} 
+                  <span style="font-size: 0.875rem; font-weight: 400; color: var(--muted);">
+                    ({event.data.feedback.responses} responses)
+                  </span>
+                </div>
+                {event.data.feedback.highlights && event.data.feedback.highlights.length > 0 && (
+                  <div>
+                    {event.data.feedback.highlights.map((highlight) => (
+                      <div class="feedback-highlight">"{highlight}"</div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>

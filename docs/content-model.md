@@ -132,6 +132,46 @@ status: upcoming
 An evening of demos, discussions, and community building.
 ```
 
+#### Event surveys
+
+Events can include pre-event and post-event surveys using Google Forms:
+
+```md
+---
+title: "#7 - Agentic Builders at Example Labs"
+date: 2026-05-14
+kind: meetup
+# ... other fields ...
+
+# Optional: Collect topic suggestions before the event
+preEventSurvey:
+  url: https://forms.gle/your-form-link
+  closesAt: 2026-05-10
+
+# Optional: Collect feedback after the event (generates QR code)
+postEventSurvey:
+  url: https://forms.gle/your-feedback-form
+  opensAt: 2026-05-14
+  qrEnabled: true
+
+# Optional: Summarized feedback results (update manually after event)
+feedback:
+  rating: 4.5
+  responses: 42
+  highlights:
+    - "Great demos"
+    - "Loved the networking"
+---
+```
+
+Survey workflow:
+1. Create Google Form at https://forms.new
+2. Link responses to Google Sheets (automatic)
+3. Copy form URL to event frontmatter
+4. After event, export key results and update `feedback` fields
+
+See `docs/surveys.md` for detailed survey setup instructions.
+
 ### `blog`
 
 Directory: `src/content/blog/`

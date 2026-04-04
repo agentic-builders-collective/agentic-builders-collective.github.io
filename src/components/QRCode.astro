@@ -1,0 +1,49 @@
+---
+export interface Props {
+  url: string;
+  size?: number;
+}
+
+const { url, size = 200 } = Astro.props;
+
+import QRCode from 'qrcode';
+
+let dataUrl = '';
+try {
+  dataUrl = await QRCode.toDataURL(url, {
+    width: size,
+    margin: 2,
+    color: {
+      dark: '#d9e7ff',
+      light: '#020410',
+    },
+  });
+} catch (err) {
+  console.error('QR Code generation failed:', err);
+}
+---
+
+{dataUrl && (
+  <div class="qr-container">
+    <img 
+      src={dataUrl} 
+      alt="QR Code" 
+      class="qr-code"
+      width={size}
+      height={size}
+    />
+    <style>
+      .qr-container {
+        display: inline-block;
+        padding: 16px;
+        background: var(--box-bg, rgba(30, 30, 40, 0.45));
+        border-radius: 12px;
+        border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+      }
+      .qr-code {
+        display: block;
+        border-radius: 8px;
+      }
+    </style>
+  </div>
+)}
