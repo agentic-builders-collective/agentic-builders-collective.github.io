@@ -86,6 +86,20 @@ const events = defineCollection({
     hosts: z.array(z.string()).default([]),
     tags: z.array(z.string()).default([]),
     status: z.enum(["upcoming", "past"]).default("past"),
+    preEventSurvey: z.object({
+      url: z.string().optional().default(""),
+      closesAt: z.coerce.date().optional(),
+    }).optional(),
+    postEventSurvey: z.object({
+      url: z.string().optional().default(""),
+      opensAt: z.coerce.date().optional(),
+      qrEnabled: z.boolean().optional().default(false),
+    }).optional(),
+    feedback: z.object({
+      rating: z.number().min(0).max(5).optional(),
+      responses: z.number().optional().default(0),
+      highlights: z.array(z.string()).default([]),
+    }).optional(),
   }),
 });
 
