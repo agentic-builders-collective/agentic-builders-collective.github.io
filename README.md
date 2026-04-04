@@ -1,13 +1,13 @@
 # Agentic Builders Collective Website
 
-This repository contains the public website for the Agentic Builders Collective. The site is built with Astro and uses a hybrid content model: structured community data lives in YAML, while longer-form tips live in Markdown.
+This repository contains the public website for the Agentic Builders Collective. The site is built with Astro and uses Astro content collections for both structured YAML data and Markdown content.
 
 ## Stack
 
 - Astro for the site framework
 - Astro content collections for typed content and data loading
-- YAML entries for structured lists such as people, resources, shares, and meetups
-- Markdown for richer editorial content such as tips
+- Single YAML files loaded into collections for structured lists such as people, organisers, resources, articles, sponsors, and FAQ entries
+- Markdown collections for event pages, blog posts, and showcase entries
 
 ## Getting started
 
@@ -20,15 +20,31 @@ Open `http://localhost:4321/` during development.
 
 ## Content model
 
-The main goal is to make contribution pull requests small and obvious:
+Content is defined in [`src/content.config.ts`](./src/content.config.ts). That file is the quickest way to see what exists, how Astro loads it, and which fields are validated.
 
-- `src/data/people/*.yaml`
-- `src/data/resources/*.yaml`
-- `src/data/shares/*.yaml`
-- `src/data/meetups/*.yaml`
-- `src/content/tips/*.md`
+This repo currently uses two content patterns:
 
-See `docs/content-model.md` for field-level guidance and example frontmatter.
+- `file()` loaders for collections stored as a single YAML array in one file
+- `glob()` loaders for collections stored as one Markdown file per entry
+
+Structured content currently lives under `src/content/` as single YAML files:
+
+- `src/content/people/people.yaml`
+- `src/content/organisers/organisers.yaml`
+- `src/content/resources/resources.yaml`
+- `src/content/articles/articles.yaml`
+- `src/content/sponsors/sponsors.yaml`
+- `src/content/faq/faq.yaml`
+
+Narrative or page-like content lives under `src/content/` as Markdown entries:
+
+- `src/content/events/*.md`
+- `src/content/blog/*.md`
+- `src/content/showcase/*.md`
+
+In practice, that means contributors usually edit one of the YAML array files for short structured additions, or add one new Markdown file when the content needs body copy and richer formatting.
+
+See `docs/content-model.md` for collection-by-collection guidance and examples.
 
 ## Available scripts
 
