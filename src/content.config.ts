@@ -89,6 +89,7 @@ const events = defineCollection({
     preEventSurvey: z.object({
       url: z.string().optional().default(""),
       closesAt: z.coerce.date().optional(),
+      qrEnabled: z.boolean().optional().default(false),
     }).optional(),
     postEventSurvey: z.object({
       url: z.string().optional().default(""),

@@ -16,5 +16,6 @@ status: "upcoming"
 preEventSurvey:
   url: "https://docs.google.com/forms/d/e/1FAIpQLSc910rtaWJzZfyJgU4YWGfbJziFJd3n1NZEwzFWxNxU2AN3NA/viewform?usp=header"
   closesAt: 2026-04-20
+  qrEnabled: true
 ---
 An evening of agentic coding, hands-on building, and community time with Lorong AI.

@@ -47,12 +47,14 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      color: var(--text);
-      text-decoration: none;
+      color: var(--accent);
+      text-decoration: underline;
+      font-weight: 500;
     }
 
     .survey-link:hover {
-      color: var(--accent);
+      color: var(--text);
+      text-decoration: none;
     }
 
     .feedback-section {
@@ -132,11 +134,22 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
             {event.data.preEventSurvey?.url && (
               <div class="survey-section">
                 <div class="survey-title">📋 Help shape this event</div>
-                <a class="survey-link" href={event.data.preEventSurvey.url} target="_blank" rel="noopener">
-                  Share topic suggestions →
+                
+                {/* QR code for pre-event survey (optional) */}
+                {event.data.preEventSurvey.qrEnabled && (
+                  <div class="qr-section" style="margin-bottom: 16px;">
+                    <QRCode url={event.data.preEventSurvey.url} size={150} />
+                    <div class="qr-label">Scan to share your suggestions</div>
+                  </div>
+                )}
+                
+                {/* Prominent button-style link */}
+                <a class="button button-secondary" href={event.data.preEventSurvey.url} target="_blank" rel="noopener" style="justify-self: start;">
+                  Take Survey <span class="inline-arrow" aria-hidden="true">▶</span>
                 </a>
+                
                 {event.data.preEventSurvey.closesAt && (
-                  <div style="font-size: 0.875rem; color: var(--muted); margin-top: 4px;">
+                  <div style="font-size: 0.875rem; color: var(--muted); margin-top: 8px;">
                     Closes {new Date(event.data.preEventSurvey.closesAt).toLocaleDateString("en-SG", { month: "short", day: "numeric" })}
                   </div>
                 )}
