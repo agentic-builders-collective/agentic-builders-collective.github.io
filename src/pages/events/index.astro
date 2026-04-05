@@ -47,12 +47,14 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      color: var(--text);
-      text-decoration: none;
+      color: var(--accent);
+      text-decoration: underline;
+      font-weight: 500;
     }
 
     .survey-link:hover {
-      color: var(--accent);
+      color: var(--text);
+      text-decoration: none;
     }
 
     .feedback-section {
