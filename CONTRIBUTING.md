@@ -6,6 +6,7 @@ This site uses GitHub as the CMS. Content changes should be small, readable pull
 
 Start with the guide matching the thing you want to add:
 
+- ID and filename rules: [`docs/id-guidelines.md`](./docs/id-guidelines.md)
 - Add a person: [`docs/add-person.md`](./docs/add-person.md)
 - Add slides or a presentation: [`docs/add-presentation.md`](./docs/add-presentation.md)
 - Add an event: [`docs/add-event.md`](./docs/add-event.md)

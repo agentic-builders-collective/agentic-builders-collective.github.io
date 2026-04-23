@@ -4,6 +4,7 @@ The site uses Astro content collections defined in `src/content.config.ts`.
 
 For task-specific contribution instructions, start with:
 
+- `docs/id-guidelines.md`
 - `docs/add-person.md`
 - `docs/add-presentation.md`
 - `docs/add-event.md`
@@ -16,6 +17,8 @@ There are two patterns in the current repo:
 - Narrative collections loaded from Markdown files with Astro `glob()` loaders
 
 For YAML-backed collections, the file contains an array of entries. For Markdown-backed collections, each file is one entry and the filename acts as the stable identifier.
+
+Use stable readable IDs as described in `docs/id-guidelines.md`.
 
 ## Relationships
 

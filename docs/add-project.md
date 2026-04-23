@@ -8,6 +8,7 @@ Use this when someone asks an agent: "I want to add a project."
 Add this project to the Agentic Builders Collective website.
 
 Follow docs/add-project.md.
+Follow docs/id-guidelines.md for the filename/project anchor.
 Create one new Markdown file in src/content/projects/.
 Use a kebab-case filename because it becomes the project anchor.
 Use personId for listed makers, or name for external makers.
@@ -55,4 +56,5 @@ Short write-up here.
 
 - `personId` must match an entry in `members` or `organisers`; otherwise `pnpm build` fails.
 - Use `name` for makers who are not listed on the Community page.
+- Do not use random numeric suffixes. If the project title collides, add the maker or organisation to the filename.
 - Put screenshots under `public/images/showcase/` and reference them as `/images/showcase/file-name.png`.

@@ -8,6 +8,7 @@ Use this when someone asks an agent: "I want to add slides" or "I want to add a 
 Add this presentation to the Agentic Builders Collective website.
 
 Follow docs/add-presentation.md.
+Follow docs/id-guidelines.md for the id.
 Edit only src/content/presentations/presentations.yaml unless you need to add the linked person or event first.
 Use personId for listed members/organisers, or name for external speakers.
 Link the presentation to an existing eventId.
@@ -51,4 +52,5 @@ The `eventId` is the event filename without `.md`, for example `lorong-ai-mar-20
 - `personId` must match an entry in `members` or `organisers`; otherwise `pnpm build` fails.
 - Use `name` for speakers who are not listed on the Community page.
 - `eventId` must match an existing event; otherwise `pnpm build` fails.
+- Do not use random numeric suffixes. If the presentation title collides, add the event or year to the `id`.
 - Presentations appear on `/showcase` and are linked from their event.

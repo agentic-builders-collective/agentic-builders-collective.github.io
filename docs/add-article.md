@@ -8,6 +8,7 @@ Use this when someone asks an agent: "I want to add an article."
 Add this article to the Agentic Builders Collective website.
 
 Follow docs/add-article.md.
+Follow docs/id-guidelines.md for the id.
 Edit only src/content/articles/articles.yaml unless you need to add a linked person first.
 Use personId for listed authors, or name for external authors.
 Keep the change additive and do not reformat unrelated entries.
@@ -49,3 +50,4 @@ If the file contains `[]`, replace it with the first list entry. Otherwise appen
 - `personId` must match an entry in `members` or `organisers`; otherwise `pnpm build` fails.
 - Use `name` for authors who are not listed on the Community page.
 - Use full `https://` URLs.
+- Do not use random numeric suffixes. If the article title collides, add the publication or year to the `id`.

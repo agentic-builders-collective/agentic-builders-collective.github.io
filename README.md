@@ -30,6 +30,8 @@ Then point your agent at the matching guide:
 
 Each guide includes a copyable agent prompt, target file, example entry, and validation commands.
 
+For IDs and filenames, follow [`docs/id-guidelines.md`](./docs/id-guidelines.md): readable kebab-case first, deterministic suffixes for collisions, and no random numbers.
+
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the compact contributor overview.
 
 ## Stack

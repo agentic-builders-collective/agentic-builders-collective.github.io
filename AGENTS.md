@@ -18,6 +18,7 @@ This repo is an Astro site for the Agentic Builders Collective. Keep durable beh
   - Add an event/meetup/workshop/learning session: `docs/add-event.md`.
   - Add a project/showcase item: `docs/add-project.md`.
   - Add an article/link/guide: `docs/add-article.md`.
+- For any new `id`, filename, `personId`, or `eventId`, follow `docs/id-guidelines.md`.
 - Default to one file per Markdown entry; YAML collections stay in their existing array file.
 - Use YAML for `members`, `organisers`, `articles`, `presentations`, `sponsors`, and `faq`.
 - Use Markdown for `events` and `projects`.
