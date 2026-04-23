@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import SiteHead from "../components/SiteHead.astro";
 import { getCollection } from "astro:content";
+import { contributionLinks } from "../lib/contribution-links";
 
 const allEvents = await getCollection("events");
 const allFaq = await getCollection("faq");
@@ -526,7 +527,7 @@ const isCurrent = (href: string) => {
           </div>
         ) : (
           <div class="card">
-            <p>No upcoming events — <a href={whatsappUrl} target="_blank" rel="noopener" style="color:var(--accent);">join the WhatsApp chat</a> to stay updated.</p>
+            <p>No upcoming events — <a href={whatsappUrl} target="_blank" rel="noopener" style="color:var(--accent);">join the WhatsApp chat</a> to stay updated, or <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">add an event by submitting a pull request</a>.</p>
           </div>
         )}
       </section>

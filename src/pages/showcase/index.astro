@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { contributionLinks } from "../../lib/contribution-links";
 import { buildEventIndex, buildPeopleIndex, getLinkedEvent, resolvePersonRefs } from "../../lib/relations";
 
 const allProjects = await getCollection("projects");
@@ -95,7 +96,7 @@ const presentations = allPresentations
         ))}
       </div>
     ) : (
-      <p>No projects yet. Submit yours via PR!</p>
+      <p>No projects yet. <a class="muted-link" href={contributionLinks.project} target="_blank" rel="noopener">Add a project by submitting a pull request</a></p>
     )}
   </section>
 
@@ -158,7 +159,7 @@ const presentations = allPresentations
         ))}
       </div>
     ) : (
-      <p>No presentations yet.</p>
+      <p>No presentations yet. <a class="muted-link" href={contributionLinks.presentation} target="_blank" rel="noopener">Add slides by submitting a pull request</a></p>
     )}
   </section>
 </BaseLayout>

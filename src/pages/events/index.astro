@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import QRCode from "../../components/QRCode.astro";
 import { getCollection } from "astro:content";
+import { contributionLinks } from "../../lib/contribution-links";
 import { buildEventIndex, getLinkedEvent } from "../../lib/relations";
 
 const allEvents = await getCollection("events");
@@ -243,7 +244,7 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
     <h3 class="section-label">Upcoming</h3>
     {upcoming.length === 0 ? (
       <div class="card">
-        <p>No upcoming events — <a href="https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn" target="_blank" rel="noopener" style="color:var(--accent);">join the WhatsApp chat</a> for announcements.</p>
+        <p>No upcoming events — <a href="https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn" target="_blank" rel="noopener" style="color:var(--accent);">join the WhatsApp chat</a> for announcements, or <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">add an event by submitting a pull request</a>.</p>
       </div>
     ) : (
       <div class="list">
@@ -412,7 +413,7 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
   <section>
     <h3 class="section-label">Meetups</h3>
     {pastMeetups.length === 0 ? (
-      <p>No past events yet.</p>
+      <p>No past events yet. <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">Add an event by submitting a pull request</a></p>
     ) : (
       <div class="list">
         {pastMeetups.map((event) => (
@@ -498,7 +499,7 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
   <section>
     <h3 class="section-label">Learning</h3>
     {pastLearning.length === 0 ? (
-      <p>No learning sessions yet.</p>
+      <p>No learning sessions yet. <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">Add a learning event by submitting a pull request</a></p>
     ) : (
       <div class="list">
         {pastLearning.map((event) => (

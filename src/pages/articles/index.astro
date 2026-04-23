@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
+import { contributionLinks } from "../../lib/contribution-links";
 import { buildPeopleIndex, resolvePersonRefs } from "../../lib/relations";
 
 const allArticles = await getCollection("articles");
@@ -63,7 +64,7 @@ const articles = allArticles.sort(
         ))}
       </div>
     ) : (
-      <p>No articles yet. Submit one via PR!</p>
+      <p>No articles yet. <a class="muted-link" href={contributionLinks.article} target="_blank" rel="noopener">Add an article by submitting a pull request</a></p>
     )}
   </section>
 </BaseLayout>

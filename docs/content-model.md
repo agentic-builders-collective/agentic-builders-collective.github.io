@@ -2,6 +2,14 @@
 
 The site uses Astro content collections defined in `src/content.config.ts`.
 
+For task-specific contribution instructions, start with:
+
+- `docs/add-person.md`
+- `docs/add-presentation.md`
+- `docs/add-event.md`
+- `docs/add-project.md`
+- `docs/add-article.md`
+
 There are two patterns in the current repo:
 
 - Structured collections loaded from a single YAML file with Astro `file()` loaders

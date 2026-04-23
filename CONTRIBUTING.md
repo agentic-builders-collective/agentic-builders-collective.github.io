@@ -2,6 +2,16 @@
 
 This site uses GitHub as the CMS. Content changes should be small, readable pull requests that edit the relevant YAML or Markdown file.
 
+## Agent Guides
+
+Start with the guide matching the thing you want to add:
+
+- Add a person: [`docs/add-person.md`](./docs/add-person.md)
+- Add slides or a presentation: [`docs/add-presentation.md`](./docs/add-presentation.md)
+- Add an event: [`docs/add-event.md`](./docs/add-event.md)
+- Add a project: [`docs/add-project.md`](./docs/add-project.md)
+- Add an article: [`docs/add-article.md`](./docs/add-article.md)
+
 ## Add Your Community Profile
 
 Ask your agent to make one localised edit to `src/content/members/members.yaml`, then run validation before opening a pull request.

@@ -12,11 +12,18 @@ This repo is an Astro site for the Agentic Builders Collective. Keep durable beh
 
 ## Content conventions
 
+- For contributor requests, open the matching guide first:
+  - Add a person/profile/member: `docs/add-person.md`.
+  - Add slides/a presentation/a talk: `docs/add-presentation.md`.
+  - Add an event/meetup/workshop/learning session: `docs/add-event.md`.
+  - Add a project/showcase item: `docs/add-project.md`.
+  - Add an article/link/guide: `docs/add-article.md`.
 - Default to one file per Markdown entry; YAML collections stay in their existing array file.
 - Use YAML for `members`, `organisers`, `articles`, `presentations`, `sponsors`, and `faq`.
 - Use Markdown for `events` and `projects`.
 - Prefer kebab-case filenames or explicit `id` values because Astro uses them as stable ids.
 - Keep contributor changes additive and localised to a single collection where possible.
+- Use `personId` for listed members/organisers and `name` for external people; use `eventId` to link presentations to events.
 
 ## Visual design
 

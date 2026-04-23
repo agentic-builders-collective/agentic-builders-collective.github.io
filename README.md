@@ -10,19 +10,27 @@ This site intentionally uses **GitHub as its content management system**. All da
 
 > **Why?** Because we're the Agentic Builders Collective. Contributing to this site should itself be an exercise in using GitHub and AI coding tools — or learning how to with your agent's help.
 
-### How to contribute content
+### Ask your coding agent
 
-| Page | What to add | File to edit | How |
-|------|-------------|--------------|-----|
-| `/community` | Your profile | `src/content/members/members.yaml` | Add YAML entry, submit PR |
-| `/showcase` | Your project | `src/content/projects/*.md` | Create Markdown file, submit PR |
-| `/showcase` | Your presentation | `src/content/presentations/presentations.yaml` | Add YAML entry, submit PR |
-| `/articles` | Articles/guides | `src/content/articles/articles.yaml` | Add YAML entry, submit PR |
-| `/events` | Event details | `src/content/events/*.md` | Create Markdown file, submit PR |
+You should be able to start with a simple request:
 
-**Don't know Git?** Ask Claude/Codex/Cursor to help you: *"Help me submit a PR to add my profile to this YAML file."*
+```text
+I want to add a new person to the ABC website.
+```
 
-For a copyable agent prompt and profile template, see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+Then point your agent at the matching guide:
+
+| Request | Public page | Agent guide |
+|---------|-------------|-------------|
+| Add a person | `/community` | [`docs/add-person.md`](./docs/add-person.md) |
+| Add slides / a presentation | `/showcase` | [`docs/add-presentation.md`](./docs/add-presentation.md) |
+| Add an event | `/events` | [`docs/add-event.md`](./docs/add-event.md) |
+| Add a project | `/showcase` | [`docs/add-project.md`](./docs/add-project.md) |
+| Add an article | `/articles` | [`docs/add-article.md`](./docs/add-article.md) |
+
+Each guide includes a copyable agent prompt, target file, example entry, and validation commands.
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the compact contributor overview.
 
 ## Stack
 
@@ -69,6 +77,8 @@ This repo uses two content patterns:
 Contributors usually edit a YAML array file for short structured additions, or add one new Markdown file when the content needs body copy and richer formatting.
 
 See `docs/content-model.md` for collection-by-collection guidance and examples.
+
+For task-specific instructions, use the `docs/add-*.md` guides listed above.
 
 ## Available scripts
 

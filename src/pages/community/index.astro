@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
+import { contributionLinks } from "../../lib/contribution-links";
 import { buildEventIndex, buildPeopleIndex, getLinkedEvent, resolvePersonRefs } from "../../lib/relations";
 
 const allMembers = await getCollection("members");
@@ -217,7 +218,7 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
         ))}
       </div>
     ) : (
-      <p>No members listed yet.</p>
+      <p>No members listed yet. <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">Add a person by submitting a pull request</a></p>
     )}
   </section>
 </BaseLayout>
