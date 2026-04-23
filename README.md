@@ -90,6 +90,12 @@ pnpm build    # Build for production, including /logo-generator from the submodu
 pnpm check    # Type check with Astro
 ```
 
+If `logo-generator/` is empty in a fresh checkout, initialise the submodule before building:
+
+```sh
+git submodule update --init --recursive
+```
+
 ## Environments
 
 - Production: `https://agenticbuilders.sg/`
