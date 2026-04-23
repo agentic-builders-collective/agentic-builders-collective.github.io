@@ -86,7 +86,7 @@ For task-specific instructions, use the `docs/add-*.md` guides listed above.
 
 ```sh
 pnpm dev      # Start development server
-pnpm build    # Build for production
+pnpm build    # Build for production, including /logo-generator from the submodule
 pnpm check    # Type check with Astro
 ```
 
@@ -100,6 +100,7 @@ Deployment automation lives in [`.github/workflows/deploy.yml`](./.github/workfl
 ## Notes
 
 - `logo-generator/` is a Git submodule for logo and brand experiments
+- Production builds copy `logo-generator/` into `dist/logo-generator/`; deploy hosts must initialise submodules before running `pnpm build`
 - The site favours **PR-based contribution** over in-browser editing or user submissions
 - **Terminal/CLI aesthetic** — single font size (1rem), monospace fonts, minimal hierarchy via color/bold rather than size
 - Design principle: *"Make it look like a CLI"*
