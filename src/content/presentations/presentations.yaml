@@ -1,1 +1,14 @@
-[]
+- id: infrastructure-based-safety-for-your-claw
+  title: "Infrastructure-based Safety For Your 'Claw"
+  speakers:
+    - personId: gaurav-manek
+  eventId: 2026-04-23-abc-at-lorong-ai
+  url: https://github.com/gauravmm/2026-04-ABC-Infrastructure/releases/tag/v0.1.1
+  slidesUrl: https://github.com/gauravmm/2026-04-ABC-Infrastructure/releases/download/v0.1.1/slides.pdf
+  videoUrl: ""
+  summary: A walkthrough of infrastructure-based safety for agentic tools, covering connector threat models, MCP gateways, and practical design patterns.
+  tags:
+    - infrastructure
+    - safety
+    - agents
+    - mcp
