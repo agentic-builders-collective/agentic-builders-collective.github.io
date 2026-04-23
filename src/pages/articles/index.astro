@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const allArticles = await getCollection("articles");
+
+const articles = allArticles.sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+---
+
+<BaseLayout
+  title="articles"
+  description="Community-curated articles, guides, and external writing from the Agentic Builders Collective."
+>
+  <h1 class="page-title">Articles</h1>
+
+  <section>
+    <h3 class="section-label">Articles</h3>
+    {articles.length > 0 ? (
+      <div class="list">
+        {articles.map((article) => (
+          <article class="list-item">
+            <div class="list-item-header">
+              <a class="list-item-title" href={article.data.url} target="_blank" rel="noopener">
+                {article.data.title}
+              </a>
+              <div class="card-meta">
+                {article.data.author && <span>{article.data.author}</span>}
+                {article.data.publication && <span>{article.data.publication}</span>}
+                <span>{new Date(article.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short" })}</span>
+              </div>
+            </div>
+            {article.data.tags.length > 0 && (
+              <ul class="tag-list">
+                {article.data.tags.map((tag) => (
+                  <li class="tag">{tag}</li>
+                ))}
+              </ul>
+            )}
+          </article>
+        ))}
+      </div>
+    ) : (
+      <p>No articles yet. Submit one via PR!</p>
+    )}
+  </section>
+</BaseLayout>

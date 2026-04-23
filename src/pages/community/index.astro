@@ -2,17 +2,19 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
-const allPeople = await getCollection("people");
+const allMembers = await getCollection("members");
 const organisers = await getCollection("organisers");
-const allBlog = await getCollection("blog");
-
-const sortedBlog = allBlog.sort(
-  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
-);
 
 const orgNames = new Set(organisers.map((o) => o.data.name));
-const featuredPeople = allPeople.filter((p) => p.data.featured || orgNames.has(p.data.name));
-const otherPeople = allPeople.filter((p) => !p.data.featured && !orgNames.has(p.data.name));
+const members = allMembers
+  .filter((person) => !orgNames.has(person.data.name))
+  .sort((a, b) => {
+    if (a.data.featured !== b.data.featured) {
+      return a.data.featured ? -1 : 1;
+    }
+
+    return a.data.name.localeCompare(b.data.name);
+  });
 ---
 
 <BaseLayout
@@ -60,11 +62,36 @@ const otherPeople = allPeople.filter((p) => !p.data.featured && !orgNames.has(p.
 
   <section>
     <h3 class="section-label">Members</h3>
-    <p>No members listed yet.</p>
-  </section>
-
-  <section>
-    <h3 class="section-label">Blog / Updates</h3>
-    <p>No posts yet.</p>
+    {members.length > 0 ? (
+      <div class="grid columns-2">
+        {members.map((person) => (
+          <div class="person-card" id={person.data.id}>
+            <div class="person-card-header">
+              <span class="person-card-title">{person.data.name}</span>
+              {(person.data.company || person.data.featured) && (
+                <div class="person-card-meta">
+                  {person.data.company && <span>{person.data.company}</span>}
+                  {person.data.featured && <span>Featured</span>}
+                </div>
+              )}
+            </div>
+            {person.data.tagline && <p class="person-card-tagline">{person.data.tagline}</p>}
+            <div class="person-card-links">
+              {person.data.website && (
+                <a class="muted-link" href={person.data.website} target="_blank" rel="noopener">Website</a>
+              )}
+              {person.data.linkedin && (
+                <a class="muted-link" href={person.data.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+              )}
+              {person.data.github && (
+                <a class="muted-link" href={person.data.github} target="_blank" rel="noopener">GitHub</a>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p>No members listed yet.</p>
+    )}
   </section>
 </BaseLayout>

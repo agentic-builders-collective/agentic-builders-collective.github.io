@@ -2,16 +2,20 @@ import { defineCollection } from "astro:content";
 import { file, glob } from "astro/loaders";
 import { z } from "astro/zod";
 
-const people = defineCollection({
-  loader: file("src/content/people/people.yaml"),
+const kebabCaseId = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+const optionalUrl = z.union([z.url(), z.literal("")]).optional().default("");
+
+const members = defineCollection({
+  loader: file("src/content/members/members.yaml"),
   schema: z.object({
-    id: z.string().optional().default(""),
+    id: kebabCaseId,
     name: z.string(),
     aliases: z.array(z.string()).default([]),
     tagline: z.string().optional().default(""),
     company: z.string().optional().default(""),
-    linkedin: z.string().optional().default(""),
-    github: z.string().optional().default(""),
+    website: optionalUrl,
+    linkedin: optionalUrl,
+    github: optionalUrl,
     featured: z.boolean().default(false),
   }),
 });
@@ -54,8 +58,8 @@ const blog = defineCollection({
   }),
 });
 
-const showcase = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/showcase" }),
+const projects = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/projects" }),
   schema: z.object({
     title: z.string(),
     author: z.string().optional().default(""),
@@ -66,6 +70,22 @@ const showcase = defineCollection({
     featured: z.boolean().default(false),
     summary: z.string().optional().default(""),
     date: z.coerce.date(),
+  }),
+});
+
+const presentations = defineCollection({
+  loader: file("src/content/presentations/presentations.yaml"),
+  schema: z.object({
+    id: kebabCaseId,
+    title: z.string(),
+    speaker: z.string().optional().default(""),
+    event: z.string().optional().default(""),
+    date: z.coerce.date(),
+    url: optionalUrl,
+    slidesUrl: optionalUrl,
+    videoUrl: optionalUrl,
+    summary: z.string().optional().default(""),
+    tags: z.array(z.string()).default([]),
   }),
 });
 
@@ -114,18 +134,6 @@ const events = defineCollection({
   }),
 });
 
-const resources = defineCollection({
-  loader: file("src/content/resources/resources.yaml"),
-  schema: z.object({
-    title: z.string(),
-    url: z.string(),
-    category: z.string(),
-    contributor: z.string().optional().default(""),
-    date: z.coerce.date(),
-    description: z.string().optional().default(""),
-  }),
-});
-
 const articles = defineCollection({
   loader: file("src/content/articles/articles.yaml"),
   schema: z.object({
@@ -149,13 +157,13 @@ const faq = defineCollection({
 });
 
 export const collections = {
-  people,
+  members,
   organisers,
   sponsors,
   blog,
-  showcase,
+  projects,
+  presentations,
   events,
-  resources,
   articles,
   faq,
 };

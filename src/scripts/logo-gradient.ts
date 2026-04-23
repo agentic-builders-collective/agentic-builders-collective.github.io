@@ -128,7 +128,7 @@ function getInitialLogoGradientIndex(): number {
     "/about": "ocean",
     "/community": "mint",
     "/showcase": "gold",
-    "/resources": "forest",
+    "/articles": "forest",
     "/events": "nebula",
     "/contact": "coral"
   };

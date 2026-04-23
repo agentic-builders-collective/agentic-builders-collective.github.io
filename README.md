@@ -14,21 +14,23 @@ This site intentionally uses **GitHub as its content management system**. All da
 
 | Page | What to add | File to edit | How |
 |------|-------------|--------------|-----|
-| `/community` | Your profile | `src/content/people/people.yaml` | Add YAML entry, submit PR |
-| `/showcase` | Your project | `src/content/showcase/*.md` | Create Markdown file, submit PR |
-| `/resources` | Links/tools | `src/content/resources/resources.yaml` | Add YAML entry, submit PR |
+| `/community` | Your profile | `src/content/members/members.yaml` | Add YAML entry, submit PR |
+| `/showcase` | Your project | `src/content/projects/*.md` | Create Markdown file, submit PR |
+| `/showcase` | Your presentation | `src/content/presentations/presentations.yaml` | Add YAML entry, submit PR |
+| `/articles` | Articles/guides | `src/content/articles/articles.yaml` | Add YAML entry, submit PR |
 | `/events` | Event details | `src/content/events/*.md` | Create Markdown file, submit PR |
 | `/blog` | Blog posts | `src/content/blog/*.md` | Create Markdown file, submit PR |
-| `/articles` | External articles | `src/content/articles/articles.yaml` | Add YAML entry, submit PR |
 
 **Don't know Git?** Ask Claude/Codex/Cursor to help you: *"Help me submit a PR to add my profile to this YAML file."*
+
+For a copyable agent prompt and profile template, see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Stack
 
 - **Astro** — static site framework
 - **Astro Content Collections** — typed content and data loading
-- **Single YAML files** — for structured lists (people, organisers, resources, articles, sponsors, FAQ)
-- **Markdown collections** — for narrative content (events, blog, showcase)
+- **Single YAML files** — for structured lists (members, organisers, articles, presentations, sponsors, FAQ)
+- **Markdown collections** — for narrative content (events, blog, projects)
 - **No database** — by design (see Philosophy above)
 
 ## Getting started
@@ -53,10 +55,10 @@ This repo uses two content patterns:
 
 **Structured YAML files** (edit for short additions):
 
-- `src/content/people/people.yaml` — Community member profiles
-- `src/content/organisers/organisers.yaml` — Event organizers
-- `src/content/resources/resources.yaml` — Links and resources
-- `src/content/articles/articles.yaml` — External articles
+- `src/content/members/members.yaml` — Community member profiles
+- `src/content/organisers/organisers.yaml` — Event organisers
+- `src/content/articles/articles.yaml` — Articles, guides, and external writing
+- `src/content/presentations/presentations.yaml` — Talk, demo, and workshop presentation links
 - `src/content/sponsors/sponsors.yaml` — Sponsors
 - `src/content/faq/faq.yaml` — Homepage FAQ
 
@@ -64,7 +66,7 @@ This repo uses two content patterns:
 
 - `src/content/events/*.md` — Event listings
 - `src/content/blog/*.md` — Blog posts
-- `src/content/showcase/*.md` — Project showcases
+- `src/content/projects/*.md` — Project showcases
 
 Contributors usually edit a YAML array file for short structured additions, or add one new Markdown file when the content needs body copy and richer formatting.
 

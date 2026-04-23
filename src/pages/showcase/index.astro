@@ -2,18 +2,14 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const allProjects = await getCollection("showcase");
-const articles = await getCollection("articles");
+const allProjects = await getCollection("projects");
+const allPresentations = await getCollection("presentations");
 
-const featured = allProjects
-  .filter((p) => p.data.featured)
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+const projects = allProjects.sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
 
-const others = allProjects
-  .filter((p) => !p.data.featured)
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
-
-const sortedArticles = articles.sort(
+const presentations = allPresentations.sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 ---
@@ -24,11 +20,11 @@ const sortedArticles = articles.sort(
 >
   <h1 class="page-title">Showcase</h1>
 
-  {featured.length > 0 && (
-    <section>
-      <h3 class="section-label">Featured Projects</h3>
+  <section>
+    <h3 class="section-label">Projects</h3>
+    {projects.length > 0 ? (
       <div class="list">
-        {featured.map((project) => (
+        {projects.map((project) => (
           <article class="list-item">
             {project.data.screenshot && (
               <img
@@ -73,17 +69,56 @@ const sortedArticles = articles.sort(
           </article>
         ))}
       </div>
-    </section>
-  )}
-
-  <section>
-    <h3 class="section-label">All Projects</h3>
-    <p>No projects yet. Submit yours via PR!</p>
+    ) : (
+      <p>No projects yet. Submit yours via PR!</p>
+    )}
   </section>
 
   <section>
-    <h3 class="section-label">Articles by Members</h3>
-    <p>No articles yet.</p>
+    <h3 class="section-label">Presentations</h3>
+    {presentations.length > 0 ? (
+      <div class="list">
+        {presentations.map((presentation) => (
+          <article class="list-item" id={presentation.data.id}>
+            <div class="list-item-header">
+              <span class="list-item-title">
+                {presentation.data.url ? (
+                  <a href={presentation.data.url} target="_blank" rel="noopener">{presentation.data.title}</a>
+                ) : (
+                  presentation.data.title
+                )}
+              </span>
+              <div class="card-meta">
+                {presentation.data.speaker && <span>{presentation.data.speaker}</span>}
+                {presentation.data.event && <span>{presentation.data.event}</span>}
+                <span>{new Date(presentation.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short" })}</span>
+              </div>
+            </div>
+            {presentation.data.summary && <p>{presentation.data.summary}</p>}
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              {presentation.data.url && (
+                <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
+              )}
+              {presentation.data.slidesUrl && (
+                <a class="muted-link" href={presentation.data.slidesUrl} target="_blank" rel="noopener">Slides</a>
+              )}
+              {presentation.data.videoUrl && (
+                <a class="muted-link" href={presentation.data.videoUrl} target="_blank" rel="noopener">Video</a>
+              )}
+            </div>
+            {presentation.data.tags.length > 0 && (
+              <ul class="tag-list">
+                {presentation.data.tags.map((tag) => (
+                  <li class="tag">{tag}</li>
+                ))}
+              </ul>
+            )}
+          </article>
+        ))}
+      </div>
+    ) : (
+      <p>No presentations yet.</p>
+    )}
   </section>
 </BaseLayout>
 

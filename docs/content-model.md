@@ -11,11 +11,11 @@ For YAML-backed collections, the file contains an array of entries. For Markdown
 
 ## Collections
 
-### `people`
+### `members`
 
-File: `src/content/people/people.yaml`
+File: `src/content/members/members.yaml`
 
-Use YAML when the entry is mostly structured profile data. Keep entries in the array compact and reviewable.
+Use YAML for community member profiles. Keep entries in the array compact and reviewable.
 
 ```yaml
 - id: jane-doe
@@ -24,6 +24,7 @@ Use YAML when the entry is mostly structured profile data. Keep entries in the a
     - JD
   tagline: Building internal agent systems for operations teams.
   company: Example Labs
+  website: https://example.com
   linkedin: https://linkedin.com/in/janedoe
   github: https://github.com/janedoe
   featured: false
@@ -51,26 +52,11 @@ Use YAML for organiser profiles that appear on site pages.
   photo: /images/people/jane.jpg
 ```
 
-### `resources`
-
-File: `src/content/resources/resources.yaml`
-
-Use YAML for links, repositories, articles, videos, tools, and similar references.
-
-```yaml
-- title: Building Eval Loops
-  url: https://example.com/evals
-  category: guide
-  contributor: Jane Doe
-  date: 2026-03-12
-  description: Practical notes on setting up an eval loop for agent workflows.
-```
-
 ### `articles`
 
 File: `src/content/articles/articles.yaml`
 
-Use YAML for external coverage, interviews, or press-style links.
+Use YAML for community-curated articles, external coverage, interviews, guides, or press-style links.
 
 ```yaml
 - title: How Singapore's builders are using coding agents
@@ -154,7 +140,7 @@ postEventSurvey:
   opensAt: 2026-05-14
   qrEnabled: true
 
-# Optional: Summarized feedback results (update manually after event)
+# Optional: Summarised feedback results (update manually after event)
 feedback:
   rating: 4.5
   responses: 42
@@ -192,9 +178,9 @@ tags:
 Write the post here.
 ```
 
-### `showcase`
+### `projects`
 
-Directory: `src/content/showcase/`
+Directory: `src/content/projects/`
 
 Use Markdown for projects that need screenshots, summaries, and body copy.
 
@@ -214,6 +200,27 @@ date: 2026-03-24
 ---
 
 Short write-up here.
+```
+
+### `presentations`
+
+File: `src/content/presentations/presentations.yaml`
+
+Use YAML for talk, demo, and workshop presentation links.
+
+```yaml
+- id: evals-for-agents
+  title: Evals for Agents
+  speaker: Jane Doe
+  event: "#7 - Agentic Builders at Example Labs"
+  date: 2026-05-14
+  url: https://example.com/talk
+  slidesUrl: https://example.com/slides
+  videoUrl: https://example.com/video
+  summary: A practical walkthrough of eval loops for agentic coding.
+  tags:
+    - evals
+    - agents
 ```
 
 ## Naming guidance

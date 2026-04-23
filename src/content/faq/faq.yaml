@@ -17,7 +17,7 @@
 - id: "how-can-i-contribute-to-the-website"
   order: 5
   question: "How can I contribute to the website?"
-  answer: "Submit a pull request. You can add yourself to the People directory, submit a project to Showcase, add a resource link, or write a blog post. See CONTRIBUTING.md in the repo for details."
+  answer: "Submit a pull request. You can add yourself as a member, submit a project or presentation to Showcase, add an article, or write a blog post. See CONTRIBUTING.md in the repo for details."
 - id: "wasnt-this-called-claude-code-club"
   order: 6
   question: "Wasn't this called Claude Code Club?"
