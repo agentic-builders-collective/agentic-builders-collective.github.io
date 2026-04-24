@@ -29,7 +29,7 @@
   videoUrl: ""
   screenshot: /showcase/presentations/workforce-os.jpg
   summary: A file-based multi-agent operating system for a seven-person team. No database, no server — just markdown and git.
-  noteTeaser: Try prompt below yourself to begin.
+  noteTeaser: Design your own agentic workflow — try prompt below yourself to begin.
   links:
     - label: Starter prompt
       url: https://www.agenticbuilders.sg/showcase/presentations/workforce-os-starter-prompt.md
