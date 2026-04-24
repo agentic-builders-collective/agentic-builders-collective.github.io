@@ -1,0 +1,39 @@
+# Agentic Builders Collective (ABC) - llms.txt
+
+This file helps AI agents discover the most useful project context for this site.
+
+## Project
+- Name: Agentic Builders Collective website
+- Stack: Astro
+- Purpose: Community site for events, members, presentations, projects, and articles.
+
+## Preferred starting points
+- /README.md (project overview)
+- /CONTRIBUTING.md (how to contribute)
+- /docs/content-model.md (canonical content model)
+- /docs/id-guidelines.md (stable id and filename rules)
+
+## Task-specific contributor guides
+- Add person/member: /docs/add-person.md
+- Add presentation/talk/slides: /docs/add-presentation.md
+- Add event/workshop/meetup: /docs/add-event.md
+- Add project/showcase: /docs/add-project.md
+- Add article/link/guide: /docs/add-article.md
+
+## Content locations
+- Structured collections: /src/content/
+- Route pages: /src/pages/
+- Global styles: /src/styles/global.css
+
+## Authoring rules (summary)
+- Use YAML collections for: members, organisers, articles, presentations, sponsors, faq.
+- Use Markdown for: events and projects.
+- Event filenames follow: YYYY-MM-DD-name.md (filename is eventId).
+- Prefer kebab-case ids and filenames for stable references.
+
+## Notes for agents
+- Keep changes localized and additive where possible.
+- When adding linked entities, use personId/eventId relationships where available.
+- Do not make visual/style changes unless explicitly requested.
+
+Last updated: 2026-04-24
