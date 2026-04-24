@@ -440,7 +440,6 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
   .link-note-popover {
     background: var(--bg);
     border: 1px solid var(--line);
-    bottom: calc(100% + 8px);
     color: var(--fg);
     display: none;
     font-size: 0.85rem;
@@ -449,6 +448,7 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     max-width: min(52ch, 90vw);
     padding: 14px 16px;
     position: absolute;
+    top: calc(100% + 8px);
     width: max-content;
     z-index: 10;
   }
