@@ -16,12 +16,22 @@ const projects = allProjects.sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 
-const presentations = allPresentations
-  .map((presentation) => ({
-    presentation,
-    event: getLinkedEvent(presentation.data.eventId, eventsById, `presentation "${presentation.data.id}"`),
-  }))
-  .sort((a, b) => new Date(b.event.data.date).getTime() - new Date(a.event.data.date).getTime());
+type PresentationEntry = (typeof allPresentations)[number];
+
+const presentationsByEvent = new Map<string, { event: ReturnType<typeof getLinkedEvent>; presentations: PresentationEntry[] }>();
+for (const presentation of allPresentations) {
+  const event = getLinkedEvent(presentation.data.eventId, eventsById, `presentation "${presentation.data.id}"`);
+  const bucket = presentationsByEvent.get(event.id);
+  if (bucket) {
+    bucket.presentations.push(presentation);
+  } else {
+    presentationsByEvent.set(event.id, { event, presentations: [presentation] });
+  }
+}
+
+const eventGroups = Array.from(presentationsByEvent.values()).sort(
+  (a, b) => new Date(b.event.data.date).getTime() - new Date(a.event.data.date).getTime()
+);
 ---
 
 <BaseLayout
@@ -29,6 +39,88 @@ const presentations = allPresentations
   description="Browse projects, demos, and member-built work from the Agentic Builders Collective community."
 >
   <h1 class="page-title">Showcase</h1>
+
+  <section>
+    <h3 class="section-label">Presentations</h3>
+    {eventGroups.length > 0 ? (
+      <div class="event-groups">
+        {eventGroups.map(({ event, presentations }) => (
+          <section class="event-group">
+            <header class="event-group-header">
+              <h4 class="event-group-title">
+                <a href={`/events/#${event.id}`}>{event.data.title.replace(/^#\d+\s*[-–—]\s*/, "")}</a>
+              </h4>
+              <span class="event-group-date">
+                {new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}
+              </span>
+            </header>
+            <div class="list presentation-list">
+              {presentations.map((presentation) => {
+                const speakers = resolvePersonRefs(
+                  presentation.data.speakers,
+                  peopleById,
+                  `presentation "${presentation.data.id}" speakers`,
+                );
+                return (
+                  <article class="list-item presentation-card" id={presentation.data.id}>
+                    {speakers.length > 0 && (
+                      <span class="presentation-speaker">
+                        {speakers.map((speaker, index) => (
+                          <>
+                            {speaker.href ? (
+                              <a href={speaker.href}>{speaker.name}</a>
+                            ) : (
+                              speaker.name
+                            )}
+                            {index < speakers.length - 1 && ", "}
+                          </>
+                        ))}
+                      </span>
+                    )}
+                    {presentation.data.screenshot && (
+                      <img
+                        src={presentation.data.screenshot}
+                        alt={`${presentation.data.title} — first slide`}
+                        loading="lazy"
+                        decoding="async"
+                        width="800"
+                        height="450"
+                        class="showcase-image"
+                      />
+                    )}
+                    <span class="presentation-title">
+                      {presentation.data.url ? (
+                        <a href={presentation.data.url} target="_blank" rel="noopener">{presentation.data.title}</a>
+                      ) : (
+                        presentation.data.title
+                      )}
+                    </span>
+                    {presentation.data.summary && <p>{presentation.data.summary}</p>}
+                    <div class="presentation-links">
+                      {presentation.data.slidesUrl && (
+                        <a class="muted-link" href={presentation.data.slidesUrl} target="_blank" rel="noopener">Slides</a>
+                      )}
+                      {presentation.data.videoUrl && (
+                        <a class="muted-link" href={presentation.data.videoUrl} target="_blank" rel="noopener">Video</a>
+                      )}
+                      {presentation.data.url && presentation.data.url !== presentation.data.slidesUrl && (
+                        <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
+                      )}
+                      {presentation.data.links.map((link) => (
+                        <a class="muted-link" href={link.url} target="_blank" rel="noopener">{link.label}</a>
+                      ))}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </div>
+    ) : (
+      <p>No presentations yet. <a class="muted-link" href={contributionLinks.presentation} target="_blank" rel="noopener">Add slides by submitting a pull request</a></p>
+    )}
+  </section>
 
   <section>
     <h3 class="section-label">Projects</h3>
@@ -99,69 +191,6 @@ const presentations = allPresentations
       <p>No projects yet. <a class="muted-link" href={contributionLinks.project} target="_blank" rel="noopener">Add a project by submitting a pull request</a></p>
     )}
   </section>
-
-  <section>
-    <h3 class="section-label">Presentations</h3>
-    {presentations.length > 0 ? (
-      <div class="list presentation-list">
-        {presentations.map(({ presentation, event }) => (
-          <article class="list-item" id={presentation.data.id}>
-            <div class="list-item-header">
-              <span class="list-item-title">
-                {presentation.data.url ? (
-                  <a href={presentation.data.url} target="_blank" rel="noopener">{presentation.data.title}</a>
-                ) : (
-                  presentation.data.title
-                )}
-              </span>
-              <div class="card-meta">
-                {(() => {
-                  const speakers = resolvePersonRefs(presentation.data.speakers, peopleById, `presentation "${presentation.data.id}" speakers`);
-                  return speakers.length > 0 && (
-                    <span>
-                      {speakers.map((speaker, index) => (
-                        <>
-                          {speaker.href ? (
-                            <a href={speaker.href}>{speaker.name}</a>
-                          ) : (
-                            speaker.name
-                          )}
-                          {index < speakers.length - 1 && ", "}
-                        </>
-                      ))}
-                    </span>
-                  );
-                })()}
-                <span><a class="presentation-event-link" href={`/events/#${event.id}`}>{event.data.title}</a></span>
-                <span>{new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short" })}</span>
-              </div>
-            </div>
-            {presentation.data.summary && <p>{presentation.data.summary}</p>}
-            <div style="display:flex;gap:12px;flex-wrap:wrap;">
-              {presentation.data.url && (
-                <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
-              )}
-              {presentation.data.slidesUrl && (
-                <a class="muted-link" href={presentation.data.slidesUrl} target="_blank" rel="noopener">Slides</a>
-              )}
-              {presentation.data.videoUrl && (
-                <a class="muted-link" href={presentation.data.videoUrl} target="_blank" rel="noopener">Video</a>
-              )}
-            </div>
-            {presentation.data.tags.length > 0 && (
-              <ul class="tag-list">
-                {presentation.data.tags.map((tag) => (
-                  <li class="tag">{tag}</li>
-                ))}
-              </ul>
-            )}
-          </article>
-        ))}
-      </div>
-    ) : (
-      <p>No presentations yet. <a class="muted-link" href={contributionLinks.presentation} target="_blank" rel="noopener">Add slides by submitting a pull request</a></p>
-    )}
-  </section>
 </BaseLayout>
 
 <style>
@@ -173,16 +202,129 @@ const presentations = allPresentations
     width: 100%;
   }
 
-  .presentation-list a {
+  .presentation-card .showcase-image {
+    align-self: start;
+    aspect-ratio: 16 / 9;
+    background: #0a0a0a;
+    display: block;
+    height: auto;
+    justify-self: stretch;
+    max-width: 100%;
+    object-fit: contain;
+    width: 100%;
+  }
+
+  .event-groups {
+    display: grid;
+    gap: 40px;
+  }
+
+  .event-group {
+    display: grid;
+    gap: 16px;
+  }
+
+  .event-group .presentation-list {
+    display: grid;
+    gap: 12px 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: auto;
+  }
+
+  .presentation-card {
+    display: grid;
+    gap: 12px;
+    grid-row: span 5;
+    grid-template-rows: subgrid;
+    padding: 14px 16px;
+  }
+
+  @media (max-width: 720px) {
+    .event-group .presentation-list {
+      grid-template-columns: 1fr;
+    }
+
+    .presentation-card {
+      grid-row: auto;
+      grid-template-rows: auto;
+    }
+  }
+
+  .presentation-links {
+    align-self: end;
+  }
+
+  .event-group-header {
+    align-items: baseline;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    padding-bottom: 8px;
+  }
+
+  .event-group-title {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .event-group-title a {
+    color: inherit;
     text-decoration: none;
   }
 
-  .presentation-list .presentation-event-link {
-    text-decoration: underline;
+  .event-group-title a:hover,
+  .event-group-title a:focus-visible {
+    color: var(--accent);
   }
 
-  .presentation-list .muted-link:hover,
-  .presentation-list .muted-link:focus-visible {
+  .event-group-date {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .presentation-speaker {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .presentation-speaker a {
+    color: inherit;
     text-decoration: none;
+  }
+
+  .presentation-speaker a:hover,
+  .presentation-speaker a:focus-visible {
+    color: var(--accent);
+  }
+
+  .presentation-title {
+    color: var(--muted);
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .presentation-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .presentation-title a:hover,
+  .presentation-title a:focus-visible {
+    color: var(--accent);
+  }
+
+  .presentation-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
   }
 </style>
