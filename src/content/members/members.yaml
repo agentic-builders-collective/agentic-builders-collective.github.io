@@ -17,3 +17,14 @@
   linkedin: https://www.linkedin.com/in/shiyankoh
   github: https://github.com/shiyankoh
   featured: false
+
+- id: boonkgim
+  name: Khur Boon Kgim
+  aliases:
+    - Boon Kgim
+  tagline: Founder at nanogent.ai. Dad at learnparrot.ai. Building AI agents for businesses.
+  company: Nanogent, Learnparrot
+  website: https://boonkgim.com
+  linkedin: https://www.linkedin.com/in/boonkgim
+  github: https://github.com/boonkgim
+  featured: false
