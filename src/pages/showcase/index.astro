@@ -77,17 +77,25 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                         ))}
                       </span>
                     )}
-                    {presentation.data.screenshot && (
-                      <img
-                        src={presentation.data.screenshot}
-                        alt={`${presentation.data.title} — first slide`}
-                        loading="lazy"
-                        decoding="async"
-                        width="800"
-                        height="450"
-                        class="showcase-image"
-                      />
-                    )}
+                    {presentation.data.screenshot && (() => {
+                      const slideHref = presentation.data.slidesUrl || presentation.data.url || "";
+                      const img = (
+                        <img
+                          src={presentation.data.screenshot}
+                          alt={`${presentation.data.title} — first slide`}
+                          loading="lazy"
+                          decoding="async"
+                          width="800"
+                          height="450"
+                          class="showcase-image"
+                        />
+                      );
+                      return slideHref ? (
+                        <a class="showcase-image-link" href={slideHref} target="_blank" rel="noopener" aria-label={`${presentation.data.title} — open slides`}>
+                          {img}
+                        </a>
+                      ) : img;
+                    })()}
                     <span class="presentation-title">
                       {presentation.data.url ? (
                         <a href={presentation.data.url} target="_blank" rel="noopener">{presentation.data.title}</a>
@@ -95,9 +103,10 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                         presentation.data.title
                       )}
                     </span>
-                    {presentation.data.summary && <p>{presentation.data.summary}</p>}
+                    {presentation.data.summary && <p class="presentation-summary">{presentation.data.summary}</p>}
+                    <span class="presentation-note-teaser">{presentation.data.noteTeaser}</span>
                     <div class="presentation-links-block">
-                      <span class="presentation-links-label">Follow-ups</span>
+                      <span class="presentation-links-label">Links</span>
                       <div class="presentation-links">
                         {presentation.data.slidesUrl && (
                           <a class="muted-link" href={presentation.data.slidesUrl} target="_blank" rel="noopener">Slides</a>
@@ -254,7 +263,7 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
   .presentation-card {
     display: grid;
     gap: 12px;
-    grid-row: span 5;
+    grid-row: span 6;
     grid-template-rows: subgrid;
     padding: 14px 16px;
   }
@@ -270,8 +279,30 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     }
   }
 
-  .presentation-links {
-    align-self: end;
+  .showcase-image-link {
+    align-self: start;
+    display: block;
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .showcase-image-link .showcase-image {
+    display: block;
+    width: 100%;
+  }
+
+  .presentation-note-teaser {
+    color: var(--muted);
+    font-family: var(--font-serif);
+    font-size: 0.85rem;
+    font-style: italic;
+    line-height: 1.4;
+    min-height: 0;
+  }
+
+  .presentation-note-teaser:empty {
+    display: block;
+    min-height: 0;
   }
 
   .event-group-header {
@@ -343,7 +374,7 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
   }
 
   .presentation-links-block {
-    align-self: end;
+    align-self: start;
     display: grid;
     gap: 6px;
   }
