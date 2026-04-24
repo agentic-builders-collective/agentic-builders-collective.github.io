@@ -103,7 +103,7 @@ const presentations = allPresentations
   <section>
     <h3 class="section-label">Presentations</h3>
     {presentations.length > 0 ? (
-      <div class="list">
+      <div class="list presentation-list">
         {presentations.map(({ presentation, event }) => (
           <article class="list-item" id={presentation.data.id}>
             <div class="list-item-header">
@@ -132,7 +132,7 @@ const presentations = allPresentations
                     </span>
                   );
                 })()}
-                <span><a href={`/events/#${event.id}`}>{event.data.title}</a></span>
+                <span><a class="presentation-event-link" href={`/events/#${event.id}`}>{event.data.title}</a></span>
                 <span>{new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short" })}</span>
               </div>
             </div>
@@ -171,5 +171,18 @@ const presentations = allPresentations
     display: block;
     object-fit: cover;
     width: 100%;
+  }
+
+  .presentation-list a {
+    text-decoration: none;
+  }
+
+  .presentation-list .presentation-event-link {
+    text-decoration: underline;
+  }
+
+  .presentation-list .muted-link:hover,
+  .presentation-list .muted-link:focus-visible {
+    text-decoration: none;
   }
 </style>
