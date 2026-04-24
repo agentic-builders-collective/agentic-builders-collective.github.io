@@ -14,10 +14,11 @@ const peopleById = buildPeopleIndex([...organisers, ...allMembers]);
 const eventsById = buildEventIndex(allEvents);
 
 const orgNames = new Set(organisers.map((o) => o.data.name));
+const getAddedAtTime = (value: Date | undefined) => value?.getTime() ?? 0;
 const members = allMembers
   .filter((person) => !orgNames.has(person.data.name))
   .sort((a, b) => {
-    const addedAtDelta = a.data.addedAt.getTime() - b.data.addedAt.getTime();
+    const addedAtDelta = getAddedAtTime(a.data.addedAt) - getAddedAtTime(b.data.addedAt);
     if (addedAtDelta !== 0) {
       return addedAtDelta;
     }
