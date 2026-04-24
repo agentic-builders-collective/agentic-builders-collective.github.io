@@ -53,35 +53,12 @@ const past = allEvents
 
 const pastMeetups = past.filter((event) => event.data.kind !== "learning");
 const pastLearning = past.filter((event) => event.data.kind === "learning");
-const eventsJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  name: "Agentic Builders Collective Events",
-  itemListElement: [...upcoming, ...past].map((event, index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    item: {
-      "@type": "Event",
-      name: event.data.title,
-      eventStatus: event.data.status === "upcoming" ? "https://schema.org/EventScheduled" : "https://schema.org/EventCompleted",
-      startDate: new Date(event.data.date).toISOString(),
-      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-      location: {
-        "@type": "Place",
-        name: event.data.venue || "Singapore",
-      },
-      url: `https://www.agenticbuilders.sg/events/#${event.id}`,
-      description: event.body,
-    },
-  })),
-};
 ---
 
 <BaseLayout
   title="events"
   description="See upcoming meetups, workshops, and past sessions from Agentic Builders Collective in Singapore."
 >
-  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(eventsJsonLd)} />
   <style>
     .events-muted-link::after {
       content: none;

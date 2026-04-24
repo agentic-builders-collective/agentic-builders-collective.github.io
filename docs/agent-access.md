@@ -1,6 +1,6 @@
-# Agent Access and Contribution Map
+# Agent Contribution Map
 
-This document is the canonical machine-readable contribution map for coding agents.
+This document maps common contribution tasks to the repository files coding agents should edit.
 
 ## Exact paths and schemas
 
@@ -29,14 +29,10 @@ This document is the canonical machine-readable contribution map for coding agen
 - Preserve stable IDs and references (`personId`, `eventId`).
 - Avoid global style changes unless explicitly requested.
 
-## Machine-readable access points
+## Public discovery
 
-- Sitemap: `/sitemap.xml`
-- LLM orientation: `/llms.txt`
-- Agent policy: `/agent-access/`
-- Events API: `/api/events.json`
-- Members API: `/api/members.json`
-- Showcase API: `/api/showcase.json`
-- FAQ API: `/api/faqs.json`
-- Upcoming events feed (JSON): `/feeds/events.json`
-- Upcoming events feed (ICS): `/feeds/events.ics`
+- Website: `https://www.agenticbuilders.sg/`
+- LLM orientation file: `https://www.agenticbuilders.sg/llms.txt`
+- Repository: `https://github.com/agentic-builders-collective/agentic-builders-collective.github.io`
+
+Repository paths in this document are not public website routes. Agents browsing the live site should use the GitHub repository links from `public/llms.txt` for source files and docs.
