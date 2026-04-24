@@ -37,6 +37,7 @@ This file helps AI agents discover the most useful public and repository context
 ## Authoring rules (summary)
 - Use YAML collections for: members, organisers, articles, presentations, sponsors, faq.
 - Use Markdown for: events and projects.
+- Member entries require addedAt as an ISO 8601 UTC timestamp and are sorted oldest first on the Community page.
 - Event filenames follow: YYYY-MM-DD-name.md (filename is eventId).
 - Prefer kebab-case ids and filenames for stable references.
 

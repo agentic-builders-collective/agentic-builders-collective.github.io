@@ -26,6 +26,7 @@ Add my profile to the Agentic Builders Collective website.
 Use `src/content/members/members.yaml`.
 Create a kebab-case `id` from my name.
 Use full `https://` URLs for links.
+Set `addedAt` to the current UTC ISO timestamp.
 Keep the change additive and do not reformat unrelated entries.
 Run `pnpm check` and `pnpm build`.
 
@@ -37,6 +38,7 @@ Profile:
 - Website:
 - LinkedIn:
 - GitHub:
+- Added at:
 ```
 
 Entry shape:
@@ -51,6 +53,7 @@ Entry shape:
   website: https://example.com
   linkedin: https://linkedin.com/in/janedoe
   github: https://github.com/janedoe
+  addedAt: "2026-03-24T12:00:00Z"
   featured: false
 ```
 
@@ -58,6 +61,7 @@ Required fields:
 
 - `name`
 - `id`
+- `addedAt`
 
 Optional fields:
 
@@ -70,6 +74,8 @@ Optional fields:
 - `featured`
 
 If the file currently contains `[]`, replace it with the first list entry. Otherwise, append a new list entry.
+
+`addedAt` controls Community page order, oldest first. Use an ISO 8601 UTC timestamp such as `"2026-03-24T12:00:00Z"`.
 
 ## Open A Pull Request Without Write Access
 

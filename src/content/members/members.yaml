@@ -6,6 +6,7 @@
   website: https://ocelli.vision
   linkedin: https://www.linkedin.com/in/gauravmanek/
   github: https://github.com/gauravmm
+  addedAt: "2026-04-23T11:36:35Z"
   featured: false
 
 - id: shiyan-koh
@@ -16,6 +17,7 @@
   website: https://www.hustlefund.vc
   linkedin: https://www.linkedin.com/in/shiyankoh
   github: https://github.com/shiyankoh
+  addedAt: "2026-04-23T12:06:46Z"
   featured: false
 
 - id: tian-lee
@@ -26,6 +28,7 @@
   website: ""
   linkedin: https://www.linkedin.com/in/leetianlee/
   github: ""
+  addedAt: "2026-04-24T00:45:24Z"
   featured: false
 
 - id: boonkgim
@@ -37,6 +40,7 @@
   website: https://boonkgim.com
   linkedin: https://www.linkedin.com/in/boonkgim
   github: https://github.com/boonkgim
+  addedAt: "2026-04-24T01:00:31Z"
   featured: false
 
 - id: mabel-loh
@@ -47,4 +51,5 @@
   website: https://maibel.com
   linkedin: https://www.linkedin.com/in/mabelohyushan/
   github: https://github.com/mabesloh
+  addedAt: "2026-04-24T03:18:14Z"
   featured: false

@@ -24,6 +24,7 @@ const members = defineCollection({
     website: optionalUrl,
     linkedin: optionalUrl,
     github: optionalUrl,
+    addedAt: z.coerce.date(),
     featured: z.boolean().default(false),
   }),
 });

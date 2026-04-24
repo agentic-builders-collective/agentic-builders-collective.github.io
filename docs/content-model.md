@@ -39,6 +39,7 @@ If a `personId` or `eventId` points at a missing entry, the build fails.
 File: `src/content/members/members.yaml`
 
 Use YAML for community member profiles. Keep entries in the array compact and reviewable.
+The Community page orders members by `addedAt`, oldest first.
 
 ```yaml
 - id: jane-doe
@@ -50,6 +51,7 @@ Use YAML for community member profiles. Keep entries in the array compact and re
   website: https://example.com
   linkedin: https://linkedin.com/in/janedoe
   github: https://github.com/janedoe
+  addedAt: "2026-03-24T12:00:00Z"
   featured: false
 ```
 

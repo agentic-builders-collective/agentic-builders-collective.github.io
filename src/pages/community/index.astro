@@ -17,8 +17,9 @@ const orgNames = new Set(organisers.map((o) => o.data.name));
 const members = allMembers
   .filter((person) => !orgNames.has(person.data.name))
   .sort((a, b) => {
-    if (a.data.featured !== b.data.featured) {
-      return a.data.featured ? -1 : 1;
+    const addedAtDelta = a.data.addedAt.getTime() - b.data.addedAt.getTime();
+    if (addedAtDelta !== 0) {
+      return addedAtDelta;
     }
 
     return a.data.name.localeCompare(b.data.name);
