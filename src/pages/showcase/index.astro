@@ -22,12 +22,45 @@ const presentations = allPresentations
     event: getLinkedEvent(presentation.data.eventId, eventsById, `presentation "${presentation.data.id}"`),
   }))
   .sort((a, b) => new Date(b.event.data.date).getTime() - new Date(a.event.data.date).getTime());
+const showcaseJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Agentic Builders Collective Showcase",
+  itemListElement: [
+    ...projects.map((project, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "SoftwareSourceCode",
+        name: project.data.title,
+        description: project.data.summary || undefined,
+        url: project.data.url || `https://www.agenticbuilders.sg/showcase/#${project.id}`,
+        codeRepository: project.data.github || undefined,
+      },
+    })),
+    ...presentations.map(({ presentation, event }, index) => ({
+      "@type": "ListItem",
+      position: projects.length + index + 1,
+      item: {
+        "@type": "CreativeWork",
+        name: presentation.data.title,
+        description: presentation.data.summary || undefined,
+        url: presentation.data.url || `https://www.agenticbuilders.sg/showcase/#${presentation.data.id}`,
+        isPartOf: {
+          "@type": "Event",
+          name: event.data.title,
+        },
+      },
+    })),
+  ],
+};
 ---
 
 <BaseLayout
   title="showcase"
   description="Browse projects, demos, and member-built work from the Agentic Builders Collective community."
 >
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(showcaseJsonLd)} />
   <h1 class="page-title">Showcase</h1>
 
   <section>

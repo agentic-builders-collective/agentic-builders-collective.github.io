@@ -12,6 +12,7 @@ Start with the guide matching the thing you want to add:
 - Add an event: [`docs/add-event.md`](./docs/add-event.md)
 - Add a project: [`docs/add-project.md`](./docs/add-project.md)
 - Add an article: [`docs/add-article.md`](./docs/add-article.md)
+- Agent access map (exact paths + machine endpoints): [`docs/agent-access.md`](./docs/agent-access.md)
 
 ## Add Your Community Profile
 

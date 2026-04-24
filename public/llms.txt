@@ -12,6 +12,9 @@ This file helps AI agents discover the most useful project context for this site
 - /CONTRIBUTING.md (how to contribute)
 - /docs/content-model.md (canonical content model)
 - /docs/id-guidelines.md (stable id and filename rules)
+- /sitemap.xml (canonical route and endpoint discovery)
+- /agent-access/ (canonical policy for machine agents)
+- /feeds/events.json and /feeds/events.ics (upcoming events feeds)
 
 ## Task-specific contributor guides
 - Add person/member: /docs/add-person.md
@@ -35,5 +38,10 @@ This file helps AI agents discover the most useful project context for this site
 - Keep changes localized and additive where possible.
 - When adding linked entities, use personId/eventId relationships where available.
 - Do not make visual/style changes unless explicitly requested.
+- Prefer machine-readable endpoints when available:
+  - /api/events.json
+  - /api/members.json
+  - /api/showcase.json
+  - /api/faqs.json
 
 Last updated: 2026-04-24

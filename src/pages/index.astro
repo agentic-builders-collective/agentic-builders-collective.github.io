@@ -7,6 +7,18 @@ import { contributionLinks } from "../lib/contribution-links";
 const allEvents = await getCollection("events");
 const allFaq = await getCollection("faq");
 const homepageFaq = allFaq.sort((a, b) => a.data.order - b.data.order);
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: homepageFaq.map((item) => ({
+    "@type": "Question",
+    name: item.data.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.data.answer,
+    },
+  })),
+};
 
 const now = new Date();
 const upcomingEvent = allEvents
@@ -143,6 +155,7 @@ const isCurrent = (href: string) => {
       title="abc"
       description="Agentic Builders Collective is a Singapore community for developers and builders exploring agentic coding with Claude Code, Codex, Antigravity, meetups, shared projects, and articles."
     />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(faqJsonLd)} />
     <style>
       html { background: #020410; color: #d9e7ff; }
       body { margin: 0; min-height: 100vh; opacity: 0; }

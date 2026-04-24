@@ -112,12 +112,31 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
     return items.length > 0 ? [{ label, items }] : [];
   });
 };
+const membersJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Agentic Builders Collective Members",
+  itemListElement: [...organisers, ...members].map((person, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    item: {
+      "@type": "Person",
+      name: person.data.name,
+      url: `https://www.agenticbuilders.sg/community/#${person.data.id}`,
+      jobTitle: "role" in person.data ? person.data.role : "Member",
+      worksFor: person.data.company ? { "@type": "Organization", name: person.data.company } : undefined,
+      sameAs: [person.data.website, person.data.linkedin, person.data.github].filter(Boolean),
+      description: person.data.tagline || undefined,
+    },
+  })),
+};
 ---
 
 <BaseLayout
   title="community"
   description="Meet the organisers behind Agentic Builders Collective and explore the Singapore community building with AI coding tools."
 >
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(membersJsonLd)} />
   <h1 class="page-title">Community</h1>
 
   <section>
