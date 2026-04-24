@@ -3,7 +3,7 @@
   speakers:
     - personId: gaurav-manek
   eventId: 2026-04-23-abc-at-lorong-ai
-  url: https://github.com/gauravmm/2026-04-ABC-Infrastructure/releases/tag/v0.1.1
+  url: https://www.gauravmanek.com/lectures/2026/abc-infrastructure/
   slidesUrl: https://github.com/gauravmm/2026-04-ABC-Infrastructure/releases/download/v0.1.1/slides.pdf
   videoUrl: ""
   screenshot: /showcase/presentations/infra-safety.jpg
