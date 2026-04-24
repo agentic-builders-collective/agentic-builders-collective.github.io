@@ -30,9 +30,9 @@ This file helps AI agents discover the most useful public and repository context
 - Add article/link/guide: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/docs/add-article.md
 
 ## Repository content locations
-- Structured collections: src/content/
-- Route pages: src/pages/
-- Global styles: src/styles/global.css
+- Structured collections: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/tree/main/src/content
+- Route pages: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/tree/main/src/pages
+- Global styles: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/src/styles/global.css
 
 ## Authoring rules (summary)
 - Use YAML collections for: members, organisers, articles, presentations, sponsors, faq.
@@ -45,5 +45,3 @@ This file helps AI agents discover the most useful public and repository context
 - When adding linked entities, use personId/eventId relationships where available.
 - Do not make visual/style changes unless explicitly requested.
 - Contributors without write access should fork the repository, commit to their fork, and open a pull request back to the main repository.
-
-Last updated: 2026-04-24
