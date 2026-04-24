@@ -8,11 +8,6 @@
   videoUrl: ""
   screenshot: /showcase/presentations/infra-safety.jpg
   summary: A walkthrough of infrastructure-based safety for agentic tools, covering connector threat models, MCP gateways, and practical design patterns.
-  links:
-    - label: Haiku demo share
-      url: https://claude.ai/share/ffe03351-cd9e-412b-a4bb-15db4906a4a9
-    - label: Opus demo share
-      url: https://claude.ai/share/9452fdd1-06f9-4512-851b-415e10699409
   tags:
     - infrastructure
     - safety
