@@ -96,44 +96,39 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                       )}
                     </span>
                     {presentation.data.summary && <p>{presentation.data.summary}</p>}
-                    <div class="presentation-links">
-                      {presentation.data.slidesUrl && (
-                        <a class="muted-link" href={presentation.data.slidesUrl} target="_blank" rel="noopener">Slides</a>
-                      )}
-                      {presentation.data.videoUrl && (
-                        <a class="muted-link" href={presentation.data.videoUrl} target="_blank" rel="noopener">Video</a>
-                      )}
-                      {presentation.data.url && presentation.data.url !== presentation.data.slidesUrl && (
-                        <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
-                      )}
-                      {presentation.data.links.map((link, idx) => {
-                        const noteId = `${presentation.data.id}-note-${idx}`;
-                        const paragraphs = link.note
-                          ? link.note.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
-                          : [];
-                        return (
-                          <span class="link-with-note">
-                            <a class="muted-link" href={link.url} target="_blank" rel="noopener">{link.label}</a>
-                            {link.note && (
-                              <>
-                                <button
-                                  type="button"
-                                  class="link-note-trigger"
-                                  popovertarget={noteId}
-                                  aria-label={`About ${link.label}`}
-                                >
-                                  i
-                                </button>
-                                <div class="link-note-popover" popover="auto" id={noteId}>
-                                  {paragraphs.map((para) => (
-                                    <p>{para}</p>
-                                  ))}
-                                </div>
-                              </>
-                            )}
-                          </span>
-                        );
-                      })}
+                    <div class="presentation-links-block">
+                      <span class="presentation-links-label">Follow-ups</span>
+                      <div class="presentation-links">
+                        {presentation.data.slidesUrl && (
+                          <a class="muted-link" href={presentation.data.slidesUrl} target="_blank" rel="noopener">Slides</a>
+                        )}
+                        {presentation.data.videoUrl && (
+                          <a class="muted-link" href={presentation.data.videoUrl} target="_blank" rel="noopener">Video</a>
+                        )}
+                        {presentation.data.url && presentation.data.url !== presentation.data.slidesUrl && (
+                          <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
+                        )}
+                        {presentation.data.links.map((link) => {
+                          const paragraphs = link.note
+                            ? link.note.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+                            : [];
+                          return (
+                            <span class={`link-with-note${link.note ? " has-note" : ""}`} tabindex={link.note ? 0 : -1}>
+                              <a class="muted-link" href={link.url} target="_blank" rel="noopener">{link.label}</a>
+                              {link.note && (
+                                <>
+                                  <span class="link-note-trigger" aria-hidden="true">i</span>
+                                  <span class="link-note-popover" role="tooltip">
+                                    {paragraphs.map((para) => (
+                                      <span class="link-note-para">{para}</span>
+                                    ))}
+                                  </span>
+                                </>
+                              )}
+                            </span>
+                          );
+                        })}
+                      </div>
                     </div>
                   </article>
                 );
@@ -347,6 +342,21 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     color: var(--accent);
   }
 
+  .presentation-links-block {
+    align-self: end;
+    display: grid;
+    gap: 6px;
+  }
+
+  .presentation-links-label {
+    color: var(--muted);
+    font-family: var(--font-serif);
+    font-size: 0.72rem;
+    font-style: italic;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
   .presentation-links {
     display: flex;
     flex-wrap: wrap;
@@ -357,6 +367,12 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     align-items: center;
     display: inline-flex;
     gap: 6px;
+    position: relative;
+  }
+
+  .link-with-note.has-note {
+    cursor: help;
+    outline: none;
   }
 
   .link-note-trigger {
@@ -365,7 +381,6 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     border: 1px solid var(--line);
     border-radius: 999px;
     color: var(--muted);
-    cursor: pointer;
     display: inline-flex;
     font-family: var(--font-serif);
     font-size: 0.72rem;
@@ -378,8 +393,8 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     width: 18px;
   }
 
-  .link-note-trigger:hover,
-  .link-note-trigger:focus-visible {
+  .link-with-note.has-note:hover .link-note-trigger,
+  .link-with-note.has-note:focus-visible .link-note-trigger {
     border-color: var(--accent);
     color: var(--accent);
   }
@@ -387,21 +402,31 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
   .link-note-popover {
     background: var(--bg);
     border: 1px solid var(--line);
+    bottom: calc(100% + 8px);
     color: var(--fg);
-    margin: auto;
-    max-width: 52ch;
-    padding: 20px 24px;
+    display: none;
+    font-size: 0.85rem;
+    left: 0;
+    line-height: 1.5;
+    max-width: min(52ch, 90vw);
+    padding: 14px 16px;
+    position: absolute;
+    width: max-content;
+    z-index: 10;
   }
 
-  .link-note-popover p {
-    margin: 0 0 12px;
+  .link-with-note.has-note:hover .link-note-popover,
+  .link-with-note.has-note:focus-visible .link-note-popover,
+  .link-with-note.has-note:focus-within .link-note-popover {
+    display: block;
   }
 
-  .link-note-popover p:last-child {
+  .link-note-para {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .link-note-para:last-child {
     margin-bottom: 0;
-  }
-
-  .link-note-popover::backdrop {
-    background: rgba(0, 0, 0, 0.5);
   }
 </style>
