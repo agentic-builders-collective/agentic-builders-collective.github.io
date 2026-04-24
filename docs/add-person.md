@@ -2,6 +2,8 @@
 
 Use this when someone asks an agent: "I want to add a new person."
 
+For beginner setup, including Git, GitHub, Node.js, pnpm, terminal, and optional GitHub CLI, see `CONTRIBUTING.md`.
+
 ## Agent Prompt
 
 ```text

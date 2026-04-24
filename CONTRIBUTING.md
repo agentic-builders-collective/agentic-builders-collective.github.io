@@ -14,6 +14,21 @@ Start with the guide matching the thing you want to add:
 - Add an article: [`docs/add-article.md`](./docs/add-article.md)
 - Agent contribution map (exact paths for coding agents): [`docs/agent-access.md`](./docs/agent-access.md)
 
+## Beginner Setup
+
+You need:
+
+- A GitHub account.
+- Git installed locally.
+- A terminal.
+- Node.js 22.12.0 or newer.
+- pnpm 10.24.0 or newer.
+- An agentic coding tool such as Codex, Claude Code, Cursor, or Windsurf.
+
+Git is enough for cloning, branching, committing, and pushing. Use the GitHub website to fork the repository and open the pull request.
+
+GitHub CLI (`gh`) is optional. Install it if you want your agent to create forks or pull requests from the terminal, but beginners can use the browser for those steps.
+
 ## Add Your Community Profile
 
 Ask your agent to make one localised edit to `src/content/members/members.yaml`, then run validation before opening a pull request.
@@ -87,6 +102,8 @@ You do not need write access to contribute.
 4. Open a pull request back to `agentic-builders-collective/agentic-builders-collective.github.io`.
 
 On GitHub, use **Fork**, then after committing use **Contribute -> Open pull request**.
+
+If you prefer the terminal and have GitHub CLI installed, `gh repo fork` and `gh pr create` can do the GitHub-specific steps. Otherwise, use the browser.
 
 ## Linked People And Events
 
