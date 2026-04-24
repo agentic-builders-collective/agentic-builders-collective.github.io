@@ -39,7 +39,7 @@ If a `personId` or `eventId` points at a missing entry, the build fails.
 File: `src/content/members/members.yaml`
 
 Use YAML for community member profiles. Keep entries in the array compact and reviewable.
-The Community page orders members by `addedAt`, oldest first.
+The Community page orders members by `addedAt`, oldest first. This keeps the list first-come, first-shown for now; search and sorting controls can be added as the community grows.
 
 ```yaml
 - id: jane-doe

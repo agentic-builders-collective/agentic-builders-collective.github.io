@@ -75,7 +75,7 @@ Optional fields:
 
 If the file currently contains `[]`, replace it with the first list entry. Otherwise, append a new list entry.
 
-`addedAt` controls Community page order, oldest first. Use an ISO 8601 UTC timestamp such as `"2026-03-24T12:00:00Z"`.
+`addedAt` controls Community page order, oldest first. Use an ISO 8601 UTC timestamp such as `"2026-03-24T12:00:00Z"`. For now, this keeps the list first-come, first-shown; search and sorting controls can be added as the community grows.
 
 ## Open A Pull Request Without Write Access
 

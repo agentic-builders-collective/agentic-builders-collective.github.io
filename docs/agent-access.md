@@ -27,7 +27,7 @@ This document maps common contribution tasks to the repository files coding agen
 - Prefer one content type per PR.
 - Keep changes additive and localised.
 - Preserve stable IDs and references (`personId`, `eventId`).
-- For members, set `addedAt` to an ISO 8601 UTC timestamp; the Community page sorts members by that value, oldest first.
+- For members, set `addedAt` to an ISO 8601 UTC timestamp; the Community page sorts members by that value, oldest first. This keeps the list first-come, first-shown for now.
 - Avoid global style changes unless explicitly requested.
 
 ## Public discovery
