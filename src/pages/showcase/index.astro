@@ -103,8 +103,10 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                         presentation.data.title
                       )}
                     </span>
-                    {presentation.data.summary && <p class="presentation-summary">{presentation.data.summary}</p>}
-                    <span class="presentation-note-teaser">{presentation.data.noteTeaser}</span>
+                    <div class="presentation-summary-block">
+                      {presentation.data.summary && <p class="presentation-summary">{presentation.data.summary}</p>}
+                      {presentation.data.noteTeaser && <p class="presentation-note-teaser">{presentation.data.noteTeaser}</p>}
+                    </div>
                     <div class="presentation-links-block">
                       <span class="presentation-links-label">Links</span>
                       <div class="presentation-links">
@@ -263,9 +265,19 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
   .presentation-card {
     display: grid;
     gap: 12px;
-    grid-row: span 6;
+    grid-row: span 5;
     grid-template-rows: subgrid;
     padding: 14px 16px;
+  }
+
+  .presentation-summary-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+  }
+
+  .presentation-summary-block p {
+    margin: 0;
   }
 
   @media (max-width: 720px) {
@@ -293,8 +305,6 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
 
   .presentation-note-teaser {
     color: var(--muted);
-    line-height: 1.4;
-    min-height: 0;
   }
 
   .presentation-note-teaser:empty {
