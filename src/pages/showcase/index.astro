@@ -77,17 +77,25 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                         ))}
                       </span>
                     )}
-                    {presentation.data.screenshot && (
-                      <img
-                        src={presentation.data.screenshot}
-                        alt={`${presentation.data.title} — first slide`}
-                        loading="lazy"
-                        decoding="async"
-                        width="800"
-                        height="450"
-                        class="showcase-image"
-                      />
-                    )}
+                    {presentation.data.screenshot && (() => {
+                      const slideHref = presentation.data.slidesUrl || presentation.data.url || "";
+                      const img = (
+                        <img
+                          src={presentation.data.screenshot}
+                          alt={`${presentation.data.title} — first slide`}
+                          loading="lazy"
+                          decoding="async"
+                          width="800"
+                          height="450"
+                          class="showcase-image"
+                        />
+                      );
+                      return slideHref ? (
+                        <a class="showcase-image-link" href={slideHref} target="_blank" rel="noopener" aria-label={`${presentation.data.title} — open slides`}>
+                          {img}
+                        </a>
+                      ) : img;
+                    })()}
                     <span class="presentation-title">
                       {presentation.data.url ? (
                         <a href={presentation.data.url} target="_blank" rel="noopener">{presentation.data.title}</a>
@@ -95,20 +103,43 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                         presentation.data.title
                       )}
                     </span>
-                    {presentation.data.summary && <p>{presentation.data.summary}</p>}
-                    <div class="presentation-links">
-                      {presentation.data.slidesUrl && (
-                        <a class="muted-link" href={presentation.data.slidesUrl} target="_blank" rel="noopener">Slides</a>
-                      )}
-                      {presentation.data.videoUrl && (
-                        <a class="muted-link" href={presentation.data.videoUrl} target="_blank" rel="noopener">Video</a>
-                      )}
-                      {presentation.data.url && presentation.data.url !== presentation.data.slidesUrl && (
-                        <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
-                      )}
-                      {presentation.data.links.map((link) => (
-                        <a class="muted-link" href={link.url} target="_blank" rel="noopener">{link.label}</a>
-                      ))}
+                    <div class="presentation-summary-block">
+                      {presentation.data.summary && <p class="presentation-summary">{presentation.data.summary}</p>}
+                      {presentation.data.noteTeaser && <p class="presentation-note-teaser">{presentation.data.noteTeaser}</p>}
+                    </div>
+                    <div class="presentation-links-block">
+                      <span class="presentation-links-label">Links</span>
+                      <div class="presentation-links">
+                        {presentation.data.slidesUrl && (
+                          <a class="muted-link" href={presentation.data.slidesUrl} target="_blank" rel="noopener">Slides</a>
+                        )}
+                        {presentation.data.videoUrl && (
+                          <a class="muted-link" href={presentation.data.videoUrl} target="_blank" rel="noopener">Video</a>
+                        )}
+                        {presentation.data.url && presentation.data.url !== presentation.data.slidesUrl && (
+                          <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
+                        )}
+                        {presentation.data.links.map((link) => {
+                          const paragraphs = link.note
+                            ? link.note.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+                            : [];
+                          return (
+                            <span class={`link-with-note${link.note ? " has-note" : ""}`} tabindex={link.note ? 0 : -1}>
+                              <a class="muted-link" href={link.url} target="_blank" rel="noopener">{link.label}</a>
+                              {link.note && (
+                                <>
+                                  <span class="link-note-trigger" aria-hidden="true">i</span>
+                                  <span class="link-note-popover" role="tooltip">
+                                    {paragraphs.map((para) => (
+                                      <span class="link-note-para">{para}</span>
+                                    ))}
+                                  </span>
+                                </>
+                              )}
+                            </span>
+                          );
+                        })}
+                      </div>
                     </div>
                   </article>
                 );
@@ -239,6 +270,16 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     padding: 14px 16px;
   }
 
+  .presentation-summary-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+  }
+
+  .presentation-summary-block p {
+    margin: 0;
+  }
+
   @media (max-width: 720px) {
     .event-group .presentation-list {
       grid-template-columns: 1fr;
@@ -250,8 +291,25 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     }
   }
 
-  .presentation-links {
-    align-self: end;
+  .showcase-image-link {
+    align-self: start;
+    display: block;
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .showcase-image-link .showcase-image {
+    display: block;
+    width: 100%;
+  }
+
+  .presentation-note-teaser {
+    color: var(--muted);
+  }
+
+  .presentation-note-teaser:empty {
+    display: block;
+    min-height: 0;
   }
 
   .event-group-header {
@@ -322,9 +380,92 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     color: var(--accent);
   }
 
+  .presentation-links-block {
+    align-self: start;
+    display: grid;
+    gap: 6px;
+  }
+
+  .presentation-links-label {
+    color: var(--muted);
+    font-family: var(--font-serif);
+    font-size: 0.72rem;
+    font-style: italic;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
   .presentation-links {
     display: flex;
     flex-wrap: wrap;
     gap: 12px 18px;
+  }
+
+  .link-with-note {
+    align-items: center;
+    display: inline-flex;
+    gap: 6px;
+    position: relative;
+  }
+
+  .link-with-note.has-note {
+    cursor: help;
+    outline: none;
+  }
+
+  .link-note-trigger {
+    align-items: center;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    display: inline-flex;
+    font-family: var(--font-serif);
+    font-size: 0.72rem;
+    font-style: italic;
+    font-weight: 700;
+    height: 18px;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    width: 18px;
+  }
+
+  .link-with-note.has-note:hover .link-note-trigger,
+  .link-with-note.has-note:focus-visible .link-note-trigger {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .link-note-popover {
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    bottom: calc(100% + 8px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    color: var(--fg);
+    display: none;
+    font-size: 0.85rem;
+    left: 0;
+    line-height: 1.75;
+    max-width: min(52ch, 90vw);
+    padding: 14px 16px;
+    position: absolute;
+    width: max-content;
+    z-index: 10;
+  }
+
+  .link-with-note.has-note:hover .link-note-popover,
+  .link-with-note.has-note:focus-visible .link-note-popover,
+  .link-with-note.has-note:focus-within .link-note-popover {
+    display: block;
+  }
+
+  .link-note-para {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .link-note-para:last-child {
+    margin-bottom: 0;
   }
 </style>
