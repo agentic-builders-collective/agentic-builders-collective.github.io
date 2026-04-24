@@ -91,6 +91,7 @@ const presentations = defineCollection({
     links: z.array(z.object({
       label: z.string(),
       url: z.union([z.url(), z.string().regex(/^\/[^\s]*$/)]),
+      note: z.string().optional().default(""),
     })).default([]),
     tags: z.array(z.string()).default([]),
   }),

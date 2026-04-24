@@ -106,9 +106,34 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                       {presentation.data.url && presentation.data.url !== presentation.data.slidesUrl && (
                         <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
                       )}
-                      {presentation.data.links.map((link) => (
-                        <a class="muted-link" href={link.url} target="_blank" rel="noopener">{link.label}</a>
-                      ))}
+                      {presentation.data.links.map((link, idx) => {
+                        const noteId = `${presentation.data.id}-note-${idx}`;
+                        const paragraphs = link.note
+                          ? link.note.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+                          : [];
+                        return (
+                          <span class="link-with-note">
+                            <a class="muted-link" href={link.url} target="_blank" rel="noopener">{link.label}</a>
+                            {link.note && (
+                              <>
+                                <button
+                                  type="button"
+                                  class="link-note-trigger"
+                                  popovertarget={noteId}
+                                  aria-label={`About ${link.label}`}
+                                >
+                                  i
+                                </button>
+                                <div class="link-note-popover" popover="auto" id={noteId}>
+                                  {paragraphs.map((para) => (
+                                    <p>{para}</p>
+                                  ))}
+                                </div>
+                              </>
+                            )}
+                          </span>
+                        );
+                      })}
                     </div>
                   </article>
                 );
@@ -326,5 +351,57 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     display: flex;
     flex-wrap: wrap;
     gap: 12px 18px;
+  }
+
+  .link-with-note {
+    align-items: center;
+    display: inline-flex;
+    gap: 6px;
+  }
+
+  .link-note-trigger {
+    align-items: center;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--font-serif);
+    font-size: 0.72rem;
+    font-style: italic;
+    font-weight: 700;
+    height: 18px;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    width: 18px;
+  }
+
+  .link-note-trigger:hover,
+  .link-note-trigger:focus-visible {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .link-note-popover {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--fg);
+    margin: auto;
+    max-width: 52ch;
+    padding: 20px 24px;
+  }
+
+  .link-note-popover p {
+    margin: 0 0 12px;
+  }
+
+  .link-note-popover p:last-child {
+    margin-bottom: 0;
+  }
+
+  .link-note-popover::backdrop {
+    background: rgba(0, 0, 0, 0.5);
   }
 </style>
