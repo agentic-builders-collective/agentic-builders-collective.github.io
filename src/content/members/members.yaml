@@ -17,3 +17,13 @@
   linkedin: https://www.linkedin.com/in/shiyankoh
   github: https://github.com/shiyankoh
   featured: false
+
+- id: mabel-loh
+  name: Mabel Loh
+  aliases: []
+  tagline: Building emotionally intelligent AI companions for real-world behavior change.
+  company: Maibel
+  website: https://maibel.com
+  linkedin: https://www.linkedin.com/in/mabelohyushan/
+  github: https://github.com/mabesloh
+  featured: false
