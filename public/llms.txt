@@ -1,0 +1,47 @@
+# Agentic Builders Collective (ABC)
+
+This file helps AI agents discover the most useful public and repository context for this site.
+
+## Project
+- Name: Agentic Builders Collective website
+- Stack: Astro
+- Purpose: Community site for events, members, presentations, projects, and articles.
+
+## Public site
+- Website: https://www.agenticbuilders.sg/
+- Community: https://www.agenticbuilders.sg/community/
+- Showcase: https://www.agenticbuilders.sg/showcase/
+- Events: https://www.agenticbuilders.sg/events/
+- Articles: https://www.agenticbuilders.sg/articles/
+
+## Repository
+- Repository: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io
+- Project overview: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/README.md
+- Contribution guide: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/CONTRIBUTING.md
+- Content model: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/docs/content-model.md
+- ID and filename rules: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/docs/id-guidelines.md
+- Agent contribution map: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/docs/agent-access.md
+
+## Task-specific contributor guides
+- Add person/member: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/docs/add-person.md
+- Add presentation/talk/slides: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/docs/add-presentation.md
+- Add event/workshop/meetup: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/docs/add-event.md
+- Add project/showcase: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/docs/add-project.md
+- Add article/link/guide: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/docs/add-article.md
+
+## Repository content locations
+- Structured collections: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/tree/main/src/content
+- Route pages: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/tree/main/src/pages
+- Global styles: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/src/styles/global.css
+
+## Authoring rules (summary)
+- Use YAML collections for: members, organisers, articles, presentations, sponsors, faq.
+- Use Markdown for: events and projects.
+- Event filenames follow: YYYY-MM-DD-name.md (filename is eventId).
+- Prefer kebab-case ids and filenames for stable references.
+
+## Notes for agents
+- Keep changes localised and additive where possible.
+- When adding linked entities, use personId/eventId relationships where available.
+- Do not make visual/style changes unless explicitly requested.
+- Contributors without write access should fork the repository, commit to their fork, and open a pull request back to the main repository.
