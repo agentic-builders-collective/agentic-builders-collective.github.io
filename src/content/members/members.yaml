@@ -53,3 +53,15 @@
   github: https://github.com/mabesloh
   addedAt: "2026-04-24T03:18:14Z"
   featured: false
+
+- id: sample-person
+  name: Sample Person
+  aliases:
+    - Fakeo McFakesALot
+  tagline: "Bananas! I love Bananas!"
+  company: Fake Company
+  website: ""
+  linkedin: ""
+  github: ""
+  addedAt: "2026-04-24T04:43:04Z"
+  featured: false
