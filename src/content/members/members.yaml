@@ -53,3 +53,26 @@
   github: https://github.com/mabesloh
   addedAt: "2026-04-24T03:18:14Z"
   featured: false
+
+- id: gaurav-keerthi
+  name: Gaurav Keerthi
+  aliases:
+    - Gaurav K
+  tagline: CEO, Strongkeep. Building a file-based multi-agent operating system for small teams.
+  company: Strongkeep
+  website: https://strongkeep.com
+  linkedin: https://www.linkedin.com/in/gaurav-keerthi
+  github: ""
+  addedAt: "2026-04-24T06:44:56Z"
+  featured: false
+
+- id: darryl-wong
+  name: Darryl Wong
+  aliases: []
+  tagline: Runs Daisy Accountants and co-founded Nexius Labs, teaching SMEs to build with AI agents.
+  company: Daisy Accountants, Nexius Labs
+  website: ""
+  linkedin: https://www.linkedin.com/in/darrylwongdq
+  github: ""
+  addedAt: "2026-04-24T06:44:56Z"
+  featured: false

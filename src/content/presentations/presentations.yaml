@@ -6,9 +6,71 @@
   url: https://github.com/gauravmm/2026-04-ABC-Infrastructure/releases/tag/v0.1.1
   slidesUrl: https://github.com/gauravmm/2026-04-ABC-Infrastructure/releases/download/v0.1.1/slides.pdf
   videoUrl: ""
+  screenshot: /showcase/presentations/infra-safety.jpg
   summary: A walkthrough of infrastructure-based safety for agentic tools, covering connector threat models, MCP gateways, and practical design patterns.
+  links:
+    - label: Haiku demo share
+      url: https://claude.ai/share/ffe03351-cd9e-412b-a4bb-15db4906a4a9
+    - label: Opus demo share
+      url: https://claude.ai/share/9452fdd1-06f9-4512-851b-415e10699409
   tags:
     - infrastructure
     - safety
     - agents
     - mcp
+
+- id: workforce-os
+  title: "Workforce OS"
+  speakers:
+    - personId: gaurav-keerthi
+  eventId: 2026-04-23-abc-at-lorong-ai
+  url: ""
+  slidesUrl: /showcase/presentations/workforce-os.pdf
+  videoUrl: ""
+  screenshot: /showcase/presentations/workforce-os.jpg
+  summary: A file-based multi-agent operating system for a seven-person team. No database, no server — just markdown and git.
+  links:
+    - label: Starter prompt
+      url: https://www.agenticbuilders.sg/showcase/presentations/workforce-os-starter-prompt.md
+  tags:
+    - agents
+    - workflow
+
+- id: workflow-engineering-2
+  title: "The Lessons I Learned Coding 10+ Apps with Claude Code"
+  speakers:
+    - personId: boonkgim
+  eventId: 2026-04-23-abc-at-lorong-ai
+  url: https://work-eng-2.pages.dev/
+  slidesUrl: https://work-eng-2.pages.dev/
+  videoUrl: ""
+  screenshot: /showcase/presentations/workflow-engineering.png
+  summary: Two agentic patterns to fix poor instruction following — Generator + Evaluator and Thin Orchestrator + Specialized Workers — composed inside Claude Code skills.
+  links:
+    - label: Clean Code book rec
+      url: https://www.linkedin.com/posts/boonkgim_vibecoding-cleancode-activity-7391625299068788736-yOMs
+    - label: Working Effectively with Legacy Code book rec
+      url: https://www.linkedin.com/posts/boonkgim_vibecoding-legacycode-softwareengineering-share-7421426938944122880-yb_0
+    - label: DB design best practices for LLMs
+      url: https://www.linkedin.com/posts/boonkgim_database-design-best-practices-for-llms-activity-7431863844953579520-R46a
+    - label: 7 local LLMs interviewed for DB design
+      url: https://www.linkedin.com/posts/boonkgim_i-interviewed-7-local-llms-for-db-design-activity-7425395705776730112-MS8U
+  tags:
+    - claude-code
+    - skills
+    - workflow
+
+- id: codex-workflow
+  title: "Codex in the Wild"
+  speakers:
+    - personId: darryl-wong
+  eventId: 2026-04-23-abc-at-lorong-ai
+  url: https://canva.link/aeo5xtmprmw5jm0
+  slidesUrl: https://canva.link/aeo5xtmprmw5jm0
+  videoUrl: ""
+  screenshot: /showcase/presentations/codex-workflow.jpg
+  summary: How Nexius Labs uses Codex as the main driver for building and teaching SMEs to ship AI-assisted tools.
+  links: []
+  tags:
+    - codex
+    - workflow

@@ -4,6 +4,11 @@ import { z } from "astro/zod";
 
 const kebabCaseId = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 const optionalUrl = z.union([z.url(), z.literal("")]).optional().default("");
+const optionalUrlOrPath = z.union([
+  z.url(),
+  z.string().regex(/^\/[^\s]*$/, "Use a site-relative path starting with /"),
+  z.literal(""),
+]).optional().default("");
 const personRef = z.object({
   personId: kebabCaseId.optional(),
   name: z.string().optional(),
@@ -78,10 +83,15 @@ const presentations = defineCollection({
     title: z.string(),
     speakers: personRefs,
     eventId: kebabCaseId,
-    url: optionalUrl,
-    slidesUrl: optionalUrl,
-    videoUrl: optionalUrl,
+    url: optionalUrlOrPath,
+    slidesUrl: optionalUrlOrPath,
+    videoUrl: optionalUrlOrPath,
+    screenshot: z.string().optional().default(""),
     summary: z.string().optional().default(""),
+    links: z.array(z.object({
+      label: z.string(),
+      url: z.union([z.url(), z.string().regex(/^\/[^\s]*$/)]),
+    })).default([]),
     tags: z.array(z.string()).default([]),
   }),
 });
