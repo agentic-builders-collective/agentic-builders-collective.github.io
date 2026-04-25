@@ -40,6 +40,7 @@ This repo is an Astro site for the Agentic Builders Collective. Keep durable beh
   - `1rem` (15px) for **all** text including cards, body copy, links, headings, metadata, timestamps, code, everything
   - `13px` acceptable only for inline symbols/arrows (e.g., ▶ characters)
 - Box/card backgrounds use `--box-bg: rgba(30, 30, 40, 0.45)` — neutral grey with slight blue tint, 45% opacity
+- Use `src/components/TerminalNoteLink.astro` for link-attached notes/popovers. It codifies the terminal-style `[ℹ]` disclosure, `[×]` close control, dynamic close-corner placement, desktop popover, and mobile inline expansion.
 
 ## Style change policy
 

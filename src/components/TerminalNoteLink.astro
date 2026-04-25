@@ -1,0 +1,241 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  note?: string;
+}
+
+const { href, label, note = "" } = Astro.props;
+const paragraphs = note.split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean);
+const hasNote = paragraphs.length > 0;
+---
+
+<div class:list={["terminal-note-link", { "has-note": hasNote }]}>
+  <a class="muted-link" href={href} target="_blank" rel="noopener">{label}</a>
+  {hasNote && (
+    <details class="terminal-note-disclosure">
+      <summary class="terminal-note-trigger" aria-label={`Read note for ${label}`}>[ℹ]</summary>
+      <div class="terminal-note-popover">
+        <div class="terminal-note-content">
+          {paragraphs.map((paragraph) => (
+            <p class="terminal-note-para">{paragraph}</p>
+          ))}
+        </div>
+        <button class="terminal-note-close" type="button" data-terminal-note-close aria-label={`Close note for ${label}`}>[×]</button>
+      </div>
+    </details>
+  )}
+</div>
+
+<script>
+  let activeTerminalNoteDetails = document.createElement("details");
+
+  function updateTerminalNotePlacement() {
+    if (!(activeTerminalNoteDetails instanceof HTMLDetailsElement)) return;
+
+    const trigger = activeTerminalNoteDetails.querySelector(".terminal-note-trigger");
+    const popover = activeTerminalNoteDetails.querySelector(".terminal-note-popover");
+    if (!(trigger instanceof HTMLElement) || !(popover instanceof HTMLElement)) return;
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const popoverRect = popover.getBoundingClientRect();
+    const triggerX = triggerRect.left + triggerRect.width / 2;
+    const triggerY = triggerRect.top + triggerRect.height / 2;
+    const popoverX = popoverRect.left + popoverRect.width / 2;
+    const popoverY = popoverRect.top + popoverRect.height / 2;
+    const vertical = triggerY < popoverY ? "top" : "bottom";
+    const horizontal = triggerX < popoverX ? "left" : "right";
+
+    activeTerminalNoteDetails.dataset.closeCorner = `${vertical}-${horizontal}`;
+  }
+
+  const updateOpenTerminalNotes = () => {
+    document.querySelectorAll(".terminal-note-disclosure[open]").forEach((details) => {
+      if (details instanceof HTMLDetailsElement) {
+        activeTerminalNoteDetails = details;
+        updateTerminalNotePlacement();
+      }
+    });
+  };
+
+  document.addEventListener(
+    "toggle",
+    (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLDetailsElement) || !target.classList.contains("terminal-note-disclosure")) return;
+
+      if (target.open) {
+        activeTerminalNoteDetails = target;
+        requestAnimationFrame(updateTerminalNotePlacement);
+      } else {
+        delete target.dataset.closeCorner;
+      }
+    },
+    true,
+  );
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const closeButton = target.closest("[data-terminal-note-close]");
+    if (!closeButton) return;
+
+    closeButton.closest("details")?.removeAttribute("open");
+  });
+
+  window.addEventListener("resize", updateOpenTerminalNotes, { passive: true });
+</script>
+
+<style>
+  .terminal-note-link {
+    align-items: center;
+    display: inline-flex;
+    gap: 6px;
+    position: relative;
+  }
+
+  .terminal-note-disclosure {
+    display: inline-flex;
+    position: relative;
+  }
+
+  .terminal-note-trigger {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: var(--muted);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    justify-content: center;
+    line-height: 1.4;
+    list-style: none;
+    padding: 0 0 0 1ch;
+    white-space: nowrap;
+  }
+
+  .terminal-note-trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .terminal-note-trigger:hover,
+  .terminal-note-trigger:focus-visible,
+  .terminal-note-disclosure[open] .terminal-note-trigger {
+    color: var(--accent);
+    outline: none;
+    text-decoration: underline;
+  }
+
+  .terminal-note-popover {
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    bottom: calc(100% + 8px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    color: var(--fg);
+    display: none;
+    font-size: 1rem;
+    gap: 10px;
+    grid-template-areas:
+      "content"
+      "close";
+    left: auto;
+    line-height: 1.75;
+    max-width: min(52ch, 90vw);
+    padding: 14px 16px;
+    position: absolute;
+    right: 0;
+    width: max-content;
+    z-index: 10;
+  }
+
+  .terminal-note-disclosure[open] .terminal-note-popover {
+    display: grid;
+  }
+
+  .terminal-note-content {
+    grid-area: content;
+  }
+
+  .terminal-note-para {
+    color: var(--fg);
+    margin-bottom: 10px;
+  }
+
+  .terminal-note-para:last-child {
+    margin-bottom: 0;
+  }
+
+  .terminal-note-close {
+    align-self: end;
+    background: transparent;
+    border: 0;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    grid-area: close;
+    justify-self: end;
+    line-height: 1.4;
+    padding: 0;
+  }
+
+  .terminal-note-close:hover,
+  .terminal-note-close:focus-visible {
+    color: var(--accent);
+    outline: none;
+    text-decoration: underline;
+  }
+
+  .terminal-note-disclosure[data-close-corner="top-left"] .terminal-note-popover,
+  .terminal-note-disclosure[data-close-corner="top-right"] .terminal-note-popover {
+    grid-template-areas:
+      "close"
+      "content";
+  }
+
+  .terminal-note-disclosure[data-close-corner="top-left"] .terminal-note-close,
+  .terminal-note-disclosure[data-close-corner="bottom-left"] .terminal-note-close {
+    justify-self: start;
+  }
+
+  .terminal-note-disclosure[data-close-corner="top-right"] .terminal-note-close,
+  .terminal-note-disclosure[data-close-corner="bottom-right"] .terminal-note-close {
+    justify-self: end;
+  }
+
+  @media (max-width: 720px) {
+    .terminal-note-link {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .terminal-note-link:has(.terminal-note-disclosure[open]) {
+      width: 100%;
+    }
+
+    .terminal-note-disclosure {
+      display: inline-flex;
+      width: auto;
+    }
+
+    .terminal-note-disclosure[open] {
+      display: block;
+      width: 100%;
+    }
+
+    .terminal-note-popover {
+      bottom: auto;
+      box-shadow: none;
+      left: auto;
+      margin-top: 8px;
+      max-width: 100%;
+      position: static;
+      right: auto;
+      width: 100%;
+    }
+  }
+</style>

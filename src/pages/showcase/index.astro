@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TerminalNoteLink from "../../components/TerminalNoteLink.astro";
 import { contributionLinks } from "../../lib/contribution-links";
 import { buildEventIndex, buildPeopleIndex, getLinkedEvent, resolvePersonRefs } from "../../lib/relations";
 
@@ -122,26 +123,9 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                         {presentation.data.url && presentation.data.url !== presentation.data.slidesUrl && (
                           <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
                         )}
-                        {presentation.data.links.map((link) => {
-                          const paragraphs = link.note
-                            ? link.note.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
-                            : [];
-                          return (
-                            <span class={`link-with-note${link.note ? " has-note" : ""}`} tabindex={link.note ? 0 : -1}>
-                              <a class="muted-link" href={link.url} target="_blank" rel="noopener">{link.label}</a>
-                              {link.note && (
-                                <>
-                                  <span class="link-note-trigger" aria-hidden="true">i</span>
-                                  <span class="link-note-popover" role="tooltip">
-                                    {paragraphs.map((para) => (
-                                      <span class="link-note-para">{para}</span>
-                                    ))}
-                                  </span>
-                                </>
-                              )}
-                            </span>
-                          );
-                        })}
+                        {presentation.data.links.map((link) => (
+                          <TerminalNoteLink href={link.url} label={link.label} note={link.note} />
+                        ))}
                       </div>
                     </div>
                   </article>
@@ -405,73 +389,5 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     display: flex;
     flex-wrap: wrap;
     gap: 12px 18px;
-  }
-
-  .link-with-note {
-    align-items: center;
-    display: inline-flex;
-    gap: 6px;
-    position: relative;
-  }
-
-  .link-with-note.has-note {
-    cursor: help;
-    outline: none;
-  }
-
-  .link-note-trigger {
-    align-items: center;
-    background: transparent;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    color: var(--muted);
-    display: inline-flex;
-    font-family: var(--font-serif);
-    font-size: 0.72rem;
-    font-style: italic;
-    font-weight: 700;
-    height: 18px;
-    justify-content: center;
-    line-height: 1;
-    padding: 0;
-    width: 18px;
-  }
-
-  .link-with-note.has-note:hover .link-note-trigger,
-  .link-with-note.has-note:focus-visible .link-note-trigger {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .link-note-popover {
-    background: var(--bg);
-    border: 2px solid var(--accent);
-    bottom: calc(100% + 8px);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
-    color: var(--fg);
-    display: none;
-    font-size: 0.85rem;
-    left: 0;
-    line-height: 1.75;
-    max-width: min(52ch, 90vw);
-    padding: 14px 16px;
-    position: absolute;
-    width: max-content;
-    z-index: 10;
-  }
-
-  .link-with-note.has-note:hover .link-note-popover,
-  .link-with-note.has-note:focus-visible .link-note-popover,
-  .link-with-note.has-note:focus-within .link-note-popover {
-    display: block;
-  }
-
-  .link-note-para {
-    display: block;
-    margin-bottom: 10px;
-  }
-
-  .link-note-para:last-child {
-    margin-bottom: 0;
   }
 </style>
