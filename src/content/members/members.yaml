@@ -98,3 +98,14 @@
   github: ""
   addedAt: "2026-04-24T09:01:10Z"
   featured: false
+
+  - id: allan-ling
+  name: Allan Ling
+  aliases: []
+  tagline: Helping possibly-neurodivergent women professionals stop burning out by working with their wiring, not against it
+  company: Peaceful Audacity
+  website: https://allanling.com
+  linkedin: https://www.linkedin.com/in/allanling
+  github: https://github.com/kosmobao
+  addedAt: "2026-04-25T10:00:00Z"
+  featured: false
