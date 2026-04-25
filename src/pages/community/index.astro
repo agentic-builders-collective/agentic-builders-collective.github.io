@@ -176,6 +176,9 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
 
   <section>
     <h3 class="section-label">Members</h3>
+    <p class="collection-guide">
+      Want to add yourself? Follow the <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">contribution guide</a>
+    </p>
     {members.length > 0 ? (
       <div class="grid columns-2">
         {members.map((person) => (

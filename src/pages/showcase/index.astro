@@ -42,6 +42,9 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
 
   <section>
     <h3 class="section-label">Presentations</h3>
+    <p class="collection-guide">
+      Presentations from our meetups will go here.
+    </p>
     {eventGroups.length > 0 ? (
       <div class="event-groups">
         {eventGroups.map(({ event, presentations }) => (
@@ -155,6 +158,9 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
 
   <section>
     <h3 class="section-label">Projects</h3>
+    <p class="collection-guide">
+      Want to add something? Follow the <a class="muted-link" href={contributionLinks.project} target="_blank" rel="noopener">contribution guide</a>
+    </p>
     {projects.length > 0 ? (
       <div class="list">
         {projects.map((project) => (

@@ -22,6 +22,9 @@ const articles = allArticles.sort(
 
   <section>
     <h3 class="section-label">Articles</h3>
+    <p class="collection-guide">
+      Want to add something? Follow the <a class="muted-link" href={contributionLinks.article} target="_blank" rel="noopener">contribution guide</a>
+    </p>
     {articles.length > 0 ? (
       <div class="list">
         {articles.map((article) => (
