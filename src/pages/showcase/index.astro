@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TerminalNoteLink from "../../components/TerminalNoteLink.astro";
 import { contributionLinks } from "../../lib/contribution-links";
 import { buildEventIndex, buildPeopleIndex, getLinkedEvent, resolvePersonRefs } from "../../lib/relations";
 
@@ -42,6 +43,9 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
 
   <section>
     <h3 class="section-label">Presentations</h3>
+    <p class="collection-guide">
+      Presentations from our meetups will go here.
+    </p>
     {eventGroups.length > 0 ? (
       <div class="event-groups">
         {eventGroups.map(({ event, presentations }) => (
@@ -77,17 +81,25 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                         ))}
                       </span>
                     )}
-                    {presentation.data.screenshot && (
-                      <img
-                        src={presentation.data.screenshot}
-                        alt={`${presentation.data.title} — first slide`}
-                        loading="lazy"
-                        decoding="async"
-                        width="800"
-                        height="450"
-                        class="showcase-image"
-                      />
-                    )}
+                    {presentation.data.screenshot && (() => {
+                      const slideHref = presentation.data.slidesUrl || presentation.data.url || "";
+                      const img = (
+                        <img
+                          src={presentation.data.screenshot}
+                          alt={`${presentation.data.title} — first slide`}
+                          loading="lazy"
+                          decoding="async"
+                          width="800"
+                          height="450"
+                          class="showcase-image"
+                        />
+                      );
+                      return slideHref ? (
+                        <a class="showcase-image-link" href={slideHref} target="_blank" rel="noopener" aria-label={`${presentation.data.title} — open slides`}>
+                          {img}
+                        </a>
+                      ) : img;
+                    })()}
                     <span class="presentation-title">
                       {presentation.data.url ? (
                         <a href={presentation.data.url} target="_blank" rel="noopener">{presentation.data.title}</a>
@@ -95,20 +107,26 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                         presentation.data.title
                       )}
                     </span>
-                    {presentation.data.summary && <p>{presentation.data.summary}</p>}
-                    <div class="presentation-links">
-                      {presentation.data.slidesUrl && (
-                        <a class="muted-link" href={presentation.data.slidesUrl} target="_blank" rel="noopener">Slides</a>
-                      )}
-                      {presentation.data.videoUrl && (
-                        <a class="muted-link" href={presentation.data.videoUrl} target="_blank" rel="noopener">Video</a>
-                      )}
-                      {presentation.data.url && presentation.data.url !== presentation.data.slidesUrl && (
-                        <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
-                      )}
-                      {presentation.data.links.map((link) => (
-                        <a class="muted-link" href={link.url} target="_blank" rel="noopener">{link.label}</a>
-                      ))}
+                    <div class="presentation-summary-block">
+                      {presentation.data.summary && <p class="presentation-summary">{presentation.data.summary}</p>}
+                      {presentation.data.noteTeaser && <p class="presentation-note-teaser">{presentation.data.noteTeaser}</p>}
+                    </div>
+                    <div class="presentation-links-block">
+                      <span class="presentation-links-label">Links</span>
+                      <div class="presentation-links">
+                        {presentation.data.slidesUrl && (
+                          <a class="muted-link" href={presentation.data.slidesUrl} target="_blank" rel="noopener">Slides</a>
+                        )}
+                        {presentation.data.videoUrl && (
+                          <a class="muted-link" href={presentation.data.videoUrl} target="_blank" rel="noopener">Video</a>
+                        )}
+                        {presentation.data.url && presentation.data.url !== presentation.data.slidesUrl && (
+                          <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
+                        )}
+                        {presentation.data.links.map((link) => (
+                          <TerminalNoteLink href={link.url} label={link.label} note={link.note} />
+                        ))}
+                      </div>
                     </div>
                   </article>
                 );
@@ -124,6 +142,9 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
 
   <section>
     <h3 class="section-label">Projects</h3>
+    <p class="collection-guide">
+      Want to add something? Follow the <a class="muted-link" href={contributionLinks.project} target="_blank" rel="noopener">contribution guide</a>
+    </p>
     {projects.length > 0 ? (
       <div class="list">
         {projects.map((project) => (
@@ -239,6 +260,16 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     padding: 14px 16px;
   }
 
+  .presentation-summary-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+  }
+
+  .presentation-summary-block p {
+    margin: 0;
+  }
+
   @media (max-width: 720px) {
     .event-group .presentation-list {
       grid-template-columns: 1fr;
@@ -250,8 +281,25 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     }
   }
 
-  .presentation-links {
-    align-self: end;
+  .showcase-image-link {
+    align-self: start;
+    display: block;
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .showcase-image-link .showcase-image {
+    display: block;
+    width: 100%;
+  }
+
+  .presentation-note-teaser {
+    color: var(--muted);
+  }
+
+  .presentation-note-teaser:empty {
+    display: block;
+    min-height: 0;
   }
 
   .event-group-header {
@@ -320,6 +368,21 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
   .presentation-title a:hover,
   .presentation-title a:focus-visible {
     color: var(--accent);
+  }
+
+  .presentation-links-block {
+    align-self: start;
+    display: grid;
+    gap: 6px;
+  }
+
+  .presentation-links-label {
+    color: var(--muted);
+    font-family: var(--font-serif);
+    font-size: 0.72rem;
+    font-style: italic;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .presentation-links {

@@ -3,7 +3,7 @@
   aliases: []
   tagline: ""
   company: Ocellivision
-  website: https://ocelli.vision
+  website: https://www.gauravmanek.com/
   linkedin: https://www.linkedin.com/in/gauravmanek/
   github: https://github.com/gauravmm
   addedAt: "2026-04-23T11:36:35Z"
@@ -75,6 +75,17 @@
   linkedin: https://www.linkedin.com/in/darrylwongdq
   github: ""
   addedAt: "2026-04-24T06:44:56Z"
+  featured: false
+
+- id: huiliang-lui
+  name: Huiliang Lui
+  aliases: []
+  tagline: ""
+  company: SG Code Campus
+  website: ""
+  linkedin: https://www.linkedin.com/in/huiliang-lui-51854224/
+  github: https://github.com/jumbomochi
+  addedAt: "2026-04-24T08:40:47Z"
   featured: false
 
 - id: joshua-goh

@@ -11,7 +11,7 @@ attendance: 0
 speakers: []
 hosts: ["Chris Pecaut", "Ian Choo", "YJ Soon", "Trevor Lum", "Jensen"]
 tags: ["meetup"]
-status: "upcoming"
+status: "past"
 
 preEventSurvey:
   url: "https://docs.google.com/forms/d/e/1FAIpQLSc910rtaWJzZfyJgU4YWGfbJziFJd3n1NZEwzFWxNxU2AN3NA/viewform?usp=header"

@@ -3,16 +3,11 @@
   speakers:
     - personId: gaurav-manek
   eventId: 2026-04-23-abc-at-lorong-ai
-  url: https://github.com/gauravmm/2026-04-ABC-Infrastructure/releases/tag/v0.1.1
+  url: https://www.gauravmanek.com/lectures/2026/abc-infrastructure/
   slidesUrl: https://github.com/gauravmm/2026-04-ABC-Infrastructure/releases/download/v0.1.1/slides.pdf
   videoUrl: ""
   screenshot: /showcase/presentations/infra-safety.jpg
   summary: A walkthrough of infrastructure-based safety for agentic tools, covering connector threat models, MCP gateways, and practical design patterns.
-  links:
-    - label: Haiku demo share
-      url: https://claude.ai/share/ffe03351-cd9e-412b-a4bb-15db4906a4a9
-    - label: Opus demo share
-      url: https://claude.ai/share/9452fdd1-06f9-4512-851b-415e10699409
   tags:
     - infrastructure
     - safety
@@ -29,9 +24,18 @@
   videoUrl: ""
   screenshot: /showcase/presentations/workforce-os.jpg
   summary: A file-based multi-agent operating system for a seven-person team. No database, no server — just markdown and git.
+  noteTeaser: Design your own agentic workflow — try prompt below yourself to begin.
   links:
     - label: Starter prompt
       url: https://www.agenticbuilders.sg/showcase/presentations/workforce-os-starter-prompt.md
+      note: |
+        I was asked by quite a number of you in person and via DM to open source workforce-os. I am not going to, because that is exactly against the philosophy of everything I was sharing (build it yourself, customise it to your needs). However, I recognise that not everybody knows where/how to start building. So instead of open sourcing the software, I asked my agent to generate a "starter prompt" for you to use to start building your own system. You can - if you wish - also reference nanoclaw as a starting git repo (but frankly there's no need because it will find the repos itself in plan + extra high effort mode).
+
+        So this is more aligned with my philosophy - learn and build your own thing, for your own needs. This community will all be here to help answer any questions if you get stuck!
+
+        Have fun building!
+
+        — Gaurav
   tags:
     - agents
     - workflow
