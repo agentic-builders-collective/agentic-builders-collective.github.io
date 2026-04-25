@@ -4,6 +4,8 @@ date: 2026-03-06
 kind: "learning"
 time: "3:00 PM – 5:00 PM SGT"
 venue: "Lorong AI, 22 Cross Street, Singapore 048421"
+sponsorName: "Lorong AI"
+sponsorUrl: "https://lorong.ai/"
 registrationUrl: ""
 attendance: 0
 speakers: ["YJ Soon", "Chris Pecaut", "Logan Goh"]

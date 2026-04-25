@@ -42,6 +42,26 @@ const hasFeedbackResults = (feedback?: {
   responses?: number;
   highlights?: string[];
 }) => typeof feedback?.rating === "number" || (feedback?.responses ?? 0) > 0 || (feedback?.highlights?.length ?? 0) > 0;
+const extraSponsorsByEventId: Record<string, { name: string; url: string }[]> = {
+  "2026-03-27-abc-at-google": [
+    {
+      name: "Google Singapore",
+      url: "https://google.com",
+    },
+  ],
+  "2026-04-23-abc-at-lorong-ai": [
+    {
+      name: "Lorong AI",
+      url: "https://lorong.ai/",
+    },
+  ],
+  "2026-05-28-abc-at-amcham": [
+    {
+      name: "American Chamber of Commerce in Singapore",
+      url: "https://www.amcham.com.sg",
+    },
+  ],
+};
 
 const upcoming = allEvents
   .filter((e) => e.data.status === "upcoming" || new Date(e.data.date) >= now)
@@ -272,12 +292,17 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
                       {event.data.time && <span>{formatTime(event.data.time)}</span>}
                       {event.data.sponsorName && (
                         <span>
-                          sponsored by{" "}
                           {event.data.sponsorUrl ? (
                             <a class="muted-link events-muted-link" href={event.data.sponsorUrl} target="_blank" rel="noopener">{event.data.sponsorName}</a>
                           ) : (
                             event.data.sponsorName
                           )}
+                          {(extraSponsorsByEventId[event.id] ?? []).map((sponsor) => (
+                            <>
+                              {" + "}
+                              <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                            </>
+                          ))}
                         </span>
                       )}
                     </div>
@@ -429,12 +454,17 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
                 {event.data.time && <span>{formatTime(event.data.time)}</span>}
                 {event.data.sponsorName && (
                   <span>
-                    sponsored by{" "}
                     {event.data.sponsorUrl ? (
                       <a class="muted-link events-muted-link" href={event.data.sponsorUrl} target="_blank" rel="noopener">{event.data.sponsorName}</a>
                     ) : (
                       event.data.sponsorName
                     )}
+                    {(extraSponsorsByEventId[event.id] ?? []).map((sponsor) => (
+                      <>
+                        {" + "}
+                        <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                      </>
+                    ))}
                   </span>
                 )}
               </div>
@@ -515,12 +545,17 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
                 {event.data.time && <span>{formatTime(event.data.time)}</span>}
                 {event.data.sponsorName && (
                   <span>
-                    sponsored by{" "}
                     {event.data.sponsorUrl ? (
                       <a class="muted-link events-muted-link" href={event.data.sponsorUrl} target="_blank" rel="noopener">{event.data.sponsorName}</a>
                     ) : (
                       event.data.sponsorName
                     )}
+                    {(extraSponsorsByEventId[event.id] ?? []).map((sponsor) => (
+                      <>
+                        {" + "}
+                        <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                      </>
+                    ))}
                   </span>
                 )}
               </div>
