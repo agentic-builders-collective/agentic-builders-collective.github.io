@@ -10,7 +10,7 @@ const paragraphs = note.split(/\n\s*\n/).map((paragraph) => paragraph.trim()).fi
 const hasNote = paragraphs.length > 0;
 ---
 
-<div class:list={["terminal-note-link", { "has-note": hasNote }]}>
+<span class="terminal-note-link">
   <a class="muted-link" href={href} target="_blank" rel="noopener">{label}</a>
   {hasNote && (
     <details class="terminal-note-disclosure">
@@ -25,37 +25,39 @@ const hasNote = paragraphs.length > 0;
       </div>
     </details>
   )}
-</div>
+</span>
 
 <script>
-  let activeTerminalNoteDetails = document.createElement("details");
-
   function updateTerminalNotePlacement() {
-    if (!(activeTerminalNoteDetails instanceof HTMLDetailsElement)) return;
+    document.querySelectorAll(".terminal-note-disclosure[data-placement-pending]").forEach((details) => {
+      if (!(details instanceof HTMLDetailsElement)) return;
 
-    const trigger = activeTerminalNoteDetails.querySelector(".terminal-note-trigger");
-    const popover = activeTerminalNoteDetails.querySelector(".terminal-note-popover");
-    if (!(trigger instanceof HTMLElement) || !(popover instanceof HTMLElement)) return;
+      details.removeAttribute("data-placement-pending");
 
-    const triggerRect = trigger.getBoundingClientRect();
-    const popoverRect = popover.getBoundingClientRect();
-    const triggerX = triggerRect.left + triggerRect.width / 2;
-    const triggerY = triggerRect.top + triggerRect.height / 2;
-    const popoverX = popoverRect.left + popoverRect.width / 2;
-    const popoverY = popoverRect.top + popoverRect.height / 2;
-    const vertical = triggerY < popoverY ? "top" : "bottom";
-    const horizontal = triggerX < popoverX ? "left" : "right";
+      const trigger = details.querySelector(".terminal-note-trigger");
+      const popover = details.querySelector(".terminal-note-popover");
+      if (!(trigger instanceof HTMLElement) || !(popover instanceof HTMLElement)) return;
 
-    activeTerminalNoteDetails.dataset.closeCorner = `${vertical}-${horizontal}`;
+      const triggerRect = trigger.getBoundingClientRect();
+      const popoverRect = popover.getBoundingClientRect();
+      const triggerX = triggerRect.left + triggerRect.width / 2;
+      const triggerY = triggerRect.top + triggerRect.height / 2;
+      const popoverX = popoverRect.left + popoverRect.width / 2;
+      const popoverY = popoverRect.top + popoverRect.height / 2;
+      const vertical = triggerY < popoverY ? "top" : "bottom";
+      const horizontal = triggerX < popoverX ? "left" : "right";
+
+      details.dataset.closeCorner = `${vertical}-${horizontal}`;
+    });
   }
 
   const updateOpenTerminalNotes = () => {
     document.querySelectorAll(".terminal-note-disclosure[open]").forEach((details) => {
       if (details instanceof HTMLDetailsElement) {
-        activeTerminalNoteDetails = details;
-        updateTerminalNotePlacement();
+        details.dataset.placementPending = "true";
       }
     });
+    updateTerminalNotePlacement();
   };
 
   document.addEventListener(
@@ -65,9 +67,10 @@ const hasNote = paragraphs.length > 0;
       if (!(target instanceof HTMLDetailsElement) || !target.classList.contains("terminal-note-disclosure")) return;
 
       if (target.open) {
-        activeTerminalNoteDetails = target;
+        target.dataset.placementPending = "true";
         requestAnimationFrame(updateTerminalNotePlacement);
       } else {
+        delete target.dataset.placementPending;
         delete target.dataset.closeCorner;
       }
     },
