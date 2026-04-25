@@ -64,21 +64,6 @@
     - skills
     - workflow
 
-- id: cloudfone-organic-growth
-  title: "Growing Social Media Accounts Organically with Cloud Phone Farms"
-  speakers:
-    - personId: xavier-fok
-  eventId: 2026-04-23-abc-at-lorong-ai
-  url: https://cloudf.one/
-  slidesUrl: https://github.com/Xavierfok/cloudfone/releases/download/v1.0-foundergro-apr2026/xavier-fok-cloudfone-presentation.pdf
-  videoUrl: ""
-  screenshot: ""
-  summary: How cloudf.one uses cloud phone farms to help businesses grow social media accounts organically at scale.
-  tags:
-    - growth
-    - automation
-    - social-media
-
 - id: codex-workflow
   title: "Codex in the Wild"
   speakers:
