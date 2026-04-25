@@ -98,3 +98,14 @@
   github: ""
   addedAt: "2026-04-24T09:01:10Z"
   featured: false
+
+- id: xavier-fok
+  name: Xavier Fok
+  aliases: []
+  tagline: Helping businesses grow social media accounts organically with cloud phone farms.
+  company: cloudf.one
+  website: https://cloudf.one/
+  linkedin: https://www.linkedin.com/in/xavierfok/
+  github: https://github.com/Xavierfok
+  addedAt: "2026-04-25T07:52:00Z"
+  featured: false
