@@ -473,6 +473,30 @@ const isCurrent = (href: string) => {
         </div>
       </section>
 
+      <!-- Upcoming Event -->
+      <section class="home-section">
+        <h3 class="section-label">Upcoming Event</h3>
+        {upcomingEvent ? (
+          <div class="list-item">
+            <div class="list-item-header">
+              <span class="list-item-title">{upcomingEvent.data.title}</span>
+              <div class="card-meta">
+                <span>{new Date(upcomingEvent.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
+                {upcomingEvent.data.time && <span>{upcomingEvent.data.time}</span>}
+                {upcomingEvent.data.venue && <span>{upcomingEvent.data.venue}</span>}
+              </div>
+            </div>
+            {upcomingEvent.data.registrationUrl && (
+              <a class="button button-primary home-event-register" href={upcomingEvent.data.registrationUrl} target="_blank" rel="noopener">Register <span class="inline-arrow" aria-hidden="true">▶</span></a>
+            )}
+          </div>
+        ) : (
+          <div class="card">
+            <p>No upcoming events — <a href={whatsappUrl} target="_blank" rel="noopener" style="color:var(--accent);">join the WhatsApp chat</a> to stay updated, or <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">add an event by submitting a pull request</a>.</p>
+          </div>
+        )}
+      </section>
+
       <!-- Getting Started -->
       <section class="home-section" id="getting-started">
         <h3 class="section-label">Getting Started</h3>
@@ -506,30 +530,6 @@ const isCurrent = (href: string) => {
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- Upcoming Event -->
-      <section class="home-section">
-        <h3 class="section-label">Upcoming Event</h3>
-        {upcomingEvent ? (
-          <div class="list-item">
-            <div class="list-item-header">
-              <span class="list-item-title">{upcomingEvent.data.title}</span>
-              <div class="card-meta">
-                <span>{new Date(upcomingEvent.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
-                {upcomingEvent.data.time && <span>{upcomingEvent.data.time}</span>}
-                {upcomingEvent.data.venue && <span>{upcomingEvent.data.venue}</span>}
-              </div>
-            </div>
-            {upcomingEvent.data.registrationUrl && (
-              <a class="button button-primary home-event-register" href={upcomingEvent.data.registrationUrl} target="_blank" rel="noopener">Register <span class="inline-arrow" aria-hidden="true">▶</span></a>
-            )}
-          </div>
-        ) : (
-          <div class="card">
-            <p>No upcoming events — <a href={whatsappUrl} target="_blank" rel="noopener" style="color:var(--accent);">join the WhatsApp chat</a> to stay updated, or <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">add an event by submitting a pull request</a>.</p>
-          </div>
-        )}
       </section>
 
       <!-- FAQ -->
