@@ -110,6 +110,17 @@
   addedAt: "2026-04-25T07:52:00Z"
   featured: false
 
+- id: akmal-bin-abd-rahman
+  name: Akmal bin Abd Rahman
+  aliases: []
+  tagline: ""
+  company: Tinkercademy
+  website: https://tinkercademy.com
+  linkedin: https://www.linkedin.com/in/akmalabdulrahman/
+  github: https://github.com/cowdinosaur
+  addedAt: "2026-04-25T08:36:00Z"
+  featured: false
+
 - id: allan-ling
   name: Allan Ling
   aliases: []
