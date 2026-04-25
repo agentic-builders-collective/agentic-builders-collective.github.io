@@ -1,7 +1,7 @@
 ---
 title: pg_ffmpeg
 makers:
-  - name: Han Qiao
+  - personId: han-qiao
 github: https://github.com/sweatybridge/pg_ffmpeg
 builtWith:
   - Rust
