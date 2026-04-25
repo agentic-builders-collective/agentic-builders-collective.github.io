@@ -128,9 +128,7 @@ function getInitialLogoGradientIndex(): number {
     "/about": "ocean",
     "/community": "mint",
     "/showcase": "gold",
-    "/articles": "forest",
-    "/events": "nebula",
-    "/contact": "coral"
+    "/events": "nebula"
   };
 
   const key = pageGradients[path];

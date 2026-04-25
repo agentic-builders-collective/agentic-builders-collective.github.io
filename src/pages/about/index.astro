@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
 const sponsors = await getCollection("sponsors");
+const whatsappUrl = "https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn";
 ---
 
 <BaseLayout
@@ -42,11 +43,24 @@ const sponsors = await getCollection("sponsors");
         </div>
       </div>
       <div class="person-card">
-        <h3>Open Articles</h3>
-        <p class="person-card-tagline">Community-curated articles, project showcases, presentation links, and workshop materials — all open source.</p>
+        <h3>Showcase</h3>
+        <p class="person-card-tagline">Community talks, project showcases, articles, and workshop materials — all open source.</p>
         <div class="person-card-links">
-          <a class="muted-link" href="/articles/">Browse articles</a>
+          <a class="muted-link" href="/showcase/">Browse Showcase</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h3 class="section-label">Get In Touch</h3>
+    <div class="list">
+      <div class="list-item">
+        <p>Want to speak at a meetup, sponsor an event, partner with us, or just say hello? Reach out by email using the address at the bottom of the page.</p>
+      </div>
+      <div class="list-item">
+        <a class="list-item-title" href={whatsappUrl} target="_blank" rel="noopener">WhatsApp Group Chat</a>
+        <p>The main hub — daily tips, tool news, troubleshooting, and project sharing.</p>
       </div>
     </div>
   </section>
@@ -80,7 +94,7 @@ const sponsors = await getCollection("sponsors");
         <p>Keep discussions relevant to agentic coding and building.</p>
       </div>
       <div class="list-item">
-        <p>Feel free to share and showcase your personal projects. For commercial work and events, <a href="/contact/">please check</a>.</p>
+        <p>Feel free to share and showcase your personal projects. For commercial work and events, please check by email first.</p>
       </div>
       <div class="list-item">
         <p>Please <a href="https://github.com/agentic-builders-collective/agentic-builders-collective.github.io" target="_blank" rel="noopener">contribute to the website</a>. When doing so, keep changes additive and localised — one content type per PR.</p>

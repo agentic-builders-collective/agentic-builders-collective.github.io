@@ -7,6 +7,7 @@ import { buildEventIndex, buildPeopleIndex, getLinkedEvent, resolvePersonRefs } 
 
 const allProjects = await getCollection("projects");
 const allPresentations = await getCollection("presentations");
+const allArticles = await getCollection("articles");
 const allEvents = await getCollection("events");
 const allMembers = await getCollection("members");
 const organisers = await getCollection("organisers");
@@ -14,6 +15,10 @@ const peopleById = buildPeopleIndex([...organisers, ...allMembers]);
 const eventsById = buildEventIndex(allEvents);
 
 const projects = allProjects.sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const articles = allArticles.sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 
@@ -37,27 +42,37 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
 
 <BaseLayout
   title="showcase"
-  description="Browse projects, demos, and member-built work from the Agentic Builders Collective community."
+  description="Browse presentations, projects, articles, demos, and member-built work from the Agentic Builders Collective community."
 >
-  <h1 class="page-title">Showcase</h1>
+  <h1 class="page-title showcase-title">
+    <span class="showcase-title-label">Showcase</span><span class="showcase-title-colon">:</span>
+    <span class="showcase-section-nav" role="navigation" aria-label="Showcase sections">
+      <a href="#presentations">Presentations</a>
+      <span class="showcase-section-separator" aria-hidden="true">/</span>
+      <a href="#projects">Projects</a>
+      <span class="showcase-section-separator" aria-hidden="true">/</span>
+      <a href="#articles">Articles</a>
+    </span>
+  </h1>
 
-  <section>
-    <h3 class="section-label">Presentations</h3>
-    <p class="collection-guide">
-      Presentations from our meetups will go here.
-    </p>
+  <details class="showcase-section" id="presentations" open>
+    <summary class="section-label collapsible-heading">Presentations</summary>
+    <div class="showcase-section-body">
+      <p class="collection-guide">
+        Presentations from our meetups will go here.
+      </p>
     {eventGroups.length > 0 ? (
       <div class="event-groups">
         {eventGroups.map(({ event, presentations }) => (
-          <section class="event-group">
-            <header class="event-group-header">
-              <h4 class="event-group-title">
-                <a href={`/events/#${event.id}`}>{event.data.title.replace(/^#\d+\s*[-–—]\s*/, "")}</a>
-              </h4>
+          <details class="event-group" open>
+            <summary class="event-group-header">
+              <span class="event-group-title">
+                {event.data.title.replace(/^#\d+\s*[-–—]\s*/, "")}
+              </span>
               <span class="event-group-date">
                 {new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}
               </span>
-            </header>
+            </summary>
             <div class="list presentation-list">
               {presentations.map((presentation) => {
                 const speakers = resolvePersonRefs(
@@ -132,19 +147,21 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                 );
               })}
             </div>
-          </section>
+          </details>
         ))}
       </div>
     ) : (
       <p>No presentations yet. <a class="muted-link" href={contributionLinks.presentation} target="_blank" rel="noopener">Add slides by submitting a pull request</a></p>
     )}
-  </section>
+    </div>
+  </details>
 
-  <section>
-    <h3 class="section-label">Projects</h3>
-    <p class="collection-guide">
-      Want to add something? Follow the <a class="muted-link" href={contributionLinks.project} target="_blank" rel="noopener">contribution guide</a>
-    </p>
+  <details class="showcase-section" id="projects" open>
+    <summary class="section-label collapsible-heading">Projects</summary>
+    <div class="showcase-section-body">
+      <p class="collection-guide">
+        Want to add something? Follow the <a class="muted-link" href={contributionLinks.project} target="_blank" rel="noopener">contribution guide</a>
+      </p>
     {projects.length > 0 ? (
       <div class="list">
         {projects.map((project) => (
@@ -211,10 +228,146 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     ) : (
       <p>No projects yet. <a class="muted-link" href={contributionLinks.project} target="_blank" rel="noopener">Add a project by submitting a pull request</a></p>
     )}
-  </section>
+    </div>
+  </details>
+
+  <details class="showcase-section" id="articles" open>
+    <summary class="section-label collapsible-heading">Articles</summary>
+    <div class="showcase-section-body">
+      <p class="collection-guide">
+        Want to add something? Follow the <a class="muted-link" href={contributionLinks.article} target="_blank" rel="noopener">contribution guide</a>
+      </p>
+      {articles.length > 0 ? (
+        <div class="list">
+          {articles.map((article) => (
+            <article class="list-item" id={article.data.id}>
+              <div class="list-item-header">
+                <a class="list-item-title" href={article.data.url} target="_blank" rel="noopener">
+                  {article.data.title}
+                </a>
+                <div class="card-meta">
+                  {(() => {
+                    const authors = resolvePersonRefs(article.data.authors, peopleById, `article "${article.data.id}" authors`);
+                    return authors.length > 0 && (
+                      <span>
+                        {authors.map((author, index) => (
+                          <>
+                            {author.href ? (
+                              <a href={author.href}>{author.name}</a>
+                            ) : (
+                              author.name
+                            )}
+                            {index < authors.length - 1 && ", "}
+                          </>
+                        ))}
+                      </span>
+                    );
+                  })()}
+                  {article.data.publication && <span>{article.data.publication}</span>}
+                  <span>{new Date(article.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short" })}</span>
+                </div>
+              </div>
+              {article.data.summary && <p>{article.data.summary}</p>}
+              {article.data.tags.length > 0 && (
+                <ul class="tag-list">
+                  {article.data.tags.map((tag) => (
+                    <li class="tag">{tag}</li>
+                  ))}
+                </ul>
+              )}
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p>No articles yet. <a class="muted-link" href={contributionLinks.article} target="_blank" rel="noopener">Add an article by submitting a pull request</a></p>
+      )}
+    </div>
+  </details>
 </BaseLayout>
 
 <style>
+  .showcase-title {
+    align-items: center;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .showcase-title::before {
+    flex: 0 0 auto;
+  }
+
+  .showcase-section-nav {
+    align-items: center;
+    color: var(--logo-gradient-end);
+    display: inline-flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+
+  .showcase-title-label {
+    color: var(--logo-gradient-start);
+  }
+
+  .showcase-title-colon {
+    color: #555;
+  }
+
+  .showcase-section-nav a {
+    color: var(--logo-gradient-end);
+    text-decoration: none;
+  }
+
+  .showcase-section-separator {
+    color: #555;
+  }
+
+  .showcase-section-nav a:hover,
+  .showcase-section-nav a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .showcase-section {
+    display: block;
+  }
+
+  .showcase-section-body {
+    display: grid;
+    gap: 0;
+  }
+
+  .collapsible-heading,
+  .event-group-header {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .collapsible-heading {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .collapsible-heading::-webkit-details-marker,
+  .event-group-header::-webkit-details-marker {
+    display: none;
+  }
+
+  .collapsible-heading::after,
+  .event-group-header::after {
+    color: #555;
+    content: "[+]";
+    margin-left: auto;
+  }
+
+  .showcase-section[open] > .collapsible-heading::after,
+  .event-group[open] > .event-group-header::after {
+    content: "[-]";
+  }
+
   .showcase-image {
     aspect-ratio: 16 / 9;
     border: 1px solid var(--line);
@@ -305,38 +458,27 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
   .event-group-header {
     align-items: baseline;
     border-bottom: 1px solid var(--line);
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     gap: 12px;
-    justify-content: space-between;
     padding-bottom: 8px;
   }
 
   .event-group-title {
     font-family: var(--font-serif);
-    font-size: 1.15rem;
+    font-size: 1rem;
     font-weight: 700;
     margin: 0;
   }
 
-  .event-group-title a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .event-group-title a:hover,
-  .event-group-title a:focus-visible {
-    color: var(--accent);
-  }
-
   .event-group-date {
     color: var(--muted);
-    font-size: 0.85rem;
+    justify-self: end;
   }
 
   .presentation-speaker {
     font-family: var(--font-serif);
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1.2;
   }
@@ -354,7 +496,7 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
   .presentation-title {
     color: var(--muted);
     font-family: var(--font-serif);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-style: italic;
     font-weight: 500;
     line-height: 1.35;
@@ -379,7 +521,7 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
   .presentation-links-label {
     color: var(--muted);
     font-family: var(--font-serif);
-    font-size: 0.72rem;
+    font-size: 1rem;
     font-style: italic;
     letter-spacing: 0.08em;
     text-transform: uppercase;

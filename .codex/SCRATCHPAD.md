@@ -9,7 +9,7 @@
 - Homepage logo colours should stay aligned with the palette list in `logo-generator/app.js`; mirror from the submodule rather than inventing a separate set.
 - Typography preference: keep visible UI text at `1rem` as far as possible to preserve the terminal feel; treat smaller text as an exception for true meta content only.
 - README should describe `agentic-builders-collective.github.io` as the staging site for `agenticbuilders.sg`, not as the primary destination.
-- Current content IA: Community has organisers and members; Showcase has projects and presentations; Resources was renamed to Articles.
+- Current content IA: Community has organisers and members; Showcase consolidates presentations, projects, and articles.
 - Astro content-layer cache can retain deleted temporary collection entries in `node_modules/.astro/data-store.json`; clear `node_modules/.astro` after seeded dry runs.
 - Static builds copy the root `logo-generator/` submodule into `dist/logo-generator/` via an Astro build hook; CI/deploy hosts need submodules initialised first.
 - Collection index pages should keep contributor guide links visible near populated section titles, not only inside empty states.

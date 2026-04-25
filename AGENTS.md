@@ -32,13 +32,14 @@ This repo is an Astro site for the Agentic Builders Collective. Keep durable beh
 - Terminal-like theme uses **consistent font sizes** throughout.
 - Base font size is **15px** on `html` element.
 - **Always use `1rem` for all visible text** — no exceptions. This is critical for the terminal-like aesthetic.
+- This includes all section headers, subsection headers, grouped-list headings, metadata, timestamps, controls, labels, cards, and link text. Do not use larger or smaller visible text to create hierarchy.
 - Do not vary font sizes for hierarchy; instead, differentiate using:
   - **Brighter colours** for headers/important elements (e.g., `--accent`)
   - **Bold weight** for emphasis
   - **Slightly dimmed opacity** for body/secondary text
 - Standard size:
-  - `1rem` (15px) for **all** text including cards, body copy, links, headings, metadata, timestamps, code, everything
-  - `13px` acceptable only for inline symbols/arrows (e.g., ▶ characters)
+  - `1rem` (15px) for **all** visible text including cards, body copy, links, headings, section headers, subsection headers, metadata, timestamps, controls, labels, and code.
+  - Do not introduce alternate visible text sizes for inline symbols, arrows, annotations, or compact labels.
 - Box/card backgrounds use `--box-bg: rgba(30, 30, 40, 0.45)` — neutral grey with slight blue tint, 45% opacity
 - Use `src/components/TerminalNoteLink.astro` for link-attached notes/popovers. It codifies the terminal-style `[ℹ]` disclosure, `[×]` close control, dynamic close-corner placement, desktop popover, and mobile inline expansion.
 

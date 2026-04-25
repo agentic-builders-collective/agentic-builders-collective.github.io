@@ -62,7 +62,7 @@ for (const article of allArticles) {
   resolvePersonRefs(article.data.authors, peopleById, `article "${article.data.id}" authors`);
   for (const author of article.data.authors) {
     if (author.personId) {
-      addBackref(author.personId, "articles", `/articles/#${article.data.id}`, article.data.title);
+      addBackref(author.personId, "articles", `/showcase/#${article.data.id}`, article.data.title);
     }
   }
 }
