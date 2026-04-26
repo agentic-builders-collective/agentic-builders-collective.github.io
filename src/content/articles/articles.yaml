@@ -1,1 +1,13 @@
-[]
+- id: hermes-agent-introduction-dev-community
+  title: "Hermes agent: Introduction"
+  authors:
+    - name: Phú
+  url: https://dev.to/lkp/hermes-agent-introduction-c38
+  publication: DEV Community
+  date: 2026-04-26
+  summary: Introduction to Hermes Agent, an open-source AI agent from Nous Research.
+  tags:
+    - ai
+    - agents
+    - llm
+    - bot
