@@ -131,3 +131,15 @@
   github: https://github.com/kosmobao
   addedAt: "2026-04-25T10:00:00Z"
   featured: false
+
+- id: han-qiao
+  name: Han Qiao
+  aliases:
+    - sweatybridge
+  tagline: ""
+  company: Supabase
+  website: ""
+  linkedin: https://www.linkedin.com/in/qiao-han-0372932a/
+  github: https://github.com/sweatybridge
+  addedAt: "2026-04-25T14:07:15Z"
+  featured: false
