@@ -9,6 +9,7 @@ This repo is an Astro site for the Agentic Builders Collective. Keep durable beh
 - `src/pages/` contains Astro routes and collection-driven index pages.
 - `logo-generator/` is a submodule for logo exploration and related brand assets.
 - `docs/content-model.md` is the source of truth for contributor-facing content shape.
+- `docs/deployment.md` documents staging deploys and production tag notification.
 
 ## Content conventions
 

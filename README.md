@@ -101,7 +101,7 @@ git submodule update --init --recursive
 - Production: `https://agenticbuilders.sg/`
 - Staging: `https://agentic-builders-collective.github.io/`
 
-Deployment automation lives in [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml).
+Deployment automation lives in [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml). Production handoff and tag notification details live in [`docs/deployment.md`](./docs/deployment.md).
 
 ## Notes
 
