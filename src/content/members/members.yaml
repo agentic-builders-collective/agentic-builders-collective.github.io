@@ -143,3 +143,14 @@
   github: https://github.com/sweatybridge
   addedAt: "2026-04-25T14:07:15Z"
   featured: false
+
+- id: lam-kim-phu
+  name: Lam Kim Phu
+  aliases: []
+  tagline: Full-stack developer specializing in creating AI applications and AI agents.
+  company: USEA
+  website: ""
+  linkedin: https://www.linkedin.com/in/lkp258/
+  github: https://github.com/lamkimphu258
+  addedAt: "2026-04-27T00:00:00Z"
+  featured: false
