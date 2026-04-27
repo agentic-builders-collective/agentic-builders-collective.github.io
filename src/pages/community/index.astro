@@ -2,16 +2,14 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import { contributionLinks } from "../../lib/contribution-links";
-import { buildEventIndex, buildPeopleIndex, getLinkedEvent, resolvePersonRefs } from "../../lib/relations";
+import { buildPeopleIndex, resolvePersonRefs } from "../../lib/relations";
 
 const allMembers = await getCollection("members");
 const organisers = await getCollection("organisers");
 const allArticles = await getCollection("articles");
 const allProjects = await getCollection("projects");
 const allPresentations = await getCollection("presentations");
-const allEvents = await getCollection("events");
 const peopleById = buildPeopleIndex([...organisers, ...allMembers]);
-const eventsById = buildEventIndex(allEvents);
 
 const orgNames = new Set(organisers.map((o) => o.data.name));
 const getAddedAtTime = (value: Date | undefined) => value?.getTime() ?? 0;
@@ -39,7 +37,6 @@ const backrefLabels = new Map([
   ["articles", "articles"],
   ["projects", "projects"],
   ["presentations", "presentations"],
-  ["events", "events"],
 ]);
 
 const addBackref = (personId: string, group: string, href: string, title: string) => {
@@ -77,30 +74,11 @@ for (const project of allProjects) {
 }
 
 for (const presentation of allPresentations) {
-  const event = getLinkedEvent(presentation.data.eventId, eventsById, `presentation "${presentation.data.id}"`);
   resolvePersonRefs(presentation.data.speakers, peopleById, `presentation "${presentation.data.id}" speakers`);
 
   for (const speaker of presentation.data.speakers) {
     if (speaker.personId) {
       addBackref(speaker.personId, "presentations", `/showcase/#${presentation.data.id}`, presentation.data.title);
-      addBackref(speaker.personId, "events", `/events/#${event.id}`, event.data.title);
-    }
-  }
-}
-
-for (const event of allEvents) {
-  resolvePersonRefs(event.data.hosts, peopleById, `event "${event.id}" hosts`);
-  resolvePersonRefs(event.data.speakers, peopleById, `event "${event.id}" speakers`);
-
-  for (const host of event.data.hosts) {
-    if (typeof host !== "string" && host.personId) {
-      addBackref(host.personId, "events", `/events/#${event.id}`, event.data.title);
-    }
-  }
-
-  for (const speaker of event.data.speakers) {
-    if (typeof speaker !== "string" && speaker.personId) {
-      addBackref(speaker.personId, "events", `/events/#${event.id}`, event.data.title);
     }
   }
 }
