@@ -16,3 +16,4 @@
 - Prefer terminal-like text affordances such as `[ℹ]` over circular info icons; hover-only popovers need mobile/touch-friendly inline behaviour.
 - Link-attached note popovers are now codified in `src/components/TerminalNoteLink.astro`; reuse it rather than rebuilding note tooltip markup locally.
 - Event sponsor metadata should render as a normal dotted card-meta row with linked names only, no `sponsored by` or `Hosted by` prefix. Numbered meetups #1 and #2 show Tinkercademy only; #3 through #7 show SG Code Campus, with venue partner links appended using `+` where applicable.
+- People cards should not show event backrefs; presentations already cover that relationship for people.

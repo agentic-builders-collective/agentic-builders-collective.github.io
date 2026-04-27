@@ -58,5 +58,5 @@ If the file contains `[]`, replace it with the first list entry. Otherwise appen
 - `id` must be kebab-case and unique across members and organisers.
 - `addedAt` must be an ISO 8601 UTC timestamp. It controls Community page order, oldest first, so the list is first-come, first-shown for now. Repository admins may adjust it based on PR timing or review history.
 - Do not add random numbers. If there is a real collision, prefer a meaningful suffix such as middle initial, handle, or company.
-- Linked articles, projects, presentations, and events will automatically show on the person's Community card once other entries reference this `id`.
+- Linked articles, projects, and presentations will automatically show on the person's Community card once other entries reference this `id`.
 - Contributors without write access can still open a pull request from a fork. See `CONTRIBUTING.md`.
