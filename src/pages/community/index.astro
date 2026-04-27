@@ -203,6 +203,12 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
               {person.data.github && (
                 <a class="muted-link" href={person.data.github} target="_blank" rel="noopener">GitHub</a>
               )}
+              {person.data.youtube && (
+                <a class="muted-link" href={person.data.youtube} target="_blank" rel="noopener">YouTube</a>
+              )}
+              {person.data.twitter && (
+                <a class="muted-link" href={person.data.twitter} target="_blank" rel="noopener">X</a>
+              )}
             </div>
             {(() => {
               const backrefGroups = getBackrefGroups(person.data.id);
