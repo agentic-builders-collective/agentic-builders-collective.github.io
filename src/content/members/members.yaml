@@ -154,3 +154,15 @@
   github: https://github.com/lamkimphu258
   addedAt: "2026-04-27T00:00:00Z"
   featured: false
+
+- id: brendan-graetz
+  name: Brendan Graetz
+  aliases:
+    - bguiz
+  tagline: Developer Relations
+  company: Hands on Dev
+  website: https://blog.bguiz.com/
+  linkedin: https://linkedin.com/in/brendangraetz
+  github: https://github.com/bguiz
+  addedAt: "2026-04-27T20:41:10Z"
+  featured: false
