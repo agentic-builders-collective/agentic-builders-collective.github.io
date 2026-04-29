@@ -51,6 +51,8 @@ The Community page orders members by `addedAt`, oldest first. This keeps the lis
   website: https://example.com
   linkedin: https://linkedin.com/in/janedoe
   github: https://github.com/janedoe
+  youtube: https://youtube.com/@janedoe
+  twitter: https://twitter.com/janedoe
   addedAt: "2026-03-24T12:00:00Z"
   featured: false
 ```

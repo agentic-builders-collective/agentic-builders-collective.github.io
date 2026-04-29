@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PersonCardLinks from '../../components/PersonCardLinks.astro';
 import { getCollection } from "astro:content";
 import { contributionLinks } from "../../lib/contribution-links";
 import { buildPeopleIndex, resolvePersonRefs } from "../../lib/relations";
@@ -121,17 +122,7 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
             </div>
           </div>
           {person.data.tagline && <p class="person-card-tagline">{person.data.tagline}</p>}
-          <div class="person-card-links">
-            {person.data.website && (
-              <a class="muted-link" href={person.data.website} target="_blank" rel="noopener">Website</a>
-            )}
-            {person.data.linkedin && (
-              <a class="muted-link" href={person.data.linkedin} target="_blank" rel="noopener">LinkedIn</a>
-            )}
-            {person.data.github && (
-              <a class="muted-link" href={person.data.github} target="_blank" rel="noopener">GitHub</a>
-            )}
-          </div>
+          <PersonCardLinks person={person}></PersonCardLinks>
           {(() => {
             const backrefGroups = getBackrefGroups(person.data.id);
             return backrefGroups.length > 0 && (
@@ -171,17 +162,7 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
               )}
             </div>
             {person.data.tagline && <p class="person-card-tagline">{person.data.tagline}</p>}
-            <div class="person-card-links">
-              {person.data.website && (
-                <a class="muted-link" href={person.data.website} target="_blank" rel="noopener">Website</a>
-              )}
-              {person.data.linkedin && (
-                <a class="muted-link" href={person.data.linkedin} target="_blank" rel="noopener">LinkedIn</a>
-              )}
-              {person.data.github && (
-                <a class="muted-link" href={person.data.github} target="_blank" rel="noopener">GitHub</a>
-              )}
-            </div>
+            <PersonCardLinks person={person}></PersonCardLinks>
             {(() => {
               const backrefGroups = getBackrefGroups(person.data.id);
               return backrefGroups.length > 0 && (
