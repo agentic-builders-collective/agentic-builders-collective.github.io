@@ -1,21 +1,21 @@
 ---
-// src/components/MyBlock.astro
 const { person } = Astro.props;
 ---
+
 <div class="person-card-links">
-    {person.data.website && (
-        <a class="muted-link" href={person.data.website} target="_blank" rel="noopener">Website</a>
-    )}
-    {person.data.linkedin && (
-        <a class="muted-link" href={person.data.linkedin} target="_blank" rel="noopener">LinkedIn</a>
-    )}
-    {person.data.github && (
-        <a class="muted-link" href={person.data.github} target="_blank" rel="noopener">GitHub</a>
-    )}
-    {person.data.youtube && (
+  {person.data.website && (
+    <a class="muted-link" href={person.data.website} target="_blank" rel="noopener">Website</a>
+  )}
+  {person.data.linkedin && (
+    <a class="muted-link" href={person.data.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+  )}
+  {person.data.github && (
+    <a class="muted-link" href={person.data.github} target="_blank" rel="noopener">GitHub</a>
+  )}
+  {person.data.youtube && (
     <a class="muted-link" href={person.data.youtube} target="_blank" rel="noopener">YouTube</a>
-    )}
-    {person.data.twitter && (
+  )}
+  {person.data.twitter && (
     <a class="muted-link" href={person.data.twitter} target="_blank" rel="noopener">X</a>
-    )}
+  )}
 </div>
