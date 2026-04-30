@@ -1,0 +1,223 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const episodes = [
+  {
+    number: 1,
+    title: "Why AI is moving to local hardware",
+    date: "2026-04-29",
+    durationLabel: "22 min",
+    cover: "/podcast/abc-001-cover.jpg",
+    audio: "/podcast/abc-001-why-ai-is-moving-to-local-hardware.m4a",
+    description:
+      "Inaugural ABC episode. Why local-first AI matters: latency, privacy, cost, and the agentic workloads that are pushing inference back onto your own machines.",
+    tags: ["local-first", "hardware", "agentic"],
+  },
+];
+
+const featured = episodes[0];
+---
+
+<BaseLayout
+  title="podcast"
+  description="The Agentic Builders Collective podcast — conversations from Singapore's agentic coding community."
+>
+  <h1 class="page-title">Podcast</h1>
+
+  <section class="podcast-intro">
+    <p class="podcast-tagline">
+      Short episodes from Singapore's agentic builders. Tools, opinions, and field notes from people shipping with Claude, Codex, Antigravity, and friends.
+    </p>
+  </section>
+
+  <section class="podcast-featured">
+    <div class="featured-cover">
+      <img
+        src={featured.cover}
+        alt={`${featured.title} — episode cover art`}
+        loading="eager"
+        decoding="async"
+        width="1200"
+        height="1200"
+      />
+    </div>
+    <div class="featured-body">
+      <span class="featured-eyebrow">Episode {String(featured.number).padStart(2, "0")} · {new Date(featured.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })} · {featured.durationLabel}</span>
+      <h2 class="featured-title">{featured.title}</h2>
+      <p class="featured-description">{featured.description}</p>
+      <audio class="featured-player" controls preload="metadata" src={featured.audio}>
+        <a href={featured.audio}>Download audio (m4a)</a>
+      </audio>
+      <div class="featured-meta">
+        <a class="muted-link" href={featured.audio} download>Download m4a ▶</a>
+      </div>
+    </div>
+  </section>
+
+  {episodes.length > 1 && (
+    <section class="podcast-archive">
+      <h3 class="section-label">Archive</h3>
+      <ul class="episode-list">
+        {episodes.slice(1).map((ep) => (
+          <li class="episode-row">
+            <div class="episode-meta">
+              <span>Ep {String(ep.number).padStart(2, "0")}</span>
+              <span>{new Date(ep.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
+              <span>{ep.durationLabel}</span>
+            </div>
+            <div class="episode-body">
+              <h4 class="episode-title">{ep.title}</h4>
+              <p>{ep.description}</p>
+              <audio controls preload="none" src={ep.audio}></audio>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .podcast-intro {
+    margin-bottom: 32px;
+  }
+
+  .podcast-tagline {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 64ch;
+  }
+
+  .podcast-featured {
+    border: 1px solid var(--line);
+    display: grid;
+    gap: 32px;
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    margin-bottom: 48px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .podcast-featured::before {
+    background: radial-gradient(60% 50% at 0% 0%, rgba(126, 162, 255, 0.18), transparent 65%);
+    content: "";
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  .featured-cover {
+    align-self: start;
+    background: #0a0a14;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  .featured-cover img {
+    aspect-ratio: 1 / 1;
+    display: block;
+    height: auto;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .featured-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .featured-eyebrow {
+    color: var(--muted);
+    font-family: var(--font-serif);
+    font-size: 0.78rem;
+    font-style: italic;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .featured-title {
+    color: var(--text);
+    font-family: var(--font-serif);
+    font-size: 1.65rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .featured-description {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .featured-player {
+    margin-top: 4px;
+    width: 100%;
+  }
+
+  .featured-meta {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    justify-content: space-between;
+  }
+
+  .podcast-archive {
+    margin-top: 48px;
+  }
+
+  .episode-list {
+    display: grid;
+    gap: 18px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .episode-row {
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 12px;
+    grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+    padding: 16px 0;
+  }
+
+  .episode-meta {
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+    gap: 4px;
+  }
+
+  .episode-title {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    margin: 0 0 8px;
+  }
+
+  @media (max-width: 720px) {
+    .podcast-featured {
+      grid-template-columns: 1fr;
+      padding: 20px;
+    }
+
+    .featured-title {
+      font-size: 1.4rem;
+    }
+
+    .episode-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
