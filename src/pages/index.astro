@@ -121,7 +121,7 @@ const navLinks = [
   { href: "/community/", label: "community" },
   { href: "/showcase/", label: "showcase" },
   { href: "/events/", label: "events" },
-  { href: "/podcast/", label: "podcast", shimmer: true }
+  { href: "/podcast/", label: "podcast" }
 ];
 
 const isCurrent = (href: string) => {
@@ -502,12 +502,8 @@ const isCurrent = (href: string) => {
       <div class="home-top-links">
         {
           navLinks.map((item) => (
-            <a
-              class:list={{ current: isCurrent(item.href), "nav-shimmer": item.shimmer }}
-              href={item.href}
-            >
-              {item.shimmer && <span class="nav-shimmer-sweep" aria-hidden="true"></span>}
-              <span class="nav-shimmer-label">{item.label}</span>
+            <a class:list={{ current: isCurrent(item.href) }} href={item.href}>
+              {item.label}
             </a>
           ))
         }
