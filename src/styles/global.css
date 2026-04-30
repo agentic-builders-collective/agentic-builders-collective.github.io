@@ -191,6 +191,70 @@ a {
   color: var(--menu-link-active);
 }
 
+/* ── Nav shimmer (subtle sparkle on featured links) ── */
+
+.nav-shimmer {
+  border-bottom: 1px solid rgba(186, 209, 255, 0.45);
+  color: rgba(220, 234, 255, 0.95);
+  overflow: hidden;
+  padding: 2px 4px 3px;
+  position: relative;
+}
+
+.nav-shimmer .nav-shimmer-label {
+  background: linear-gradient(
+    100deg,
+    #cfdef3 0%,
+    #ffffff 30%,
+    #bad1ff 50%,
+    #ffffff 70%,
+    #cfdef3 100%
+  );
+  background-clip: text;
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: navShimmerText 4.2s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-shimmer .nav-shimmer-sweep {
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(186, 209, 255, 0.32) 50%,
+    transparent 62%,
+    transparent 100%
+  );
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-110%);
+  animation: navShimmerSweep 4.2s ease-in-out infinite;
+}
+
+.nav-shimmer:hover {
+  border-bottom-color: rgba(186, 209, 255, 0.9);
+}
+
+@keyframes navShimmerText {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 220% 50%; }
+}
+
+@keyframes navShimmerSweep {
+  0% { transform: translateX(-110%); }
+  55% { transform: translateX(110%); }
+  100% { transform: translateX(110%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-shimmer .nav-shimmer-label,
+  .nav-shimmer .nav-shimmer-sweep { animation: none; }
+}
+
 /* ── Nav CTA button ── */
 
 .nav-cta {
