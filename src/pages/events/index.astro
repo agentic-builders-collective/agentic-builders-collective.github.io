@@ -490,7 +490,7 @@ const recaps = [
     )}
   </section>
 
-  <details class="events-section">
+  <details class="events-section" open>
     <summary class="section-label collapsible-heading">Past Meetups</summary>
     {pastMeetups.length === 0 ? (
       <p>No past events yet. <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">Add an event by submitting a pull request</a></p>
@@ -607,13 +607,14 @@ const recaps = [
                   type="button"
                   class="button button-secondary events-panel-toggle recap-listen-toggle"
                   data-panel-toggle={panelId}
-                  data-show-label="Play recap"
+                  data-show-label="Listen to recap"
                   data-hide-label="Hide recap"
+                  data-show-text="Listen"
+                  data-hide-text="Hide"
                   aria-controls={panelId}
                   aria-expanded="false"
-                  aria-label="Play recap"
-                  title="Play recap"
-                  aria-disabled="false"
+                  aria-label="Listen to recap"
+                  title="Listen to recap"
                 >
                   <span>Listen</span>
                   <span class="inline-arrow" aria-hidden="true">▶</span>
@@ -771,6 +772,12 @@ const recaps = [
         toggle.setAttribute("aria-expanded", String(isVisible));
         toggle.setAttribute("aria-label", nextLabel);
         toggle.setAttribute("title", nextLabel);
+        const showText = toggle.getAttribute("data-show-text");
+        const hideText = toggle.getAttribute("data-hide-text");
+        if (showText && hideText) {
+          const textSpan = toggle.querySelector("span:not([aria-hidden])");
+          if (textSpan) textSpan.textContent = isVisible ? hideText : showText;
+        }
       });
     });
   </script>
