@@ -192,3 +192,15 @@
   youtube: https://youtube.com/butternmilk
   addedAt: "2026-05-03T05:17:15Z"
   featured: false
+
+- id: mohamed-yasin
+  name: Mohamed Yasin
+  aliases:
+    - Hyerba
+  tagline: Experimenting with agents and using AI to build automations for anyone who is willing to let me have a go at it 😊
+  company: Tenfingers Pte Ltd
+  website: https://hyerba.io/
+  linkedin: https://www.linkedin.com/in/hyerba/
+  github: https://github.com/hyerba
+  addedAt: "2026-05-12T00:00:00Z"
+  featured: false
