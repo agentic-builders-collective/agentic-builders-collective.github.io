@@ -1,0 +1,148 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { contributionLinks } from "../../lib/contribution-links";
+import { buildPeopleIndex, resolvePersonRefs } from "../../lib/relations";
+
+const allJobs = await getCollection("jobs");
+const allMembers = await getCollection("members");
+const organisers = await getCollection("organisers");
+const peopleById = buildPeopleIndex([...organisers, ...allMembers]);
+const now = new Date();
+
+const visibleJobs = allJobs
+  .filter((job) => job.data.status !== "draft")
+  .sort((a, b) => new Date(b.data.postedAt).getTime() - new Date(a.data.postedAt).getTime());
+
+const openJobs = visibleJobs.filter(
+  (job) => job.data.status === "open" && new Date(job.data.expiresAt).getTime() >= now.getTime(),
+);
+const expiredJobs = visibleJobs.filter(
+  (job) => job.data.status === "closed" || new Date(job.data.expiresAt).getTime() < now.getTime(),
+);
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" });
+
+const formatLabel = (value: string) => value.replaceAll("-", " ");
+---
+
+<BaseLayout
+  title="jobs"
+  description="Browse member-submitted jobs from the Agentic Builders Collective community."
+>
+  <h1 class="page-title">Jobs</h1>
+
+  <p class="collection-guide">
+    Member-submitted roles are published after admin review. Want to add one?
+    Follow the <a class="muted-link" href={contributionLinks.job} target="_blank" rel="noopener">job post guide</a>
+  </p>
+
+  <section class="jobs-section" aria-labelledby="open-jobs">
+    <h2 id="open-jobs" class="section-label">Open roles</h2>
+    {openJobs.length > 0 ? (
+      <div class="list">
+        {openJobs.map((job) => {
+          const submitters = resolvePersonRefs([job.data.submittedBy], peopleById, `job "${job.id}" submittedBy`);
+          const submitter = submitters[0];
+          return (
+            <article class="list-item job-card" id={job.id}>
+              <div class="list-item-header">
+                <a class="list-item-title" href={`/jobs/${job.id}/`}>{job.data.title}</a>
+                <div class="card-meta">
+                  <span>{job.data.company}</span>
+                  <span>{job.data.location}</span>
+                  <span>{formatLabel(job.data.workMode)}</span>
+                  <span>{formatLabel(job.data.employmentType)}</span>
+                </div>
+              </div>
+              <p>
+                Posted {formatDate(job.data.postedAt)}. Expires {formatDate(job.data.expiresAt)}.
+                {" "}Submitted by{" "}
+                {submitter.href ? <a href={submitter.href}>{submitter.name}</a> : submitter.name}.
+              </p>
+              {job.data.tags.length > 0 && (
+                <ul class="tag-list">
+                  {job.data.tags.map((tag) => (
+                    <li class="tag">{tag}</li>
+                  ))}
+                </ul>
+              )}
+              <div class="job-links">
+                <a class="muted-link" href={`/jobs/${job.id}/`}>Details</a>
+                {job.data.applyUrl && (
+                  <a class="muted-link" href={job.data.applyUrl} target="_blank" rel="noopener">Apply</a>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    ) : (
+      <p>
+        No open roles yet.
+        {" "}<a class="muted-link" href={contributionLinks.job} target="_blank" rel="noopener">Add a job post by submitting a pull request</a>
+      </p>
+    )}
+  </section>
+
+  {expiredJobs.length > 0 && (
+    <details class="jobs-section">
+      <summary class="section-label collapsible-heading">Closed or expired roles</summary>
+      <div class="list">
+        {expiredJobs.map((job) => (
+          <article class="list-item job-card job-card-expired" id={job.id}>
+            <div class="list-item-header">
+              <a class="list-item-title" href={`/jobs/${job.id}/`}>{job.data.title}</a>
+              <div class="card-meta">
+                <span>{job.data.company}</span>
+                <span>{job.data.location}</span>
+                <span>expired {formatDate(job.data.expiresAt)}</span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </details>
+  )}
+</BaseLayout>
+
+<style>
+  .jobs-section {
+    display: grid;
+    gap: 14px;
+  }
+
+  .job-card {
+    gap: 14px;
+  }
+
+  .job-card-expired {
+    opacity: 0.72;
+  }
+
+  .job-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .collapsible-heading {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .collapsible-heading::-webkit-details-marker {
+    display: none;
+  }
+
+  .collapsible-heading::after {
+    color: #555;
+    content: "[+]";
+    margin-left: 8px;
+  }
+
+  details[open] > .collapsible-heading::after {
+    content: "[-]";
+  }
+</style>

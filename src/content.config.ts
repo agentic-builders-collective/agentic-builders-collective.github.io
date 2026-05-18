@@ -78,6 +78,29 @@ const projects = defineCollection({
   }),
 });
 
+const jobs = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/jobs" }),
+  schema: z.object({
+    title: z.string(),
+    company: z.string(),
+    companyUrl: optionalUrl,
+    location: z.string(),
+    workMode: z.enum(["onsite", "hybrid", "remote"]),
+    employmentType: z.enum(["full-time", "part-time", "contract", "internship", "fractional"]),
+    applyUrl: optionalUrl,
+    contactEmail: z.email().optional().default(""),
+    postedAt: z.coerce.date(),
+    expiresAt: z.coerce.date(),
+    submittedBy: personRef,
+    tags: z.array(z.string()).default([]),
+    status: z.enum(["open", "closed", "draft"]).default("open"),
+  }).refine((job) => job.applyUrl || job.contactEmail, {
+    message: "Expected either applyUrl or contactEmail.",
+  }).refine((job) => job.expiresAt >= job.postedAt, {
+    message: "expiresAt must be on or after postedAt.",
+  }),
+});
+
 const presentations = defineCollection({
   loader: file("src/content/presentations/presentations.yaml"),
   schema: z.object({
@@ -174,6 +197,7 @@ export const collections = {
   organisers,
   sponsors,
   projects,
+  jobs,
   presentations,
   events,
   articles,
