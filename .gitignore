@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # local agent notes
 .codex/
+
+# local planning artifacts
+projects/

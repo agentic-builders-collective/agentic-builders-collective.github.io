@@ -9,6 +9,7 @@ For task-specific contribution instructions, start with:
 - `docs/add-presentation.md`
 - `docs/add-event.md`
 - `docs/add-project.md`
+- `docs/add-job.md`
 - `docs/add-article.md`
 
 There are two patterns in the current repo:
@@ -216,6 +217,37 @@ date: 2026-03-24
 
 Short write-up here.
 ```
+
+### `jobs`
+
+Directory: `src/content/jobs/`
+
+Use Markdown for member-submitted job posts. Each file is one role. Job posts are published only after an admin approves and merges the pull request.
+
+```md
+---
+title: Founding Agent Engineer
+company: Example Labs
+companyUrl: https://example.com
+location: Singapore
+workMode: hybrid
+employmentType: full-time
+applyUrl: https://example.com/careers/founding-agent-engineer
+contactEmail: hiring@example.com
+postedAt: 2026-05-18
+expiresAt: 2026-06-18
+submittedBy:
+  personId: jane-doe
+tags:
+  - agents
+  - engineering
+status: open
+---
+
+Short role description here.
+```
+
+`workMode` must be `onsite`, `hybrid`, or `remote`. `employmentType` must be `full-time`, `part-time`, `contract`, `internship`, or `fractional`. Use `status: closed` to close a post before expiry. Use `status: draft` only for local review because draft posts do not render.
 
 ### `presentations`
 

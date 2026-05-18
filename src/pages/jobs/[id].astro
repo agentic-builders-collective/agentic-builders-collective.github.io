@@ -1,0 +1,116 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { buildPeopleIndex, resolvePersonRefs } from "../../lib/relations";
+
+export async function getStaticPaths() {
+  const jobs = await getCollection("jobs", ({ data }) => data.status !== "draft");
+
+  return jobs.map((job) => ({
+    params: { id: job.id },
+    props: { job },
+  }));
+}
+
+const { job } = Astro.props;
+const { Content } = await render(job);
+const allMembers = await getCollection("members");
+const organisers = await getCollection("organisers");
+const peopleById = buildPeopleIndex([...organisers, ...allMembers]);
+const submitter = resolvePersonRefs([job.data.submittedBy], peopleById, `job "${job.id}" submittedBy`)[0];
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" });
+
+const formatLabel = (value: string) => value.replaceAll("-", " ");
+---
+
+<BaseLayout
+  title={`${job.data.title} at ${job.data.company}`}
+  description={`${job.data.title} at ${job.data.company}. Submitted to Agentic Builders Collective.`}
+>
+  <p><a class="muted-link" href="/jobs/">Back to jobs</a></p>
+
+  <article class="job-detail">
+    <header class="job-detail-header">
+      <h1 class="page-title">{job.data.title}</h1>
+      <div class="card-meta">
+        <span>{job.data.company}</span>
+        <span>{job.data.location}</span>
+        <span>{formatLabel(job.data.workMode)}</span>
+        <span>{formatLabel(job.data.employmentType)}</span>
+      </div>
+      <p>
+        Posted {formatDate(job.data.postedAt)}. Expires {formatDate(job.data.expiresAt)}.
+        {" "}Submitted by{" "}
+        {submitter.href ? <a href={submitter.href}>{submitter.name}</a> : submitter.name}.
+      </p>
+      <div class="job-actions">
+        {job.data.applyUrl && (
+          <a class="button button-primary" href={job.data.applyUrl} target="_blank" rel="noopener">Apply</a>
+        )}
+        {job.data.contactEmail && (
+          <a class="button button-secondary" href={`mailto:${job.data.contactEmail}`}>Email contact</a>
+        )}
+        {job.data.companyUrl && (
+          <a class="button button-secondary" href={job.data.companyUrl} target="_blank" rel="noopener">Company</a>
+        )}
+      </div>
+      {job.data.tags.length > 0 && (
+        <ul class="tag-list">
+          {job.data.tags.map((tag) => (
+            <li class="tag">{tag}</li>
+          ))}
+        </ul>
+      )}
+    </header>
+
+    <div class="job-body">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .job-detail {
+    display: grid;
+    gap: 24px;
+  }
+
+  .job-detail-header {
+    border-left: 3px solid var(--line);
+    display: grid;
+    gap: 14px;
+    padding-left: 22px;
+  }
+
+  .job-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .job-body {
+    display: grid;
+    gap: 16px;
+  }
+
+  .job-body :global(h2),
+  .job-body :global(h3) {
+    margin-top: 8px;
+  }
+
+  .job-body :global(ul),
+  .job-body :global(ol) {
+    color: var(--muted);
+    display: grid;
+    font-size: 1rem;
+    gap: 8px;
+    margin: 0;
+    padding-left: 24px;
+  }
+
+  .job-body :global(a) {
+    color: var(--accent);
+  }
+</style>

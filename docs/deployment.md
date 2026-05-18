@@ -3,7 +3,7 @@
 This repository has two deployment steps:
 
 1. Every push to `main` deploys the staging site at `agentic-builders-collective.github.io` through GitHub Pages.
-2. A pushed version tag sends a Resend email asking SG Code Campus to update production at `agenticbuilders.sg`.
+2. A pushed version tag matching `v*` deploys production to `agenticbuilders.sg` through S3 + CloudFront, and sends a Resend notification email.
 
 ## Staging
 
@@ -16,25 +16,33 @@ The workflow runs on:
 
 It checks out submodules, builds the Astro site, and deploys the static output to GitHub Pages.
 
-## Production handoff
+## Production
 
-Production updates are currently a manual handoff. When a version tag matching `v*` is pushed, [`.github/workflows/notify-production-deploy.yml`](../.github/workflows/notify-production-deploy.yml) sends an email through Resend.
+Production is handled by [`.github/workflows/deploy-s3.yml`](../.github/workflows/deploy-s3.yml).
+
+The workflow runs on pushed tags matching `v*`. It checks out submodules, installs dependencies, builds the Astro site, syncs `dist/` to `s3://agenticbuilders.sg`, and invalidates the CloudFront distribution.
+
+After the release commit is merged to `main`, create and push the next version tag from the updated `main` branch:
+
+```sh
+git switch main
+git pull --ff-only origin main
+git tag v1.0.16
+git push origin v1.0.16
+```
+
+Use the next appropriate `v*` version. The current latest tag is `v1.0.15`, so the next patch tag would be `v1.0.16`.
+
+## Production notification
+
+When a version tag matching `v*` is pushed, [`.github/workflows/notify-production-deploy.yml`](../.github/workflows/notify-production-deploy.yml) also sends an email through Resend.
 
 The email is sent:
 
 - From the `RESEND_FROM_EMAIL` repository variable.
 - To the comma-separated addresses in the `RESEND_TO_EMAILS` repository variable.
 
-The message asks SG Code Campus to push the tagged version from `github.com/agentic-builders-collective/agentic-builders-collective.github.io` to `agenticbuilders.sg`.
-
-Create and push a version tag with:
-
-```sh
-git tag vYYYY.MM.DD
-git push origin vYYYY.MM.DD
-```
-
-Use another clear `v*` version format if needed, for example `v1.2.3`.
+The message records the tagged version and can be used as a production deploy notification.
 
 ## Resend configuration
 

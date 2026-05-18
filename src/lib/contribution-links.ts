@@ -3,6 +3,7 @@ const repoDocsBase = "https://github.com/agentic-builders-collective/agentic-bui
 export const contributionLinks = {
   article: `${repoDocsBase}/add-article.md`,
   event: `${repoDocsBase}/add-event.md`,
+  job: `${repoDocsBase}/add-job.md`,
   person: `${repoDocsBase}/add-person.md`,
   presentation: `${repoDocsBase}/add-presentation.md`,
   project: `${repoDocsBase}/add-project.md`,
