@@ -11,3 +11,30 @@
     - agents
     - llm
     - bot
+
+- id: hermes-agent-connect-to-discord-dev-community
+  title: "Hermes agent: Connect to Discord"
+  authors:
+    - personId: lam-kim-phu
+  url: https://dev.to/lkp/hermes-agent-connect-to-discord-2p95
+  publication: DEV Community
+  date: 2026-05-12
+  summary: Walkthrough for connecting Hermes Agent to Discord and using it for text, image, music, and voice interactions.
+  tags:
+    - ai
+    - agents
+    - api
+    - tutorial
+
+- id: i-used-gemma-4-as-a-local-coding-agent-with-opencode-heres-what-happened-dev-community
+  title: "I Used Gemma 4 as a Local Coding Agent With OpenCode. Here's What Happened"
+  authors:
+    - personId: lam-kim-phu
+  url: https://dev.to/lkp/i-used-gemma-4-as-a-local-coding-agent-with-opencode-heres-what-happened-19mh
+  publication: DEV Community
+  date: 2026-05-13
+  summary: Practical experiment using Gemma 4 with OpenCode as a local coding agent for codebase inspection, implementation, and testing.
+  tags:
+    - devchallenge
+    - gemmachallenge
+    - gemma
