@@ -100,6 +100,9 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
   description="Meet the organisers behind Agentic Builders Collective and explore the Singapore community building with AI coding tools."
 >
   <h1 class="page-title">Community</h1>
+  <p class="collection-guide">
+    A snapshot of our 800+ members as of May 2026. <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">Add yourself on GitHub</a>.
+  </p>
 
   <section>
     <h3 class="section-label">Organisers</h3>
@@ -145,9 +148,6 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
 
   <section>
     <h3 class="section-label">Members</h3>
-    <p class="collection-guide">
-      Want to add yourself? Follow the <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">contribution guide</a>
-    </p>
     {members.length > 0 ? (
       <div class="grid columns-2">
         {members.map((person) => (
