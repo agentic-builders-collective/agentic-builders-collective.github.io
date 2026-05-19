@@ -204,3 +204,14 @@
   github: https://github.com/hyerba
   addedAt: "2026-05-12T00:00:00Z"
   featured: false
+
+- id: brandon-lee
+  name: Brandon Lee
+  aliases: []
+  tagline: ""
+  company: sangsara.net
+  website: https://sangsara.net/
+  linkedin: https://www.linkedin.com/in/brlee/
+  github: ""
+  addedAt: "2026-05-19T00:12:55Z"
+  featured: false

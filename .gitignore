@@ -27,4 +27,4 @@ pnpm-debug.log*
 .codex/
 
 # local planning artifacts
-projects/
+/projects/
