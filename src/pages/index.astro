@@ -3,6 +3,7 @@ import "../styles/global.css";
 import SiteHead from "../components/SiteHead.astro";
 import { getCollection } from "astro:content";
 import { contributionLinks } from "../lib/contribution-links";
+import { navLinks } from "../lib/navigation";
 import { latestRecap } from "../lib/recaps";
 
 const allEvents = await getCollection("events");
@@ -116,13 +117,6 @@ const { html: taglineAnimatedHtml, cursorSec: taglineEndSec } = injectGlyphsSequ
   taglineStartSec,
   TAGLINE_GLYPH_GAP_SEC
 );
-
-const navLinks = [
-  { href: "/about/", label: "about" },
-  { href: "/community/", label: "community" },
-  { href: "/showcase/", label: "showcase" },
-  { href: "/events/", label: "events" }
-];
 
 const isCurrent = (href: string) => {
   if (href === "/") {

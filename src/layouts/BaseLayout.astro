@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import SiteHead from "../components/SiteHead.astro";
+import { navLinks } from "../lib/navigation";
 
 interface Props {
   title: string;
@@ -8,14 +9,6 @@ interface Props {
 }
 
 const { title, description = "Agentic Builders Collective" } = Astro.props;
-
-const navLinks = [
-  { href: "/about/", label: "about" },
-  { href: "/community/", label: "community" },
-  { href: "/showcase/", label: "showcase" },
-  { href: "/jobs/", label: "jobs" },
-  { href: "/events/", label: "events" }
-];
 
 const whatsappUrl = "https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn";
 
