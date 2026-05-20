@@ -27,6 +27,7 @@ Then point your agent at the matching guide:
 | Add an event | `/events` | [`docs/add-event.md`](./docs/add-event.md) |
 | Add a project | `/showcase` | [`docs/add-project.md`](./docs/add-project.md) |
 | Add an article | `/showcase/#articles` | [`docs/add-article.md`](./docs/add-article.md) |
+| Add a job post | `/jobs/` | [`docs/add-job.md`](./docs/add-job.md) |
 
 Each guide includes a copyable agent prompt, target file, example entry, and validation commands.
 
