@@ -10,7 +10,7 @@ contactEmail: nathan.wangliao@cognition.ai
 postedAt: 2026-05-21
 expiresAt: 2026-08-19
 submittedBy:
-  personId: yj-soon
+  personId: kevin-lee
 tags:
   - deployed-engineering
   - customer-engineering
