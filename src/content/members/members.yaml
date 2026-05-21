@@ -215,3 +215,14 @@
   github: ""
   addedAt: "2026-05-19T00:12:55Z"
   featured: false
+
+- id: kevin-lee
+  name: Kevin Lee
+  aliases: []
+  tagline: Head of Deployed Engineering APJ at Cognition.
+  company: Cognition
+  website: ""
+  linkedin: https://www.linkedin.com/in/kevinlrd/
+  github: ""
+  addedAt: "2026-05-21T18:07:53Z"
+  featured: false
