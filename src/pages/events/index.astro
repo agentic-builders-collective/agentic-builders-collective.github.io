@@ -74,6 +74,16 @@ const past = allEvents
 
 const pastMeetups = past.filter((event) => event.data.kind !== "learning");
 const pastLearning = past.filter((event) => event.data.kind === "learning");
+const chatDigests = [
+  {
+    id: "2026-05-22-chat-digest",
+    title: "May 6-22 chat digest",
+    href: "/newsletters/2026-05-22/",
+    date: "2026-05-22",
+    label: "Unofficial rough notes",
+    summary: "A hacky written digest from the same WhatsApp stream: community shoutouts, build notes, links, and the main agentic-coding threads.",
+  },
+];
 ---
 
 <BaseLayout
@@ -253,6 +263,19 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
 
     .recap-listen-toggle {
       gap: 6px;
+    }
+
+    .recap-companion-section {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .recap-companion-heading {
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 500;
+      margin: 0;
     }
 
     .events-section {
@@ -619,6 +642,25 @@ const pastLearning = past.filter((event) => event.data.kind === "learning");
             </div>
           );
         })}
+      </div>
+    )}
+    {chatDigests.length > 0 && (
+      <div class="recap-companion-section">
+        <h3 class="recap-companion-heading">Unofficial rough notes</h3>
+        <div class="list">
+          {chatDigests.map((digest) => (
+            <div class="list-item" id={digest.id}>
+              <div class="list-item-header">
+                <a class="list-item-title" href={digest.href}>{digest.title}</a>
+                <div class="card-meta">
+                  <span>{new Date(digest.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
+                  <span>{digest.label}</span>
+                </div>
+              </div>
+              <p>{digest.summary}</p>
+            </div>
+          ))}
+        </div>
       </div>
     )}
   </details>
