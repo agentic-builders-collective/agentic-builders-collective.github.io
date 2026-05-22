@@ -3,7 +3,7 @@ title: Magicdoor.ai
 makers:
   - name: Gijs Verheijke
 url: https://www.magicdoor.ai
-github: https://github.com/gijsverheijke/magicdoorai
+github: ""
 screenshot: ""
 builtWith:
   - Next.js
