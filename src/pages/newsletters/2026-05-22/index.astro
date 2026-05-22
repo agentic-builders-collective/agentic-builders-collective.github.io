@@ -1,0 +1,664 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+const toc = [
+  { href: "#boot-sequence", label: "Boot sequence" },
+  { href: "#local-llm-garage", label: "Local LLM garage" },
+  { href: "#goal-mode-tokenmaxxing", label: "Goal mode and tokenmaxxing" },
+  { href: "#harnesses-skills-os", label: "Harnesses, skills, OS" },
+  { href: "#builder-drops", label: "Builder drops" },
+  { href: "#enterprise-agent-infra", label: "Enterprise agent infra" },
+  { href: "#design-and-docs", label: "Design and docs" },
+  { href: "#security-governance", label: "Security and governance" },
+  { href: "#community-notes", label: "Community notes" },
+  { href: "#shoutout-roll", label: "Shoutout roll" },
+];
+
+const signalLinks = [
+  {
+    label: "DGX Spark unboxing and local Qwen tests",
+    href: "https://www.linkedin.com/posts/jensenloke_thanks-to-ian-and-the-sg-code-campus-team-activity-7457771707517554688-N4_O",
+  },
+  {
+    label: "vLLM speculators",
+    href: "https://github.com/vllm-project/speculators/blob/main/README.md",
+  },
+  {
+    label: "Codex goals cookbook",
+    href: "https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex",
+  },
+  {
+    label: "Direct Corpus Interaction paper",
+    href: "https://huggingface.co/papers/2605.05242",
+  },
+  {
+    label: "Hidden technical debt in agent harnesses",
+    href: "https://leehanchung.github.io/blogs/2026/05/08/hidden-technical-debt-agent-harness/",
+  },
+  {
+    label: "Cognition FDE Singapore role",
+    href: "/jobs/deployed-engineer-apac-cognition/",
+  },
+];
+---
+
+<BaseLayout
+  title="abc newsletter / 2026-05-22"
+  description="A dark-mode community newsletter distilled from the Agentic Builders Collective May 6-22, 2026 podcast chunk."
+>
+  <style>
+    :global(.shell) {
+      max-width: 1040px;
+    }
+
+    :global(.page) {
+      gap: 30px;
+    }
+
+    .newsletter-page {
+      color: var(--text);
+      display: grid;
+      gap: 28px;
+      isolation: isolate;
+      position: relative;
+    }
+
+    .newsletter-page code {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+    }
+
+    .newsletter-page::before {
+      background:
+        linear-gradient(rgba(215, 228, 248, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(215, 228, 248, 0.04) 1px, transparent 1px),
+        repeating-linear-gradient(135deg, rgba(129, 241, 180, 0.05) 0 1px, transparent 1px 28px),
+        linear-gradient(180deg, #010208 0%, #050612 42%, #02030a 100%);
+      background-size: 42px 42px, 42px 42px, 100% 100%, 100% 100%;
+      content: "";
+      inset: 0;
+      pointer-events: none;
+      position: fixed;
+      z-index: -1;
+    }
+
+    .newsletter-page::after {
+      background: repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 7px,
+        rgba(255, 255, 255, 0.025) 8px
+      );
+      content: "";
+      inset: 0;
+      opacity: 0.55;
+      pointer-events: none;
+      position: fixed;
+      z-index: -1;
+    }
+
+    .newsletter-hero {
+      border-bottom: 1px solid rgba(129, 241, 180, 0.28);
+      display: grid;
+      gap: 18px;
+      padding: 24px 0 26px;
+      position: relative;
+    }
+
+    .newsletter-kicker,
+    .newsletter-meta,
+    .terminal-line {
+      color: rgba(129, 241, 180, 0.88);
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      line-height: 1.6;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .newsletter-title {
+      color: #f7fbff;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.7;
+      margin: 0;
+      max-width: 760px;
+    }
+
+    .newsletter-title::before {
+      color: rgba(255, 205, 116, 0.86);
+      content: "./";
+      margin-right: 0.4rem;
+    }
+
+    .newsletter-deck {
+      color: rgba(217, 231, 255, 0.86);
+      font-size: 1rem;
+      line-height: 1.85;
+      margin: 0;
+      max-width: 820px;
+    }
+
+    .terminal-strip {
+      background: rgba(30, 30, 40, 0.45);
+      border: 1px solid rgba(129, 241, 180, 0.24);
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+    }
+
+    .terminal-line {
+      text-transform: none;
+    }
+
+    .terminal-line::before {
+      color: rgba(255, 205, 116, 0.86);
+      content: "$ ";
+    }
+
+    .metric-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .metric {
+      background: rgba(30, 30, 40, 0.45);
+      border: 1px solid rgba(215, 228, 248, 0.14);
+      display: grid;
+      gap: 5px;
+      padding: 12px;
+    }
+
+    .metric strong {
+      color: #f7fbff;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .toc {
+      background: rgba(30, 30, 40, 0.45);
+      border: 1px solid rgba(215, 228, 248, 0.18);
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .toc h2,
+    .newsletter-section h2,
+    .mini-heading {
+      color: rgba(255, 205, 116, 0.95);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      line-height: 1.5;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .toc h2::before,
+    .newsletter-section h2::before,
+    .mini-heading::before {
+      color: rgba(129, 241, 180, 0.82);
+      content: "## ";
+    }
+
+    .toc ol {
+      display: grid;
+      gap: 8px;
+      list-style: decimal-leading-zero;
+      margin: 0;
+      padding-left: 2.1rem;
+    }
+
+    .toc a {
+      color: #d9e7ff;
+      font-size: 1rem;
+      line-height: 1.6;
+      text-decoration: none;
+    }
+
+    .toc a:hover,
+    .toc a:focus-visible {
+      color: rgba(129, 241, 180, 0.95);
+      text-decoration: underline;
+      text-underline-offset: 0.22em;
+    }
+
+    .newsletter-section {
+      border-top: 1px solid rgba(215, 228, 248, 0.16);
+      display: grid;
+      gap: 16px;
+      padding-top: 24px;
+      scroll-margin-top: 96px;
+    }
+
+    .newsletter-section p,
+    .newsletter-section li {
+      color: rgba(217, 231, 255, 0.82);
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+
+    .newsletter-section p {
+      margin: 0;
+    }
+
+    .signal-list,
+    .shoutout-list,
+    .drop-list {
+      display: grid;
+      gap: 12px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .signal-list li,
+    .shoutout-list li,
+    .drop-list li {
+      border-left: 3px solid rgba(129, 241, 180, 0.32);
+      padding-left: 14px;
+    }
+
+    .signal-list strong,
+    .drop-list strong,
+    .shoutout-list strong {
+      color: #f7fbff;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .field-notes {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field-note {
+      background: rgba(30, 30, 40, 0.45);
+      border: 1px solid rgba(215, 228, 248, 0.14);
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .field-note p {
+      color: rgba(217, 231, 255, 0.78);
+    }
+
+    .link-bank {
+      background: rgba(30, 30, 40, 0.45);
+      border: 1px solid rgba(255, 205, 116, 0.18);
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .link-bank ul {
+      display: grid;
+      gap: 8px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .link-bank a {
+      color: rgba(129, 241, 180, 0.95);
+      font-size: 1rem;
+      line-height: 1.6;
+      text-decoration: none;
+    }
+
+    .link-bank a::before {
+      color: rgba(255, 205, 116, 0.9);
+      content: "-> ";
+    }
+
+    .link-bank a:hover,
+    .link-bank a:focus-visible {
+      color: #f7fbff;
+      text-decoration: underline;
+      text-underline-offset: 0.22em;
+    }
+
+    .pull-line {
+      border-left: 3px solid rgba(255, 205, 116, 0.65);
+      color: #f7fbff;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.8;
+      margin: 0;
+      padding-left: 14px;
+    }
+
+    .memory-note {
+      background: rgba(30, 30, 40, 0.45);
+      border: 1px solid rgba(215, 228, 248, 0.14);
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .memory-note p {
+      color: rgba(217, 231, 255, 0.82);
+    }
+
+    .back-top {
+      color: rgba(129, 241, 180, 0.9);
+      font-size: 1rem;
+      line-height: 1.6;
+      text-decoration: none;
+      width: fit-content;
+    }
+
+    .back-top::before {
+      color: rgba(255, 205, 116, 0.9);
+      content: "^ ";
+    }
+
+    @media (max-width: 760px) {
+      .metric-grid,
+      .field-notes {
+        grid-template-columns: 1fr;
+      }
+
+      .newsletter-hero {
+        padding-top: 10px;
+      }
+    }
+  </style>
+
+  <article class="newsletter-page" id="top">
+    <header class="newsletter-hero">
+      <p class="newsletter-kicker">ABC packet capture / May 6-22, 2026 / SGT</p>
+      <h1 class="newsletter-title">Dark-mode ship log from the group chat furnace</h1>
+      <p class="newsletter-deck">
+        This is the hacked-together, neon-on-charcoal, plenty-of-shoutouts digest from the ABC podcast chunk
+        named <code>ian-choo-stanford-added-thanks-make</code>. It covers 1,869 messages of agent experiments,
+        local-model tinkering, token economics, builder drops, enterprise architecture, and community care.
+      </p>
+      <div class="terminal-strip" aria-label="Newsletter source summary">
+        <p class="terminal-line">ingest ./podcast_chunks/2026_05_22 --redact-phone-numbers --keep-names --ship-newsletter</p>
+        <p class="terminal-line">tone=hacky prose; background=dark terminal mesh; toc=clickable; shoutouts=abundant</p>
+      </div>
+    </header>
+
+    <div class="metric-grid" aria-label="Chunk metrics">
+      <div class="metric">
+        <strong>1,869</strong>
+        <span>messages parsed</span>
+      </div>
+      <div class="metric">
+        <strong>17 days</strong>
+        <span>May 6 through May 22</span>
+      </div>
+      <div class="metric">
+        <strong>101</strong>
+        <span>attachments referenced</span>
+      </div>
+      <div class="metric">
+        <strong>0</strong>
+        <span>phone numbers repeated here</span>
+      </div>
+    </div>
+
+    <nav class="toc" aria-label="Table of contents">
+      <h2>Clickable table of contents</h2>
+      <ol>
+        {toc.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ol>
+    </nav>
+
+    <section class="newsletter-section" id="boot-sequence">
+      <h2>Boot sequence</h2>
+      <p>
+        The chunk opens with Anton declaring Codex fast mode dangerously addictive, Jensen immediately pricing the
+        addiction in tokens, and YJ volunteering a test run that closed issues before the review bots had finished
+        talking. That set the operating mode for the fortnight: everyone trying to make agents go faster, run longer,
+        spend less, break less, and somehow still obey the part of the prompt that says "wait".
+      </p>
+      <p>
+        Gaurav Keerthi pulled the memory conversation back toward first principles: the Karpathy-style file wiki is a
+        research tool, not magic RAM. Chris turned a failed search workflow into a Codex-powered plugin. Pranav wrestled
+        with context burn. B started asking whether anyone had tried <code>/goal</code> inside <code>/goal</code>, which is
+        exactly the kind of recursive idea this chat treats as a reasonable Tuesday.
+      </p>
+      <p class="pull-line">
+        The vibe: less "AI will replace developers", more "which profile lets the agent run all night without setting fire
+        to the repo?"
+      </p>
+      <a class="back-top" href="#top">Back to contents</a>
+    </section>
+
+    <section class="newsletter-section" id="local-llm-garage">
+      <h2>Local LLM garage</h2>
+      <p>
+        Jensen, Ian, Ray, and Huiliang kept the local stack loud. DGX Sparks, Mac Studios, RTX boxes, vLLM, SGLang,
+        Ollama, Qwen, Gemma, Nemotron, Kimi, vision sidecars: the lab bench was basically a small weather system.
+        Jensen showed Qwen coder tests running locally with the SG Code Campus crew, Ian called the early Qwen output
+        impressive, and Ray kept the SGLang containers warm with Qwen3-coder and Nemotron experiments.
+      </p>
+      <p>
+        Gaurav Manek dropped the stat that made the self-hosted people sit up: speculative decoding pushed a Gemma setup
+        on an RTX 4090 from "fast" to "what just happened". Huiliang added field notes from Google Edge Gallery and later
+        Google startup credits. Ian kept separating serving from orchestration: the model runtime is one problem, the
+        agent loop around it is another, and pretending they are the same thing is where dashboards go to become soup.
+      </p>
+      <ul class="signal-list">
+        <li><strong>Jensen:</strong> DGX Spark unboxing, Qwen tests, Kimi-in-Claude experiments, and a small vision model bolted beside a larger Qwen model like a skill cartridge.</li>
+        <li><strong>Ian:</strong> MoE model guidance, local/hybrid architecture, and the recurring reminder that enterprise orchestration is not the same beast as personal coding-agent autonomy.</li>
+        <li><strong>Ray:</strong> SGLang, Nemotron, Devin-style enterprise comparisons, and the excellent "local harnesses need tinkering; enterprise systems need boring capabilities" reality check.</li>
+        <li><strong>Huiliang:</strong> Gemma-on-phone reports, Paperclip curiosity, Google Cloud startup pointers, and pragmatic AWS-vs-Google data-gravity notes.</li>
+      </ul>
+      <a class="back-top" href="#top">Back to contents</a>
+    </section>
+
+    <section class="newsletter-section" id="goal-mode-tokenmaxxing">
+      <h2>Goal mode and tokenmaxxing</h2>
+      <p>
+        The group spent a heroic amount of time turning subscription limits into a systems-design problem. Chris ran a
+        spectacular 68-agent burn-down against a weekly reset, then explained the orchestration as a pile of independent,
+        resumable creation loops. Jensen went deep on Codex profiles, yolo settings, <code>5.5 low</code> execution, and
+        the point at which permission prompts stop being safety and start being a tripwire.
+      </p>
+      <p>
+        The practical pattern that emerged: plan high, execute cheaper, review adversarially, and keep a kill switch.
+        Bennett liked xhigh planning plus cheaper implementation. Brendan described Opus as the orchestrator with Kimi
+        workers. Gaurav Keerthi proposed plan, challenge, execute, challenge again. Ling asked the budget question
+        everyone was already living. Anh nailed the <code>/goal</code> paradox: goal mode is about evaluation, but if you
+        approve every step manually, the goal has no legs.
+      </p>
+      <div class="field-notes">
+        <div class="field-note">
+          <h3 class="mini-heading">Budget doctrine</h3>
+          <p>
+            Use the expensive model where ambiguity is expensive. Use the cheap model where repetition is cheap. Spend
+            tokens on context assembly, tests, and review loops before spending them on confident thrashing.
+          </p>
+        </div>
+        <div class="field-note">
+          <h3 class="mini-heading">Safety doctrine</h3>
+          <p>
+            Separate profiles. Sandbox scary runs. Keep allowlists tight. If the agent wants to close twenty issues
+            before CI speaks, maybe make it sit down and show its work.
+          </p>
+        </div>
+      </div>
+      <a class="back-top" href="#top">Back to contents</a>
+    </section>
+
+    <section class="newsletter-section" id="harnesses-skills-os">
+      <h2>Harnesses, skills, OS</h2>
+      <p>
+        This was the fortnight where "agent harness" became table stakes vocabulary. Gaurav Manek gave the crisp layer
+        split: harness equals model plus tools plus loop; agent OS equals orchestration and business function on top.
+        Boon Kgim put Claude Code, Codex, Cowork, Claude Design, and terminal tools into the same wrapper family, then
+        kept asking the practical question: where does the agent live when clients want to message it at 3am?
+      </p>
+      <p>
+        Yish91 kept dragging theory back into production reality. Large codebases have weird patterns for a reason,
+        compliance does not accept "I get the full picture now", and giant autocomplete is not a substitute for owning
+        the blast radius. Rhys linked the "thin harness, fat skills" argument. Mabel brought in Nanoclaw and AIE harness
+        talks. Brendan compared GSD, Claude Code, Kimi, and opencode. Ian treated GSD and superpowers as complementary:
+        one for spec decomposition, the other for feature-level build-test-iterate pressure.
+      </p>
+      <ul class="signal-list">
+        <li><strong>Gaurav Manek:</strong> harness-vs-OS taxonomy, plus the immortal warning not to expose a Claude channel over a network port.</li>
+        <li><strong>Boon Kgim:</strong> subagents, Telegram-to-Hermes-to-Vercel shipping loops, and client website updates without asking the client to learn vibe coding.</li>
+        <li><strong>yish91:</strong> grill-me workflows, context rot, codebase pattern respect, and the recurring "tokens can go brrrr in side projects, not in accountable work" correction.</li>
+        <li><strong>Mabel:</strong> AIE livestream pointers and the Nanoclaw side-agent path.</li>
+      </ul>
+      <a class="back-top" href="#top">Back to contents</a>
+    </section>
+
+    <section class="newsletter-section" id="builder-drops">
+      <h2>Builder drops</h2>
+      <p>
+        The builder feed was busy in the best possible way. Brandon shipped Window Box, a desktop companion with scenery
+        and music. Gijs shipped Markjason diff views, opened it up, and then gave the most useful MVP sequencing note:
+        one-shotting the core can work, but the moment live infrastructure enters the chat, guardrails matter. YJ started
+        collecting Brandon's tiny toys for the ABC showcase and kept pointing people back to the repo.
+      </p>
+      <p>
+        Brendan came back from the AIE hackathon with a working build even when the portal misbehaved, then wrote up
+        DevRel thoughts for the agent era. Daylon showed a Telegram chatbot without middleware. Ivan Ong shared an AI-built
+        Bible platform story from a 60-year-old builder. Chris used classical Chinese book production as an eval set.
+        Ray, Jensen, Ian, and Huiliang kept the hardware bench alive. This is how the group works when it is healthy:
+        someone ships, someone benchmarks, someone asks if it is secure, someone makes it weirdly useful by tomorrow.
+      </p>
+      <ul class="drop-list">
+        <li><strong>Brandon L:</strong> Window Box, plus the continuing tiny-toy streak that makes showcase curation a real problem.</li>
+        <li><strong>Gijs:</strong> Markjason diffs, open source momentum, and practical notes on sequencing AI-built MVPs.</li>
+        <li><strong>Brendan / bguiz:</strong> AIE build notes, DevRel funnel thinking, and a magnificent map of Google's agent-product naming chaos.</li>
+        <li><strong>YJ Soon:</strong> repo nudges, showcase gardening, Copilot Agents Window spotting, and the public call to add profiles, projects, jobs, and articles.</li>
+        <li><strong>Kevin Lee:</strong> the Cognition Forward Deployed Engineer role and a very on-brand plug for the new ABC jobs page.</li>
+      </ul>
+      <a class="back-top" href="#top">Back to contents</a>
+    </section>
+
+    <section class="newsletter-section" id="enterprise-agent-infra">
+      <h2>Enterprise agent infra</h2>
+      <p>
+        The cloud conversation got sharper on May 22. Boon wanted a coding harness with Git access, Telegram input,
+        staging preview, and a "go live" switch. Ian drew the boundary around AWS AgentCore: great for explicit,
+        deterministic workflow coordination; not the obvious home for fuzzy user interaction, exploratory solution search,
+        or emergent multi-agent coordination. Bedrock Agents, Google ADK, Autogen, Kiro, VPS boxes, Mac minis, Azure,
+        Beelinks, RAM limits, home-network failure modes: the map got usefully messy.
+      </p>
+      <p>
+        Kishore pushed back from the 24x7 customized performance-cost side. Randy brought governed AI infrastructure into
+        the room. Jensen joked his house would become the deployment risk if he self-hosted too hard, then got serious:
+        for long-running client workloads, RAM and gateways are not decoration. Gibson already had the Telegram-to-Hermes
+        loop running. B kept the minimal answer alive: Codex on a VPS works. Lars spotted the secret job requirement:
+        basic network engineering, but make it operational.
+      </p>
+      <p class="pull-line">
+        Emerging consensus: personal claws and enterprise workflows overlap, but they are not one product wearing two
+        invoices.
+      </p>
+      <a class="back-top" href="#top">Back to contents</a>
+    </section>
+
+    <section class="newsletter-section" id="design-and-docs">
+      <h2>Design and docs</h2>
+      <p>
+        The group kept poking at the design handoff problem from both ends. Ian proposed a weirdly promising pipeline:
+        PRD or BRD in Markdown, Figma layout converted to raw HTML/CSS, then hand annotations in comments so the agent has
+        a richer substrate than a screenshot and a prayer. Petty is already using Claude Design as a high-fidelity first
+        cut before sending it into Claude Code. Adamzafir named the gap: letting an agent design is still a gamble, and
+        matching screenshots can take ten rounds of prompting.
+      </p>
+      <p>
+        Gaurav Keerthi asked about Figma MCP. Jan tried Claude-to-Figma for diagrams and UI recreation, then flagged a
+        Figma plugin to test next. Wan Wei asked the delightful beginner-facing question about image and text generation
+        replacing a marketing system. Ian recommended MacDown for non-technical Markdown editing and confessed that emacs
+        once bounced him out of freshman CS. B, naturally, suggested nano and vim anyway.
+      </p>
+      <ul class="signal-list">
+        <li><strong>Ian:</strong> HTML-plus-comments as an agent-readable design handoff path, and MacDown for people who should not be forced into terminal editing on day one.</li>
+        <li><strong>Petty:</strong> Claude Design as mock, PRD reference, and cautionary tale when the agent decides the aesthetic has wandered off.</li>
+        <li><strong>Gaurav Keerthi and Jan:</strong> Figma MCP, diagram trials, and the still-unsolved "design intent into code" bridge.</li>
+        <li><strong>Wan Wei:</strong> the exact product-manager question everyone eventually asks: which tool eats which workflow now?</li>
+      </ul>
+      <a class="back-top" href="#top">Back to contents</a>
+    </section>
+
+    <section class="newsletter-section" id="security-governance">
+      <h2>Security and governance</h2>
+      <p>
+        Security kept interrupting the fun in useful ways. Gaurav Keerthi flagged a supply-chain threat and explained his
+        current skill-handling pattern: have the agent inspect a skill and rebuild the relevant parts locally instead of
+        blindly importing embedded content. Daryl's simple public-repo reminder landed: do not commit personal data.
+        Rhys and Jan kept the legal-accountability layer in view while the group discussed white-collar displacement and
+        professional responsibility.
+      </p>
+      <p>
+        Chris posted a draft of collective guidelines for external events, keeping the chat technical, social, and not an
+        ad board. The group also circled around token opacity as a pricing and trust problem. Chris framed tokens like a
+        metered currency; others compared subscriptions, API buckets, <code>-p</code> changes, Fire Pass, Kimi, and Claude
+        limits. The practical result was not ideological purity. It was hedging: multiple harnesses, multiple providers,
+        local fallbacks, and fewer assumptions that any one platform will remain generous.
+      </p>
+      <a class="back-top" href="#top">Back to contents</a>
+    </section>
+
+    <section class="newsletter-section" id="community-notes">
+      <h2>Community notes</h2>
+      <div class="memory-note">
+        <h3 class="mini-heading">Remembering Logan</h3>
+        <p>
+          The chat paused to remember Logan Goh with grief, admiration, and a lot of gratitude. Chris shared his
+          presentation again. Olivia, Lakshmi, Peijing, Jeff, Wan Wei, YJ, WS Chioh, Aaron, Johnny, Boon Kgim, Alex, and
+          others remembered his curiosity, generosity, technical depth, and the way he helped people feel brave enough to
+          learn. The newsletter keeps the note simple: Logan mattered here.
+        </p>
+      </div>
+      <p>
+        There was also a lot of welcome energy. Ian and others kept adding new builders. Kevin thanked everyone who came
+        to or watched AIE and pointed people to Cognition's Singapore role. Brendan suggested future meetup speakers from
+        the AIE circuit. YJ, Chris, Jensen, and Ian kept the ABC site, jobs page, repo, and contribution loops moving.
+        This is the less glamorous maintenance layer of a community: links, guidelines, PRs, event asks, and someone
+        saying "please put that on the showcase page" before the thing vanishes into chat sediment.
+      </p>
+      <div class="link-bank">
+        <h3 class="mini-heading">Signal links from the chunk</h3>
+        <ul>
+          {signalLinks.map((link) => (
+            <li><a href={link.href} target={link.href.startsWith("/") ? undefined : "_blank"} rel={link.href.startsWith("/") ? undefined : "noopener"}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+      <a class="back-top" href="#top">Back to contents</a>
+    </section>
+
+    <section class="newsletter-section" id="shoutout-roll">
+      <h2>Shoutout roll</h2>
+      <ul class="shoutout-list">
+        <li><strong>Jensen Loke:</strong> for running hot on DGX, yolo profiles, Kimi trials, Codex release spotting, and the local-vision skill cartridge energy.</li>
+        <li><strong>Ian Choo:</strong> for model architecture notes, enterprise-agent boundary setting, Figma-to-HTML speculation, and many new-member handoffs.</li>
+        <li><strong>YJ Soon:</strong> for repo stewardship, showcase nudges, Copilot agent-window links, and trying Codex on live issues so the rest of us get the scar tissue for free.</li>
+        <li><strong>Chris Pecaut:</strong> for the 68-agent sprint, classical Chinese evals, token-economics provocations, collective guidelines, and turning chat fuel into recap fuel.</li>
+        <li><strong>Gaurav Keerthi:</strong> for research-tool clarity, plan-reflect loops, Figma MCP questions, and supply-chain caution.</li>
+        <li><strong>Gaurav Manek:</strong> for speculative decoding numbers, harness taxonomy, WhatsApp MCP, and the Unix socket security nudge.</li>
+        <li><strong>Ray A. Fan:</strong> for Qwen/Nemotron/SGLang experiments and enterprise-agent benchmarking curiosity.</li>
+        <li><strong>Huiliang:</strong> for Gemma, Google credits, ADK, Paperclip, and data-gravity pragmatism.</li>
+        <li><strong>Boon Kgim:</strong> for subagent pattern language, client-facing agent flows, and Telegram-to-Hermes shipping loops.</li>
+        <li><strong>Brendan / bguiz:</strong> for AIE hackathon dispatches, DevRel notes, opencode/Kimi tests, and the Google product-name stack trace.</li>
+        <li><strong>Wan Wei:</strong> for asking the questions that make tools legible to more people, reporting from hackathons, and carrying Logan's encouragement forward.</li>
+        <li><strong>Gijs:</strong> for Markjason, MVP sequencing notes, and a healthy suspicion of unguarded AI-built infrastructure.</li>
+        <li><strong>yish91:</strong> for context-rot warnings, production caution, and making "giant autocomplete" sound as risky as it is useful.</li>
+        <li><strong>Rhys, Jan, Daryl, Peijing, Mabel, Gibson, Adamzafir, Phu, Anton, Brandon, Ivan, Daylon, Kevin, Kishore, Randy, Lars, B, and many more:</strong> for links, builds, warnings, jokes, questions, and the steady conversion of noisy chat into working knowledge.</li>
+      </ul>
+      <a class="back-top" href="#top">Back to contents</a>
+    </section>
+  </article>
+</BaseLayout>
