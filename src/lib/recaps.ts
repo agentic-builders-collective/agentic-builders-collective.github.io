@@ -9,6 +9,15 @@ export interface Recap {
 
 export const recaps: Recap[] = [
   {
+    id: "recap-2026-05-22",
+    title: "#2 - Orchestrating autonomous agents in YOLO mode",
+    date: "2026-05-22",
+    durationLabel: "37 min",
+    audio: "/recaps/abc-002-orchestrating-autonomous-agents-in-yolo-mode.m4a",
+    description:
+      "Highlights from the May 6-22 chat: Codex and Claude workflows, long-running agent jobs, local model experiments, community tooling, and how builders are letting autonomous agents run with fewer handoffs.",
+  },
+  {
     id: "recap-2026-04-29",
     title: "#1 - Why AI is moving to local hardware",
     date: "2026-04-29",
