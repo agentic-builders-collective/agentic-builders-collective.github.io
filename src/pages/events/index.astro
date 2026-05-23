@@ -74,6 +74,13 @@ const past = allEvents
 
 const pastMeetups = past.filter((event) => event.data.kind !== "learning");
 const pastLearning = past.filter((event) => event.data.kind === "learning");
+const externalEvents = allEvents.filter((event) => event.data.kind === "external");
+const upcomingExternal = externalEvents
+  .filter((e) => e.data.status === "upcoming" || new Date(e.data.date) >= now)
+  .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime());
+const pastExternal = externalEvents
+  .filter((e) => e.data.status === "past" && new Date(e.data.date) < now)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 const chatDigests = [
   {
     id: "2026-05-22-chat-digest",
@@ -331,6 +338,13 @@ const chatDigests = [
 
   <section>
     <h3 class="section-label">Upcoming</h3>
+    <div class="card" style="margin-bottom: 24px; border-left-color: var(--accent);">
+      <p>
+        <strong>Have an event to share?</strong> Submit a pull request to add meetups, workshops, conferences, or hackathons — including external events from other organisers.
+        <a href={contributionLinks.event} target="_blank" rel="noopener">Follow the contribution guide</a>.
+        Agents reading this repo should know how: use <code>kind: external</code> in the event frontmatter.
+      </p>
+    </div>
     {upcoming.length === 0 ? (
       <div class="card">
         <p>Stay tuned for the next event!</p>
@@ -505,6 +519,97 @@ const chatDigests = [
   </section>
 
   <details class="events-section">
+
+  <section style="margin-top: 48px;">
+    <h3 class="section-label">External Events</h3>
+    {upcomingExternal.length === 0 && pastExternal.length === 0 ? (
+      <div class="card">
+        <p>No external events listed right now. Have one to share? <a href={contributionLinks.event} target="_blank" rel="noopener">Submit an external event</a>.</p>
+      </div>
+    ) : (
+      <div class="list">
+        {upcomingExternal.map((event) => (
+          <div class="list-item" id={event.id}>
+            <div class="list-item-header">
+              {event.data.registrationUrl ? (
+                <a class="list-item-title" href={event.data.registrationUrl} target="_blank" rel="noopener">{event.data.title}</a>
+              ) : (
+                <span class="list-item-title">{event.data.title}</span>
+              )}
+              <div class="card-meta">
+                <span>{new Date(event.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
+                {event.data.time && <span>{formatTime(event.data.time)}</span>}
+                {event.data.venue && (
+                  <span>
+                    {event.data.venueUrl ? (
+                      <a class="muted-link events-muted-link" href={event.data.venueUrl} target="_blank" rel="noopener">{event.data.venue}</a>
+                    ) : (
+                      event.data.venue
+                    )}
+                  </span>
+                )}
+                {event.data.tags.length > 0 && (
+                  <span>
+                    {event.data.tags.map((tag) => (
+                      <span class="tag" style="margin-left: 4px;">#{tag}</span>
+                    ))}
+                  </span>
+                )}
+              </div>
+            </div>
+            {event.data.registrationUrl && (
+              <div class="survey-actions">
+                <a class="button button-primary events-register" href={event.data.registrationUrl} target="_blank" rel="noopener">
+                  Register <span class="inline-arrow" aria-hidden="true">▶</span>
+                </a>
+              </div>
+            )}
+            <div class="list-item-body">
+              <slot />
+            </div>
+          </div>
+        ))}
+        {pastExternal.map((event) => (
+          <div class="list-item" id={event.id}>
+            <div class="list-item-header">
+              {event.data.registrationUrl ? (
+                <a class="list-item-title" href={event.data.registrationUrl} target="_blank" rel="noopener">{event.data.title}</a>
+              ) : (
+                <span class="list-item-title">{event.data.title}</span>
+              )}
+              <div class="card-meta">
+                <span>{new Date(event.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
+                {event.data.time && <span>{formatTime(event.data.time)}</span>}
+                {event.data.venue && (
+                  <span>
+                    {event.data.venueUrl ? (
+                      <a class="muted-link events-muted-link" href={event.data.venueUrl} target="_blank" rel="noopener">{event.data.venue}</a>
+                    ) : (
+                      event.data.venue
+                    )}
+                  </span>
+                )}
+                {event.data.tags.length > 0 && (
+                  <span>
+                    {event.data.tags.map((tag) => (
+                      <span class="tag" style="margin-left: 4px;">#{tag}</span>
+                    ))}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div class="list-item-body">
+              <slot />
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+    <p style="margin-top: 16px; color: var(--muted); opacity: 0.65;">
+      Want to list an external event? <a href={contributionLinks.event} target="_blank" rel="noopener">Follow the contribution guide</a> and use <code>kind: external</code>.
+    </p>
+  </section>
+
     <summary class="section-label collapsible-heading">Past Meetups</summary>
     {pastMeetups.length === 0 ? (
       <p>No past events yet. <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">Add an event by submitting a pull request</a></p>

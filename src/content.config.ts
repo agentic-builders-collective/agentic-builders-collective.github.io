@@ -128,7 +128,7 @@ const events = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
-    kind: z.enum(["meetup", "learning"]).default("meetup"),
+    kind: z.enum(["meetup", "learning", "external"]).default("meetup"),
     time: z.string().optional().default(""),
     venue: z.string().optional().default(""),
     venueUrl: z.string().optional().default(""),
