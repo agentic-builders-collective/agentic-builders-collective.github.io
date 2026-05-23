@@ -226,3 +226,16 @@
   github: ""
   addedAt: "2026-05-21T18:07:53Z"
   featured: false
+
+- id: gijs-verheijke
+  name: Gijs Verheijke
+  aliases: []
+  tagline: Building AI products, agent workflows, and practical adoption inside real organisations.
+  company: Carousell
+  website: https://gijs.substack.com
+  linkedin: https://www.linkedin.com/in/gverheijke/
+  github: https://github.com/gijsverheijke
+  youtube: ""
+  twitter: ""
+  addedAt: "2026-05-23T12:22:21Z"
+  featured: false

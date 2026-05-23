@@ -1,7 +1,7 @@
 ---
 title: Magicdoor.ai
 makers:
-  - name: Gijs Verheijke
+  - personId: gijs-verheijke
 url: https://www.magicdoor.ai
 github: ""
 screenshot: ""
