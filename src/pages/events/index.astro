@@ -548,13 +548,6 @@ const chatDigests = [
                     )}
                   </span>
                 )}
-                {event.data.tags.length > 0 && (
-                  <span>
-                    {event.data.tags.map((tag) => (
-                      <span class="tag" style="margin-left: 4px;">#{tag}</span>
-                    ))}
-                  </span>
-                )}
               </div>
             </div>
             {event.data.registrationUrl && (
@@ -563,6 +556,13 @@ const chatDigests = [
                   Register <span class="inline-arrow" aria-hidden="true">▶</span>
                 </a>
               </div>
+            )}
+            {event.data.tags.length > 0 && (
+              <ul class="tag-list" style="margin-top: 8px;">
+                {event.data.tags.map((tag) => (
+                  <li class="tag">{tag}</li>
+                ))}
+              </ul>
             )}
             <div class="list-item-body">
               <slot />
@@ -589,15 +589,15 @@ const chatDigests = [
                     )}
                   </span>
                 )}
-                {event.data.tags.length > 0 && (
-                  <span>
-                    {event.data.tags.map((tag) => (
-                      <span class="tag" style="margin-left: 4px;">#{tag}</span>
-                    ))}
-                  </span>
-                )}
               </div>
             </div>
+            {event.data.tags.length > 0 && (
+              <ul class="tag-list" style="margin-top: 8px;">
+                {event.data.tags.map((tag) => (
+                  <li class="tag">{tag}</li>
+                ))}
+              </ul>
+            )}
             <div class="list-item-body">
               <slot />
             </div>
