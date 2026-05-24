@@ -16,6 +16,7 @@ const upcomingEvent = allEvents
   .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime())[0] ?? null;
 
 const whatsappUrl = "https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn";
+const getEventHref = (eventId: string) => `/events/#${eventId}`;
 
 /** Scales base timings (0.8 then ×0.75 ≈ another 25% faster). */
 const SPEED = 0.6;
@@ -481,7 +482,7 @@ const isCurrent = (href: string) => {
         {upcomingEvent ? (
           <div class="list-item">
             <div class="list-item-header">
-              <span class="list-item-title">{upcomingEvent.data.title}</span>
+              <a class="list-item-title" href={getEventHref(upcomingEvent.id)}>{upcomingEvent.data.title}</a>
               <div class="card-meta">
                 <span>{new Date(upcomingEvent.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
                 {upcomingEvent.data.time && <span>{upcomingEvent.data.time}</span>}

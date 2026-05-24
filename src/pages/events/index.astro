@@ -25,6 +25,7 @@ for (const [, presentations] of presentationsByEventId) {
 
 const getEventPresentations = (eventId: string) => presentationsByEventId.get(eventId) ?? [];
 const now = new Date();
+const getEventHref = (eventId: string) => `/events/#${eventId}`;
 const formatTime = (time: string) => time.replace(/\s*SGT$/, "");
 const formatDateKey = (value: Date | string) => {
   const date = value instanceof Date ? value : new Date(value);
@@ -104,6 +105,16 @@ const chatDigests = [
 
     .events-register {
       justify-self: start;
+    }
+
+    .list-item {
+      scroll-margin-top: 96px;
+    }
+
+    .list-item:target {
+      background: rgba(215, 228, 248, 0.08);
+      border-left: 3px solid var(--accent);
+      box-shadow: inset 0 0 0 1px rgba(215, 228, 248, 0.24);
     }
 
     .survey-section {
@@ -358,18 +369,13 @@ const chatDigests = [
               const qrPanelId = `pre-survey-${event.id}`;
               const feedbackPanelId = `feedback-${event.id}`;
               const closesText = getClosesText(preSurvey);
-              const showActionButtons = !!(event.data.registrationUrl || preSurvey?.url);
               const closesInsideSurvey = closesText && preSurvey?.url && preSurvey.closesAtPlacement === "inside";
               const closesOutsideSurvey = closesText && preSurvey?.url && preSurvey.closesAtPlacement === "outside";
               const hasResults = hasFeedbackResults(event.data.feedback);
               return (
                 <>
                   <div class="list-item-header">
-                    {event.data.registrationUrl ? (
-                      <a class="list-item-title" href={event.data.registrationUrl} target="_blank" rel="noopener">{event.data.title}</a>
-                    ) : (
-                      <span class="list-item-title">{event.data.title}</span>
-                    )}
+                    <a class="list-item-title" href={getEventHref(event.id)}>{event.data.title}</a>
                     <div class="card-meta">
                       <span>{new Date(event.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
                       {event.data.time && <span>{formatTime(event.data.time)}</span>}
@@ -401,58 +407,59 @@ const chatDigests = [
                       </div>
                     );
                   })()}
-                  {showActionButtons && (
-                    <div class="survey-actions">
-                      {event.data.registrationUrl && (
-                        <a class="button button-primary events-register" href={event.data.registrationUrl} target="_blank" rel="noopener">
-                          Register <span class="inline-arrow" aria-hidden="true">▶</span>
-                        </a>
-                      )}
-                      {preSurvey?.url && (
-                        <a class="button button-secondary events-survey-button" href={preSurvey.url} target="_blank" rel="noopener">
-                          <span>{preSurvey.takeSurveyLabel || "Take survey"}</span>
-                          <span class="inline-arrow" aria-hidden="true">▶</span>
-                          {closesInsideSurvey && <span class="events-survey-meta-inline">{closesText}</span>}
-                        </a>
-                      )}
-                      {preSurvey?.url && preSurvey.qrEnabled && (
-                        <button
-                          type="button"
-                          class="button button-secondary events-panel-toggle"
-                          data-panel-toggle={qrPanelId}
-                          data-show-label={preSurvey.qrToggleLabel || "Show survey QR"}
-                          data-hide-label="Hide survey QR"
-                          aria-controls={qrPanelId}
-                          aria-expanded="false"
-                          aria-label={preSurvey.qrToggleLabel || "Show survey QR"}
-                          title={preSurvey.qrToggleLabel || "Show survey QR"}
-                          aria-disabled="false"
-                        >
-                          <svg class="events-panel-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M4 4H10V10H4V4ZM6 6V8H8V6H6ZM14 4H20V10H14V4ZM16 6V8H18V6H16ZM4 14H10V20H4V14ZM6 16V18H8V16H6ZM12 12H14V14H12V12ZM14 14H16V16H14V14ZM12 16H14V18H12V16ZM16 16H18V18H16V16ZM18 12H20V14H18V12ZM18 18H20V20H18V18ZM16 20H18V22H16V20ZM20 16H22V18H20V16Z" fill="currentColor" />
-                          </svg>
-                        </button>
-                      )}
-                      {preSurvey?.feedbackEnabled && (
-                        <button
-                          type="button"
-                          class="button button-secondary events-panel-toggle"
-                          data-panel-toggle={feedbackPanelId}
-                          data-show-label={preSurvey.feedbackToggleLabel || "Show survey results"}
-                          data-hide-label="Hide survey results"
-                          aria-controls={feedbackPanelId}
-                          aria-expanded="false"
-                          aria-label={preSurvey.feedbackToggleLabel || "Show survey results"}
-                          title={preSurvey.feedbackToggleLabel || "Show survey results"}
-                          aria-disabled="false"
-                        >
-                          <svg class="events-panel-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M5 6H19V16H9L5 20V6ZM7 8V15.17L8.17 14H17V8H7ZM9 10H15V12H9V10Z" fill="currentColor" />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-                  )}
+                  <div class="survey-actions">
+                    {event.data.registrationUrl && (
+                      <a class="button button-primary events-register" href={event.data.registrationUrl} target="_blank" rel="noopener">
+                        Register <span class="inline-arrow" aria-hidden="true">▶</span>
+                      </a>
+                    )}
+                    <a class="button button-secondary" href={getEventHref(event.id)} aria-label={`Link to ${event.data.title}`}>
+                      Event link
+                    </a>
+                    {preSurvey?.url && (
+                      <a class="button button-secondary events-survey-button" href={preSurvey.url} target="_blank" rel="noopener">
+                        <span>{preSurvey.takeSurveyLabel || "Take survey"}</span>
+                        <span class="inline-arrow" aria-hidden="true">▶</span>
+                        {closesInsideSurvey && <span class="events-survey-meta-inline">{closesText}</span>}
+                      </a>
+                    )}
+                    {preSurvey?.url && preSurvey.qrEnabled && (
+                      <button
+                        type="button"
+                        class="button button-secondary events-panel-toggle"
+                        data-panel-toggle={qrPanelId}
+                        data-show-label={preSurvey.qrToggleLabel || "Show survey QR"}
+                        data-hide-label="Hide survey QR"
+                        aria-controls={qrPanelId}
+                        aria-expanded="false"
+                        aria-label={preSurvey.qrToggleLabel || "Show survey QR"}
+                        title={preSurvey.qrToggleLabel || "Show survey QR"}
+                        aria-disabled="false"
+                      >
+                        <svg class="events-panel-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M4 4H10V10H4V4ZM6 6V8H8V6H6ZM14 4H20V10H14V4ZM16 6V8H18V6H16ZM4 14H10V20H4V14ZM6 16V18H8V16H6ZM12 12H14V14H12V12ZM14 14H16V16H14V14ZM12 16H14V18H12V16ZM16 16H18V18H16V16ZM18 12H20V14H18V12ZM18 18H20V20H18V18ZM16 20H18V22H16V20ZM20 16H22V18H20V16Z" fill="currentColor" />
+                        </svg>
+                      </button>
+                    )}
+                    {preSurvey?.feedbackEnabled && (
+                      <button
+                        type="button"
+                        class="button button-secondary events-panel-toggle"
+                        data-panel-toggle={feedbackPanelId}
+                        data-show-label={preSurvey.feedbackToggleLabel || "Show survey results"}
+                        data-hide-label="Hide survey results"
+                        aria-controls={feedbackPanelId}
+                        aria-expanded="false"
+                        aria-label={preSurvey.feedbackToggleLabel || "Show survey results"}
+                        title={preSurvey.feedbackToggleLabel || "Show survey results"}
+                        aria-disabled="false"
+                      >
+                        <svg class="events-panel-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M5 6H19V16H9L5 20V6ZM7 8V15.17L8.17 14H17V8H7ZM9 10H15V12H9V10Z" fill="currentColor" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
                   {preSurvey?.url && preSurvey.qrEnabled && (
                     <>
                       <div id={qrPanelId} class="survey-section events-panel-section is-hidden" data-panel>
@@ -531,11 +538,7 @@ const chatDigests = [
         {upcomingExternal.map((event) => (
           <div class="list-item" id={event.id}>
             <div class="list-item-header">
-              {event.data.registrationUrl ? (
-                <a class="list-item-title" href={event.data.registrationUrl} target="_blank" rel="noopener">{event.data.title}</a>
-              ) : (
-                <span class="list-item-title">{event.data.title}</span>
-              )}
+              <a class="list-item-title" href={getEventHref(event.id)}>{event.data.title}</a>
               <div class="card-meta">
                 <span>{new Date(event.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
                 {event.data.time && <span>{formatTime(event.data.time)}</span>}
@@ -550,13 +553,16 @@ const chatDigests = [
                 )}
               </div>
             </div>
-            {event.data.registrationUrl && (
-              <div class="survey-actions">
+            <div class="survey-actions">
+              {event.data.registrationUrl && (
                 <a class="button button-primary events-register" href={event.data.registrationUrl} target="_blank" rel="noopener">
                   Register <span class="inline-arrow" aria-hidden="true">▶</span>
                 </a>
-              </div>
-            )}
+              )}
+              <a class="button button-secondary" href={getEventHref(event.id)} aria-label={`Link to ${event.data.title}`}>
+                Event link
+              </a>
+            </div>
             {event.data.tags.length > 0 && (
               <ul class="tag-list" style="margin-top: 8px;">
                 {event.data.tags.map((tag) => (
@@ -572,11 +578,7 @@ const chatDigests = [
         {pastExternal.map((event) => (
           <div class="list-item" id={event.id}>
             <div class="list-item-header">
-              {event.data.registrationUrl ? (
-                <a class="list-item-title" href={event.data.registrationUrl} target="_blank" rel="noopener">{event.data.title}</a>
-              ) : (
-                <span class="list-item-title">{event.data.title}</span>
-              )}
+              <a class="list-item-title" href={getEventHref(event.id)}>{event.data.title}</a>
               <div class="card-meta">
                 <span>{new Date(event.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
                 {event.data.time && <span>{formatTime(event.data.time)}</span>}
@@ -618,11 +620,7 @@ const chatDigests = [
         {pastMeetups.map((event) => (
           <div class="list-item" id={event.id}>
             <div class="list-item-header">
-              {event.data.registrationUrl ? (
-                <a class="list-item-title" href={event.data.registrationUrl} target="_blank" rel="noopener">{event.data.title}</a>
-              ) : (
-                <span class="list-item-title">{event.data.title}</span>
-              )}
+              <a class="list-item-title" href={getEventHref(event.id)}>{event.data.title}</a>
               <div class="card-meta">
                 <span>{new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
                 {event.data.time && <span>{formatTime(event.data.time)}</span>}
@@ -781,11 +779,7 @@ const chatDigests = [
         {pastLearning.map((event) => (
           <div class="list-item" id={event.id}>
             <div class="list-item-header">
-              {event.data.registrationUrl ? (
-                <a class="list-item-title" href={event.data.registrationUrl} target="_blank" rel="noopener">{event.data.title}</a>
-              ) : (
-                <span class="list-item-title">{event.data.title}</span>
-              )}
+              <a class="list-item-title" href={getEventHref(event.id)}>{event.data.title}</a>
               <div class="card-meta">
                 <span>{new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
                 {event.data.time && <span>{formatTime(event.data.time)}</span>}
@@ -918,5 +912,27 @@ const chatDigests = [
         }
       });
     });
+
+    const revealHashTarget = () => {
+      const hash = window.location.hash.slice(1);
+      if (!hash) {
+        return;
+      }
+
+      const target = document.getElementById(decodeURIComponent(hash));
+      if (!target) {
+        return;
+      }
+
+      const parentDetails = target.closest("details");
+      if (parentDetails instanceof HTMLDetailsElement) {
+        parentDetails.open = true;
+      }
+
+      target.scrollIntoView({ block: "center" });
+    };
+
+    window.addEventListener("hashchange", revealHashTarget);
+    revealHashTarget();
   </script>
 </BaseLayout>
