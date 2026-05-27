@@ -1,7 +1,7 @@
 ---
 title: markjason
 makers:
-  - name: Gijs Verheijke
+  - personId: gijs-verheijke
 url: https://markjason.app
 github: https://github.com/gijsverheijke/markjason
 screenshot: /images/showcase/markjason.png
