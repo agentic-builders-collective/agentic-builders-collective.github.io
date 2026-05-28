@@ -137,6 +137,11 @@ const isCurrent = (href: string) => {
       title="abc"
       description="Agentic Builders Collective is a Singapore community for developers and builders exploring agentic coding with Claude Code, Codex, Antigravity, meetups, shared projects, and articles."
     />
+    <script is:inline>
+      if (/\bAndroid\b/i.test(navigator.userAgent)) {
+        document.documentElement.classList.add("android-browser");
+      }
+    </script>
     <style>
       html { background: #020410; color: #d9e7ff; }
       body { margin: 0; min-height: 100vh; opacity: 0; }
@@ -191,6 +196,10 @@ const isCurrent = (href: string) => {
         transform: skewX(-18deg);
       }
 
+      :global(.android-browser) .ascii {
+        line-height: 1.22;
+      }
+
       /*
        * Injected markup from set:html has no data-astro-cid; scoped selectors would not match.
        */
@@ -205,6 +214,11 @@ const isCurrent = (href: string) => {
         animation: logoGlyphIn calc(var(--glyphAnimSec) * var(--logo-reveal-speed)) cubic-bezier(0.22, 1, 0.36, 1)
           forwards;
         animation-delay: calc(var(--logo-del, 0s) * var(--logo-reveal-speed));
+      }
+
+      :global(.android-browser) .ascii :global(.logo-glyph) {
+        -webkit-text-stroke: 0.22px rgba(2, 4, 16, 0.36);
+        text-shadow: 0.035em 0 rgba(2, 4, 16, 0.16);
       }
 
       :global(.logo-glyph.no-animation) {
@@ -296,6 +310,26 @@ const isCurrent = (href: string) => {
           word-spacing: max(2px, 1.6vw);
         }
 
+      }
+
+      @media (max-width: 640px) {
+        :global(.android-browser) .logo {
+          -webkit-text-size-adjust: 100%;
+          padding: 40px 0;
+          text-size-adjust: 100%;
+          width: 100%;
+        }
+
+        :global(.android-browser) .ascii,
+        :global(.android-browser) .rule {
+          font-size: min(26px, 4.3vw);
+        }
+
+        :global(.android-browser) .tagline {
+          font-size: min(20px, 3.4vw);
+          letter-spacing: max(1px, 0.55vw);
+          word-spacing: max(2px, 1.1vw);
+        }
       }
 
       /* ── Homepage content sections ── */
