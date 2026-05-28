@@ -78,3 +78,22 @@
   tags:
     - codex
     - workflow
+
+- id: tips-threats-and-what-actually-works
+  title: "Tips, Threats, and What Actually Works"
+  speakers:
+    - name: Logan Goh
+  eventId: 2026-03-27-abc-at-google
+  url: https://gamma.app/docs/Tips-Threats-and-What-Actually-Works-4d2b5cqd18iqt8t
+  slidesUrl: /showcase/presentations/tips-threats-and-what-actually-works.pdf
+  videoUrl: ""
+  screenshot: /showcase/presentations/tips-threats-and-what-actually-works.jpg
+  summary: Logan Goh's ABC at Google talk on why viral prompting tricks sometimes appear to work, and why expert framing and multi-perspective prompting are more reliable tools.
+  links:
+    - label: Warmthink/coldthink prompts
+      url: /showcase/presentations/logan-goh-warmthink-coldthink.txt
+      note: Original Coldthink and Warmthink prompt documents shared by Logan Goh in the ABC chat on Feb 18, 2026.
+  tags:
+    - prompting
+    - agents
+    - llms
