@@ -138,6 +138,7 @@ const events = defineCollection({
     attendance: z.number().optional().default(0),
     speakers: legacyPersonRefs,
     hosts: legacyPersonRefs,
+    sharedBy: legacyPersonRefs,
     tags: z.array(z.string()).default([]),
     status: z.enum(["upcoming", "past"]).default("past"),
     preEventSurvey: z.object({
