@@ -25,6 +25,7 @@ Event:
 - Registration URL:
 - Hosts:
 - Speakers:
+- Shared by:
 - Tags:
 - Status: upcoming or past
 - Description:
@@ -73,6 +74,8 @@ venueUrl: https://example.com/venue
 registrationUrl: https://example.com/register
 hosts:
   - name: Example Conf Organisers
+sharedBy:
+  - personId: jane-doe
 tags:
   - conference
   - agentic-ai
@@ -91,4 +94,5 @@ A full-day conference on agentic AI. Open to ABC members and the public.
 - `status` must be `upcoming` or `past`.
 - Use `personId` only when the person exists in `members` or `organisers`.
 - External events do not need to list ABC hosts or speakers.
+- Use `sharedBy` when a listed member or organiser surfaced the event for the community.
 - Presentation slides are added separately in `src/content/presentations/presentations.yaml`.

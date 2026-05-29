@@ -250,3 +250,17 @@
   github: https://github.com/whooshinglander
   addedAt: "2026-05-28T09:30:00Z"
   featured: false
+
+- id: anh-nguyen
+  name: Anh Nguyen
+  aliases:
+    - anhybear
+  tagline: Shaping human brands in the age of AI.
+  company: A4 Communications
+  website: https://www.anh-nguyen.work
+  linkedin: https://www.linkedin.com/in/anhybear/
+  github: https://github.com/anhybear
+  youtube: ""
+  twitter: ""
+  addedAt: "2026-05-28T10:50:45Z"
+  featured: false

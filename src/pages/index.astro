@@ -137,7 +137,27 @@ const isCurrent = (href: string) => {
       title="abc"
       description="Agentic Builders Collective is a Singapore community for developers and builders exploring agentic coding with Claude Code, Codex, Antigravity, meetups, shared projects, and articles."
     />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://fonts.gstatic.com/l/font?kit=tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8SKtjOFmSsaepnulV5bwbv_VpVsGwDwwKgCsx94dK3viodg&skey=48ad01c60053c2ae&v=v24"
+      crossorigin
+    />
     <style>
+      /*
+       * Logo block/box glyphs (█ ╔ ╗ ╚ ╝ ║ ═ ┄) live in Unicode ranges Google Fonts
+       * never serves in its JetBrains Mono subsets, so they fell through to a proportional
+       * system font (Noto Sans Symbols on Android) and broke the grid. This text=-subsetted
+       * face carries exactly those 8 glyphs at a uniform 0.6em advance on every platform.
+       */
+      @font-face {
+        font-family: 'JBM Logo';
+        font-style: normal;
+        font-weight: 800;
+        font-display: block;
+        src: url(https://fonts.gstatic.com/l/font?kit=tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8SKtjOFmSsaepnulV5bwbv_VpVsGwDwwKgCsx94dK3viodg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+      }
       html { background: #020410; color: #d9e7ff; }
       body { margin: 0; min-height: 100vh; opacity: 0; }
       body.ready { opacity: 1; transition: opacity 80ms ease; }
@@ -182,13 +202,16 @@ const isCurrent = (href: string) => {
       }
 
       .ascii {
-        font-family: 'JetBrains Mono', 'Courier New', monospace;
+        font-family: 'JBM Logo', 'JetBrains Mono', 'Courier New', monospace;
         font-size: 26px;
-        line-height: 1.25;
+        /* JBM's █ is 1.32em tall and tiles seamlessly (no gaps). scaleY normalises it
+           back to ~1em so the logo keeps its original height, and line-height 1.65 then
+           gives an effective ~1.25 pitch — the striped bar:gap ≈ 80:20 of the original. */
+        line-height: 1.65;
         font-weight: 800;
         margin-bottom: 8px;
         display: inline-block;
-        transform: skewX(-18deg);
+        transform: skewX(-18deg) scaleY(0.758);
       }
 
       /*
@@ -233,7 +256,7 @@ const isCurrent = (href: string) => {
       }
 
       .rule {
-        font-family: 'JetBrains Mono', 'Courier New', monospace;
+        font-family: 'JBM Logo', 'JetBrains Mono', 'Courier New', monospace;
         font-size: 26px;
         white-space: pre;
         margin-bottom: 8px;

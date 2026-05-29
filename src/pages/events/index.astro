@@ -3,11 +3,14 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import QRCode from "../../components/QRCode.astro";
 import { getCollection } from "astro:content";
 import { contributionLinks } from "../../lib/contribution-links";
-import { buildEventIndex, getLinkedEvent } from "../../lib/relations";
+import { buildEventIndex, buildPeopleIndex, getLinkedEvent, resolvePersonRefs } from "../../lib/relations";
 import { recaps } from "../../lib/recaps";
 
 const allEvents = await getCollection("events");
 const allPresentations = await getCollection("presentations");
+const allMembers = await getCollection("members");
+const organisers = await getCollection("organisers");
+const peopleById = buildPeopleIndex([...organisers, ...allMembers]);
 const eventsById = buildEventIndex(allEvents);
 const presentationsByEventId = new Map<string, typeof allPresentations>();
 for (const presentation of allPresentations) {
@@ -24,6 +27,11 @@ for (const [, presentations] of presentationsByEventId) {
 }
 
 const getEventPresentations = (eventId: string) => presentationsByEventId.get(eventId) ?? [];
+const getSharedBy = (event: typeof allEvents[number]) => resolvePersonRefs(
+  event.data.sharedBy,
+  peopleById,
+  `event "${event.id}" sharedBy`,
+);
 const now = new Date();
 const getEventHref = (eventId: string) => `/events/#${eventId}`;
 const formatTime = (time: string) => time.replace(/\s*SGT$/, "");
@@ -372,6 +380,7 @@ const chatDigests = [
               const closesInsideSurvey = closesText && preSurvey?.url && preSurvey.closesAtPlacement === "inside";
               const closesOutsideSurvey = closesText && preSurvey?.url && preSurvey.closesAtPlacement === "outside";
               const hasResults = hasFeedbackResults(event.data.feedback);
+              const sharedBy = getSharedBy(event);
               return (
                 <>
                   <div class="list-item-header">
@@ -390,6 +399,21 @@ const chatDigests = [
                             <>
                               {" + "}
                               <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                            </>
+                          ))}
+                        </span>
+                      )}
+                      {sharedBy.length > 0 && (
+                        <span>
+                          Shared by{" "}
+                          {sharedBy.map((person, index) => (
+                            <>
+                              {person.href ? (
+                                <a class="muted-link events-muted-link" href={person.href}>{person.name}</a>
+                              ) : (
+                                person.name
+                              )}
+                              {index < sharedBy.length - 1 && ", "}
                             </>
                           ))}
                         </span>
@@ -413,9 +437,6 @@ const chatDigests = [
                         Register <span class="inline-arrow" aria-hidden="true">▶</span>
                       </a>
                     )}
-                    <a class="button button-secondary" href={getEventHref(event.id)} aria-label={`Link to ${event.data.title}`}>
-                      Event link
-                    </a>
                     {preSurvey?.url && (
                       <a class="button button-secondary events-survey-button" href={preSurvey.url} target="_blank" rel="noopener">
                         <span>{preSurvey.takeSurveyLabel || "Take survey"}</span>
@@ -551,6 +572,21 @@ const chatDigests = [
                     )}
                   </span>
                 )}
+                {getSharedBy(event).length > 0 && (
+                  <span>
+                    Shared by{" "}
+                    {getSharedBy(event).map((person, index) => (
+                      <>
+                        {person.href ? (
+                          <a class="muted-link events-muted-link" href={person.href}>{person.name}</a>
+                        ) : (
+                          person.name
+                        )}
+                        {index < getSharedBy(event).length - 1 && ", "}
+                      </>
+                    ))}
+                  </span>
+                )}
               </div>
             </div>
             <div class="survey-actions">
@@ -559,9 +595,6 @@ const chatDigests = [
                   Register <span class="inline-arrow" aria-hidden="true">▶</span>
                 </a>
               )}
-              <a class="button button-secondary" href={getEventHref(event.id)} aria-label={`Link to ${event.data.title}`}>
-                Event link
-              </a>
             </div>
             {event.data.tags.length > 0 && (
               <ul class="tag-list" style="margin-top: 8px;">
@@ -589,6 +622,21 @@ const chatDigests = [
                     ) : (
                       event.data.venue
                     )}
+                  </span>
+                )}
+                {getSharedBy(event).length > 0 && (
+                  <span>
+                    Shared by{" "}
+                    {getSharedBy(event).map((person, index) => (
+                      <>
+                        {person.href ? (
+                          <a class="muted-link events-muted-link" href={person.href}>{person.name}</a>
+                        ) : (
+                          person.name
+                        )}
+                        {index < getSharedBy(event).length - 1 && ", "}
+                      </>
+                    ))}
                   </span>
                 )}
               </div>
@@ -635,6 +683,21 @@ const chatDigests = [
                       <>
                         {" + "}
                         <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                      </>
+                    ))}
+                  </span>
+                )}
+                {getSharedBy(event).length > 0 && (
+                  <span>
+                    Shared by{" "}
+                    {getSharedBy(event).map((person, index) => (
+                      <>
+                        {person.href ? (
+                          <a class="muted-link events-muted-link" href={person.href}>{person.name}</a>
+                        ) : (
+                          person.name
+                        )}
+                        {index < getSharedBy(event).length - 1 && ", "}
                       </>
                     ))}
                   </span>
@@ -794,6 +857,21 @@ const chatDigests = [
                       <>
                         {" + "}
                         <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                      </>
+                    ))}
+                  </span>
+                )}
+                {getSharedBy(event).length > 0 && (
+                  <span>
+                    Shared by{" "}
+                    {getSharedBy(event).map((person, index) => (
+                      <>
+                        {person.href ? (
+                          <a class="muted-link events-muted-link" href={person.href}>{person.name}</a>
+                        ) : (
+                          person.name
+                        )}
+                        {index < getSharedBy(event).length - 1 && ", "}
                       </>
                     ))}
                   </span>

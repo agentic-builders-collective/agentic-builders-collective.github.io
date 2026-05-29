@@ -144,6 +144,8 @@ registrationUrl: https://example.com/register
 hosts:
   - personId: jane-doe
   - name: External Host
+sharedBy:
+  - personId: jane-doe
 tags:
   - meetup
 status: upcoming
@@ -151,6 +153,8 @@ status: upcoming
 
 An evening of demos, discussions, and community building.
 ```
+
+Use `sharedBy` when a listed member or organiser contributed the event listing or surfaced an external opportunity for the community.
 
 #### Event surveys
 
