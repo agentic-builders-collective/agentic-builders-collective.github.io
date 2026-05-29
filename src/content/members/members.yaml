@@ -240,6 +240,17 @@
   addedAt: "2026-05-23T12:22:21Z"
   featured: false
 
+- id: ronald-shi
+  name: Ronald Shi
+  aliases:
+    - WhooshingLander
+  tagline: Building things people actually use.
+  company: Fifteenoneone Private Limited
+  website: https://fifteenoneone.com
+  github: https://github.com/whooshinglander
+  addedAt: "2026-05-28T09:30:00Z"
+  featured: false
+
 - id: anh-nguyen
   name: Anh Nguyen
   aliases:
