@@ -137,12 +137,27 @@ const isCurrent = (href: string) => {
       title="abc"
       description="Agentic Builders Collective is a Singapore community for developers and builders exploring agentic coding with Claude Code, Codex, Antigravity, meetups, shared projects, and articles."
     />
-    <script is:inline>
-      if (/\bAndroid\b/i.test(navigator.userAgent)) {
-        document.documentElement.classList.add("android-browser");
-      }
-    </script>
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://fonts.gstatic.com/l/font?kit=tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8SKtjOFmSsaepnulV5bwbv_VpVsGwDwwKgCsx94dK3viodg&skey=48ad01c60053c2ae&v=v24"
+      crossorigin
+    />
     <style>
+      /*
+       * Logo block/box glyphs (█ ╔ ╗ ╚ ╝ ║ ═ ┄) live in Unicode ranges Google Fonts
+       * never serves in its JetBrains Mono subsets, so they fell through to a proportional
+       * system font (Noto Sans Symbols on Android) and broke the grid. This text=-subsetted
+       * face carries exactly those 8 glyphs at a uniform 0.6em advance on every platform.
+       */
+      @font-face {
+        font-family: 'JBM Logo';
+        font-style: normal;
+        font-weight: 800;
+        font-display: block;
+        src: url(https://fonts.gstatic.com/l/font?kit=tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8SKtjOFmSsaepnulV5bwbv_VpVsGwDwwKgCsx94dK3viodg&skey=48ad01c60053c2ae&v=v24) format('woff2');
+      }
       html { background: #020410; color: #d9e7ff; }
       body { margin: 0; min-height: 100vh; opacity: 0; }
       body.ready { opacity: 1; transition: opacity 80ms ease; }
@@ -187,17 +202,16 @@ const isCurrent = (href: string) => {
       }
 
       .ascii {
-        font-family: 'JetBrains Mono', 'Courier New', monospace;
+        font-family: 'JBM Logo', 'JetBrains Mono', 'Courier New', monospace;
         font-size: 26px;
-        line-height: 1.25;
+        /* JBM's █ is 1.32em tall and tiles seamlessly (no gaps). scaleY normalises it
+           back to ~1em so the logo keeps its original height, and line-height 1.65 then
+           gives an effective ~1.25 pitch — the striped bar:gap ≈ 80:20 of the original. */
+        line-height: 1.65;
         font-weight: 800;
         margin-bottom: 8px;
         display: inline-block;
-        transform: skewX(-18deg);
-      }
-
-      :global(.android-browser) .ascii {
-        line-height: 1.22;
+        transform: skewX(-18deg) scaleY(0.758);
       }
 
       /*
@@ -214,11 +228,6 @@ const isCurrent = (href: string) => {
         animation: logoGlyphIn calc(var(--glyphAnimSec) * var(--logo-reveal-speed)) cubic-bezier(0.22, 1, 0.36, 1)
           forwards;
         animation-delay: calc(var(--logo-del, 0s) * var(--logo-reveal-speed));
-      }
-
-      :global(.android-browser) .ascii :global(.logo-glyph) {
-        -webkit-text-stroke: 0.22px rgba(2, 4, 16, 0.36);
-        text-shadow: 0.035em 0 rgba(2, 4, 16, 0.16);
       }
 
       :global(.logo-glyph.no-animation) {
@@ -247,7 +256,7 @@ const isCurrent = (href: string) => {
       }
 
       .rule {
-        font-family: 'JetBrains Mono', 'Courier New', monospace;
+        font-family: 'JBM Logo', 'JetBrains Mono', 'Courier New', monospace;
         font-size: 26px;
         white-space: pre;
         margin-bottom: 8px;
@@ -310,26 +319,6 @@ const isCurrent = (href: string) => {
           word-spacing: max(2px, 1.6vw);
         }
 
-      }
-
-      @media (max-width: 640px) {
-        :global(.android-browser) .logo {
-          -webkit-text-size-adjust: 100%;
-          padding: 40px 0;
-          text-size-adjust: 100%;
-          width: 100%;
-        }
-
-        :global(.android-browser) .ascii,
-        :global(.android-browser) .rule {
-          font-size: min(26px, 4.3vw);
-        }
-
-        :global(.android-browser) .tagline {
-          font-size: min(20px, 3.4vw);
-          letter-spacing: max(1px, 0.55vw);
-          word-spacing: max(2px, 1.1vw);
-        }
       }
 
       /* ── Homepage content sections ── */
