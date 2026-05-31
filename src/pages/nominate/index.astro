@@ -1,0 +1,253 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="nominate a speaker"
+  description="Nominate a speaker for an upcoming Agentic Builders Collective meetup. Submit yourself or someone else."
+>
+  <h1 class="page-title">Nominate a Speaker</h1>
+
+  <p class="page-intro">
+    Have someone in mind who would be great for one of our meetups? Or want to nominate yourself?
+    Fill out the form below and we will be in touch.
+  </p>
+
+  <form
+    id="nomination-form"
+    class="nomination-form"
+    onsubmit="(function(e){e.preventDefault(); handleSubmit();})(event)"
+  >
+    <div class="form-group">
+      <label for="nominator-name">Your Name</label>
+      <input type="text" id="nominator-name" name="nominatorName" required placeholder="Your full name" />
+    </div>
+
+    <div class="form-group">
+      <label for="nominator-email">Your Email</label>
+      <input type="email" id="nominator-email" name="nominatorEmail" required placeholder="you@example.com" />
+    </div>
+
+    <div class="form-group">
+      <label for="speaker-name">Speaker Name</label>
+      <input type="text" id="speaker-name" name="speakerName" required placeholder="Who do you want to nominate?" />
+    </div>
+
+    <div class="form-group">
+      <label for="speaker-email">Speaker Email (optional)</label>
+      <input type="email" id="speaker-email" name="speakerEmail" placeholder="speaker@example.com" />
+    </div>
+
+    <div class="form-group">
+      <label for="topic">Proposed Topic or Title</label>
+      <input type="text" id="topic" name="topic" required placeholder="What would they talk about?" />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Brief Description</label>
+      <textarea id="description" name="description" rows="4" placeholder="A few sentences about the topic, why it is relevant, and what the audience would learn."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="event-preference">Preferred Event (optional)</label>
+      <select id="event-preference" name="eventPreference">
+        <option value="">Any upcoming meetup</option>
+        <option value="2026-07">July 2026</option>
+        <option value="2026-08">August 2026</option>
+        <option value="2026-09">September 2026</option>
+        <option value="2026-10">October 2026</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="speaker-background">Speaker Background (optional)</label>
+      <textarea id="speaker-background" name="speakerBackground" rows="3" placeholder="Links to previous talks, LinkedIn, GitHub, or any relevant background."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" id="self-nomination" name="selfNomination" />
+        <span>I am nominating myself</span>
+      </label>
+    </div>
+
+    <button type="submit" class="submit-btn">Submit Nomination</button>
+  </form>
+
+  <div id="form-result" class="form-result hidden">
+    <h3>Thank you!</h3>
+    <p>Your nomination has been prepared. An email will open in your default email client to send it to us.</p>
+    <p>If no email client opens, you can manually email <a href="mailto:hello@agenticbuilders.sg">hello@agenticbuilders.sg</a></p>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  function handleSubmit() {
+    const form = document.getElementById('nomination-form');
+    const formData = new FormData(form);
+    
+    const nominatorName = formData.get('nominatorName');
+    const nominatorEmail = formData.get('nominatorEmail');
+    const speakerName = formData.get('speakerName');
+    const speakerEmail = formData.get('speakerEmail') || 'Not provided';
+    const topic = formData.get('topic');
+    const description = formData.get('description') || 'Not provided';
+    const eventPreference = formData.get('eventPreference') || 'Any upcoming meetup';
+    const speakerBackground = formData.get('speakerBackground') || 'Not provided';
+    const selfNomination = formData.get('selfNomination') ? 'Yes' : 'No';
+
+    const subject = `Speaker Nomination: ${speakerName} - ${topic}`;
+    const body = `Speaker Nomination for Agentic Builders Collective
+
+NOMINATOR
+Name: ${nominatorName}
+Email: ${nominatorEmail}
+
+SPEAKER
+Name: ${speakerName}
+Email: ${speakerEmail}
+Topic: ${topic}
+
+DESCRIPTION
+${description}
+
+PREFERRED EVENT
+${eventPreference}
+
+SPEAKER BACKGROUND
+${speakerBackground}
+
+SELF NOMINATION
+${selfNomination}
+
+---
+Submitted via agenticbuilders.sg/nominate
+`;
+
+    const mailtoLink = `mailto:hello@agenticbuilders.sg?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    window.location.href = mailtoLink;
+    
+    document.getElementById('form-result').classList.remove('hidden');
+    form.style.opacity = '0.5';
+    form.style.pointerEvents = 'none';
+  }
+</script>
+
+<style>
+  .page-intro {
+    color: var(--muted);
+    margin-bottom: 32px;
+    max-width: 640px;
+  }
+
+  .nomination-form {
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 10px 12px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--accent);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .form-group select {
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .form-group select option {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+  }
+
+  .submit-btn {
+    padding: 12px 24px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+    align-self: flex-start;
+  }
+
+  .submit-btn:hover {
+    opacity: 0.85;
+  }
+
+  .form-result {
+    margin-top: 24px;
+    padding: 20px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+  }
+
+  .form-result.hidden {
+    display: none;
+  }
+
+  .form-result h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+  }
+
+  .form-result p {
+    margin: 0 0 6px 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 480px) {
+    .nomination-form {
+      max-width: 100%;
+    }
+  }
+</style>
