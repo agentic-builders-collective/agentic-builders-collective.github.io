@@ -141,6 +141,7 @@ const events = defineCollection({
     sharedBy: legacyPersonRefs,
     tags: z.array(z.string()).default([]),
     status: z.enum(["upcoming", "past"]).default("past"),
+    tentative: z.boolean().optional().default(false),
     preEventSurvey: z.object({
       url: z.string().optional().default(""),
       closesAt: z.coerce.date().optional(),
