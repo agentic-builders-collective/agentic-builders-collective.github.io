@@ -20,7 +20,6 @@ Project:
 - Makers:
 - Live URL:
 - GitHub URL:
-- Screenshot path:
 - Built with:
 - Featured:
 - Summary:
@@ -40,7 +39,6 @@ makers:
   - name: External Maker
 url: https://example.com
 github: https://github.com/janedoe/eval-dashboard
-screenshot: /images/showcase/eval-dashboard.png
 builtWith:
   - Astro
   - TypeScript
@@ -57,4 +55,3 @@ Short write-up here.
 - `personId` must match an entry in `members` or `organisers`; otherwise `pnpm build` fails.
 - Use `name` for makers who are not listed on the Community page.
 - Do not use random numeric suffixes. If the project title collides, add the maker or organisation to the filename.
-- Put screenshots under `public/images/showcase/` and reference them as `/images/showcase/file-name.png`.

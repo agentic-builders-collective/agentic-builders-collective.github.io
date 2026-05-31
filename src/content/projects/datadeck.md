@@ -4,7 +4,6 @@ makers:
   - personId: brandon-lee
 url: https://datadeck.app/
 github: ""
-screenshot: ""
 builtWith:
   - AI-assisted coding
   - generative music

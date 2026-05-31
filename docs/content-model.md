@@ -200,7 +200,7 @@ See `docs/surveys.md` for detailed survey setup instructions.
 
 Directory: `src/content/projects/`
 
-Use Markdown for projects that need screenshots, summaries, and body copy.
+Use Markdown for projects that need summaries, links, and body copy.
 
 ```md
 ---
@@ -210,7 +210,6 @@ makers:
   - name: External Maker
 url: https://example.com
 github: https://github.com/janedoe/eval-dashboard
-screenshot: /images/showcase/eval-dashboard.png
 builtWith:
   - Astro
   - TypeScript
