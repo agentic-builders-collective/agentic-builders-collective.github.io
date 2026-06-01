@@ -80,11 +80,11 @@ a {
   margin: 0 auto;
   max-width: 800px;
   min-height: 100vh;
-  padding: 64px 20px 24px;
+  padding: 24px 20px;
   width: 100%;
 }
 
-/* ── Brand (pinned top-left) ── */
+/* ── Brand ── */
 
 .brand {
   align-items: center;
@@ -94,7 +94,7 @@ a {
   font-weight: 700;
   left: 20px;
   letter-spacing: 0.08em;
-  position: fixed;
+  position: absolute;
   text-decoration: none;
   top: 20px;
   z-index: 21;
@@ -128,22 +128,19 @@ a {
   50% { opacity: 0; }
 }
 
-/* ── Fixed top menu ── */
+/* ── Top menu ── */
 
 .site-top-menu,
 .home-top-menu {
   align-items: center;
-  background: rgba(2, 4, 12, 0.92);
-  backdrop-filter: blur(8px);
+  background: rgb(30, 30, 40);
+  border-bottom: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   gap: 8px;
   justify-content: center;
-  left: 50%;
   padding: 20px 0 16px;
-  position: fixed;
-  top: 0;
-  transform: translateX(-50%);
+  position: relative;
   transition: background-color 200ms ease;
   width: 100%;
   z-index: 20;
@@ -307,12 +304,6 @@ a {
 }
 
 @media (max-width: 1100px) {
-  .brand,
-  .site-top-menu,
-  .home-top-menu {
-    position: absolute;
-  }
-
   .site-top-menu,
   .home-top-menu {
     display: flex !important;
@@ -353,7 +344,53 @@ a {
   }
 }
 
-/* ── Email (bottom when short, natural when long) ── */
+/* ── Footer ── */
+
+.site-footer {
+  align-self: center;
+  background: var(--box-bg);
+  border-top: 1px solid var(--line);
+  margin: 48px calc(50% - 50vw) 0;
+  padding: 32px max(20px, calc((100vw - 800px) / 2 + 20px)) 24px;
+  width: 100vw;
+}
+
+.site-footer-groups {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.site-footer-group h2 {
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0 0 12px;
+}
+
+.site-footer-group ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-footer-group a {
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.site-footer-group a:hover,
+.site-footer-group a:focus-visible {
+  color: var(--text);
+}
 
 .site-footer-contact {
   align-items: center;
@@ -363,9 +400,14 @@ a {
   gap: 0;
   justify-content: center;
   letter-spacing: 0.08em;
-  margin-top: auto;
-  padding: 48px 0 24px;
+  margin: 32px 0 0;
   text-align: center;
+}
+
+@media (max-width: 720px) {
+  .site-footer-groups {
+    grid-template-columns: 1fr;
+  }
 }
 
 .site-email {
@@ -806,7 +848,7 @@ p {
 
 @media (max-width: 640px) {
   .shell {
-    padding: 64px 14px 40px;
+    padding: 24px 14px 40px;
   }
 
   .list-item,

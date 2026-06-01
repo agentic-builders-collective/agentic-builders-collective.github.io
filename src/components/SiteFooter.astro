@@ -1,0 +1,77 @@
+---
+import { contributionLinks } from "../lib/contribution-links";
+
+const repoUrl = "https://github.com/agentic-builders-collective/agentic-builders-collective.github.io";
+
+type FooterLink = {
+  href: string;
+  label: string;
+  external?: boolean;
+  prefixArrow?: boolean;
+};
+
+const footerGroups: { title: string; links: FooterLink[] }[] = [
+  {
+    title: "explore",
+    links: [
+      { href: "/about/", label: "about" },
+      { href: "/community/", label: "community" },
+      { href: "/showcase/", label: "showcase" },
+      { href: "/events/", label: "events" },
+      { href: "/jobs/", label: "jobs" },
+    ],
+  },
+  {
+    title: "contribute",
+    links: [
+      { href: "/nominate/", label: "nominate speaker" },
+      { href: repoUrl, label: "github", external: true },
+      { href: contributionLinks.person, label: "add member", external: true, prefixArrow: true },
+      { href: contributionLinks.project, label: "add project", external: true, prefixArrow: true },
+      { href: contributionLinks.event, label: "add event", external: true, prefixArrow: true },
+      { href: contributionLinks.article, label: "add article", external: true, prefixArrow: true },
+    ],
+  },
+  {
+    title: "collective",
+    links: [
+      { href: "/partners/", label: "partners" },
+      { href: "/guidelines/", label: "guidelines" },
+      { href: "mailto:hello@agenticbuilders.sg", label: "email" },
+      { href: "/logo-generator", label: "logo generator" },
+    ],
+  },
+];
+---
+
+<footer class="site-footer">
+  <div class="site-footer-groups">
+    {
+      footerGroups.map((group) => (
+        <section class="site-footer-group" aria-labelledby={`footer-${group.title.replace(/\s+/g, "-")}`}>
+          <h2 id={`footer-${group.title.replace(/\s+/g, "-")}`}>{group.title}</h2>
+          <ul>
+            {group.links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
+                >
+                  {link.prefixArrow && <span class="inline-arrow" aria-hidden="true">▶ </span>}
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+
+  <p class="site-footer-contact">
+    <a class="site-email" href="mailto:hello@agenticbuilders.sg">
+      <span class="footer-email-user">hello</span><span class="footer-email-at">@</span><span class="footer-email-host">agenticbuilders.sg</span>
+    </a>
+  </p>
+</footer>

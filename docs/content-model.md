@@ -5,6 +5,7 @@ The site uses Astro content collections defined in `src/content.config.ts`.
 For task-specific contribution instructions, start with:
 
 - `docs/id-guidelines.md`
+- `docs/information-architecture.md`
 - `docs/add-person.md`
 - `docs/add-presentation.md`
 - `docs/add-event.md`

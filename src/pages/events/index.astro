@@ -115,6 +115,29 @@ const chatDigests = [
       justify-self: start;
     }
 
+    .events-page-actions {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 24px;
+    }
+
+    .events-page-actions a {
+      border: 1px solid rgba(215, 228, 248, 0.2);
+      color: var(--accent);
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      padding: 8px 12px;
+      text-decoration: none;
+    }
+
+    .events-page-actions a:hover,
+    .events-page-actions a:focus-visible {
+      background: rgba(215, 228, 248, 0.08);
+      color: var(--text);
+    }
+
     .list-item {
       scroll-margin-top: 96px;
     }
@@ -354,6 +377,11 @@ const chatDigests = [
   </style>
 
   <h1 class="page-title">Events</h1>
+
+  <div class="events-page-actions" aria-label="Event actions">
+    <a href="/calendar/">Calendar view <span class="inline-arrow" aria-hidden="true">▶</span></a>
+    <a href="/nominate/">Nominate a speaker <span class="inline-arrow" aria-hidden="true">▶</span></a>
+  </div>
 
   <section>
     <h3 class="section-label">Upcoming</h3>

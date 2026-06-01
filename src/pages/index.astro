@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import SiteHead from "../components/SiteHead.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import { getCollection } from "astro:content";
 import { contributionLinks } from "../lib/contribution-links";
 import { navLinks } from "../lib/navigation";
@@ -185,7 +186,7 @@ const isCurrent = (href: string) => {
         margin: 0 auto;
         max-width: 800px;
         min-height: 100vh;
-        padding: 64px 20px 24px;
+        padding: 24px 20px;
         width: 100%;
       }
 
@@ -573,22 +574,7 @@ const isCurrent = (href: string) => {
         </section>
       )}
 
-      <p class="site-footer-contact">
-        <a class="site-email" href="mailto:hello@agenticbuilders.sg">
-          <span class="footer-email-user">hello</span><span class="footer-email-at">@</span><span class="footer-email-host">agenticbuilders.sg</span>
-        </a>
-        <span class="footer-contact-separator" aria-hidden="true"> • </span>
-        <a
-          class="footer-github-link"
-          href="https://github.com/agentic-builders-collective/agentic-builders-collective.github.io"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          github
-        </a>
-        <span class="footer-contact-separator" aria-hidden="true"> • </span>
-        <a class="footer-github-link" href="/logo-generator">logo generator</a>
-      </p>
+      <SiteFooter />
     </div>
 
     <script>
