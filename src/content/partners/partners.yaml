@@ -1,0 +1,29 @@
+- id: tinkercademy
+  name: Tinkercademy
+  logo: "/images/partners/tinkercademy.svg"
+  url: "https://tinkercademy.com"
+  description: "Coding and making education for kids and adults"
+
+- id: sg-code-campus
+  name: SG Code Campus
+  logo: "/images/partners/sg-code-campus.svg"
+  url: "https://sgcodecampus.com"
+  description: "Singapore's leading coding school for kids and teens"
+
+- id: success-it
+  name: Success IT
+  logo: "/images/partners/success-it.svg"
+  url: "https://successit.net"
+  description: "IT solutions and digital transformation"
+
+- id: lorong-ai
+  name: Lorong AI
+  logo: "/images/partners/lorong-ai.svg"
+  url: "https://lorong.ai"
+  description: "AI community and co-working space"
+
+- id: amcham
+  name: AmCham Singapore
+  logo: "/images/partners/amcham.svg"
+  url: "https://www.amcham.com.sg"
+  description: "American Chamber of Commerce in Singapore"

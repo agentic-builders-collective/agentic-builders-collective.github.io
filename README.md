@@ -23,7 +23,6 @@ Then point your agent at the matching guide:
 | Request | Public page | Agent guide |
 |---------|-------------|-------------|
 | Add a person | `/community` | [`docs/add-person.md`](./docs/add-person.md) |
-| Add slides / a presentation | `/showcase` | [`docs/add-presentation.md`](./docs/add-presentation.md) |
 | Add an event | `/events` | [`docs/add-event.md`](./docs/add-event.md) |
 | Add a project | `/showcase` | [`docs/add-project.md`](./docs/add-project.md) |
 | Add an article | `/showcase/#articles` | [`docs/add-article.md`](./docs/add-article.md) |

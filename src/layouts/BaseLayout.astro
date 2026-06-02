@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import SiteHead from "../components/SiteHead.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import { navLinks } from "../lib/navigation";
 
 interface Props {
@@ -82,22 +83,7 @@ const isCurrent = (href: string) => {
         <slot />
       </main>
 
-      <p class="site-footer-contact">
-        <a class="site-email" href="mailto:hello@agenticbuilders.sg">
-          <span class="footer-email-user">hello</span><span class="footer-email-at">@</span><span class="footer-email-host">agenticbuilders.sg</span>
-        </a>
-        <span class="footer-contact-separator" aria-hidden="true"> • </span>
-        <a
-          class="footer-github-link"
-          href="https://github.com/agentic-builders-collective/agentic-builders-collective.github.io"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          github
-        </a>
-        <span class="footer-contact-separator" aria-hidden="true"> • </span>
-        <a class="footer-github-link" href="/logo-generator">logo generator</a>
-      </p>
+      <SiteFooter />
     </div>
 
     <script>

@@ -54,6 +54,17 @@ const organisers = defineCollection({
   }),
 });
 
+const partners = defineCollection({
+  loader: file("src/content/partners/partners.yaml"),
+  schema: z.object({
+    id: kebabCaseId,
+    name: z.string(),
+    logo: z.string().optional().default(""),
+    url: z.string().optional().default(""),
+    description: z.string().optional().default(""),
+  }),
+});
+
 const sponsors = defineCollection({
   loader: file("src/content/sponsors/sponsors.yaml"),
   schema: z.object({
@@ -141,6 +152,7 @@ const events = defineCollection({
     sharedBy: legacyPersonRefs,
     tags: z.array(z.string()).default([]),
     status: z.enum(["upcoming", "past"]).default("past"),
+    tentative: z.boolean().optional().default(false),
     preEventSurvey: z.object({
       url: z.string().optional().default(""),
       closesAt: z.coerce.date().optional(),
@@ -194,6 +206,7 @@ const faq = defineCollection({
 });
 
 export const collections = {
+  partners,
   members,
   organisers,
   sponsors,

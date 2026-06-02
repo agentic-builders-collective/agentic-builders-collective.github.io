@@ -1,0 +1,299 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const allEvents = await getCollection("events");
+
+const now = new Date();
+const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+const toUtcDate = (value: Date | string) => {
+  const date = value instanceof Date ? value : new Date(value);
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+};
+
+// Group events by year-month
+const eventsByMonth = new Map<string, typeof allEvents>();
+
+for (const event of allEvents) {
+  const date = toUtcDate(event.data.date);
+  const key = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
+  if (!eventsByMonth.has(key)) {
+    eventsByMonth.set(key, []);
+  }
+  eventsByMonth.get(key)!.push(event);
+}
+
+// Sort months
+const sortedMonths = Array.from(eventsByMonth.keys()).sort();
+
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+const formatMonth = (key: string) => {
+  const [year, month] = key.split("-");
+  return `${monthNames[parseInt(month) - 1]} ${year}`;
+};
+
+const formatDay = (date: Date | string) => {
+  const d = toUtcDate(date);
+  return d.getUTCDate();
+};
+
+const formatWeekday = (date: Date | string) => {
+  const d = toUtcDate(date);
+  return d.toLocaleDateString("en-SG", { weekday: "short", timeZone: "UTC" });
+};
+---
+
+<BaseLayout
+  title="calendar"
+  description="Monthly meetup calendar for the Agentic Builders Collective — tentative and confirmed dates for our Singapore meetups."
+>
+  <h1 class="page-title">Calendar</h1>
+
+  <p class="page-intro">
+    Monthly meetup dates for the Agentic Builders Collective.
+    <span class="calendar-legend">
+      <span class="legend-item confirmed">Confirmed</span>
+      <span class="legend-item tentative">Tentative</span>
+    </span>
+  </p>
+
+  <div class="calendar-container">
+    {sortedMonths.map((monthKey) => {
+      const events = eventsByMonth.get(monthKey)!.sort(
+        (a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime()
+      );
+      return (
+        <section class="calendar-month">
+          <h2 class="month-heading">{formatMonth(monthKey)}</h2>
+          <div class="month-events">
+            {events.map((event) => {
+              const isTentative = event.data.tentative ?? false;
+              const eventDate = toUtcDate(event.data.date);
+              const isPast = eventDate < today;
+              return (
+                <a
+                  href={`/events/#${event.id}`}
+                  class={`event-card ${isTentative ? "tentative" : "confirmed"} ${isPast ? "past" : ""}`}
+                >
+                  <div class="event-date">
+                    <span class="event-day">{formatDay(event.data.date)}</span>
+                    <span class="event-weekday">{formatWeekday(event.data.date)}</span>
+                  </div>
+                  <div class="event-info">
+                    <h3 class="event-title">{event.data.title}</h3>
+                    <div class="event-meta">
+                      {event.data.time && <span class="event-time">{event.data.time}</span>}
+                      {event.data.venue && <span class="event-venue">{event.data.venue}</span>}
+                    </div>
+                    <div class="event-tags">
+                      {isTentative && <span class="tag tentative">tentative</span>}
+                      {!isTentative && !isPast && <span class="tag confirmed">confirmed</span>}
+                      {isPast && <span class="tag past">past</span>}
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-intro {
+    color: var(--muted);
+    margin-bottom: 32px;
+    max-width: 640px;
+  }
+
+  .calendar-legend {
+    display: inline-flex;
+    gap: 16px;
+    margin-left: 16px;
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .legend-item::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+
+  .legend-item.confirmed::before {
+    background: #4ade80;
+  }
+
+  .legend-item.tentative::before {
+    background: #fbbf24;
+  }
+
+  .calendar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .calendar-month {
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+  }
+
+  .month-heading {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+    color: var(--accent);
+  }
+
+  .month-events {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .event-card {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: var(--panel);
+    border-left: 3px solid var(--line);
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+
+  .event-card:hover {
+    background: var(--panel-strong);
+  }
+
+  .event-card.confirmed {
+    border-left-color: #4ade80;
+  }
+
+  .event-card.tentative {
+    border-left-color: #fbbf24;
+  }
+
+  .event-card.past {
+    opacity: 0.6;
+  }
+
+  .event-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    padding: 4px 8px;
+    background: var(--box-bg);
+    border-radius: var(--radius-sm);
+  }
+
+  .event-day {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .event-weekday {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .event-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .event-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    line-height: 1.3;
+  }
+
+  .event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .event-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .event-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .tag.confirmed {
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+  }
+
+  .tag.tentative {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+  }
+
+  .tag.past {
+    background: rgba(166, 184, 217, 0.15);
+    color: var(--muted);
+  }
+
+  @media (max-width: 480px) {
+    .event-card {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .event-date {
+      flex-direction: row;
+      gap: 6px;
+      min-width: unset;
+      align-self: flex-start;
+    }
+
+    .event-day {
+      font-size: 16px;
+    }
+
+    .calendar-legend {
+      display: flex;
+      margin-left: 0;
+      margin-top: 8px;
+    }
+  }
+</style>
