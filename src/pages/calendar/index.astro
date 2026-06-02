@@ -5,14 +5,19 @@ import { getCollection } from "astro:content";
 const allEvents = await getCollection("events");
 
 const now = new Date();
-const today = new Date(now.setHours(0,0,0,0));
+const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+const toUtcDate = (value: Date | string) => {
+  const date = value instanceof Date ? value : new Date(value);
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+};
 
 // Group events by year-month
 const eventsByMonth = new Map<string, typeof allEvents>();
 
 for (const event of allEvents) {
-  const date = new Date(event.data.date);
-  const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+  const date = toUtcDate(event.data.date);
+  const key = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
   if (!eventsByMonth.has(key)) {
     eventsByMonth.set(key, []);
   }
@@ -33,13 +38,13 @@ const formatMonth = (key: string) => {
 };
 
 const formatDay = (date: Date | string) => {
-  const d = date instanceof Date ? date : new Date(date);
-  return d.getDate();
+  const d = toUtcDate(date);
+  return d.getUTCDate();
 };
 
 const formatWeekday = (date: Date | string) => {
-  const d = date instanceof Date ? date : new Date(date);
-  return d.toLocaleDateString("en-SG", { weekday: "short" });
+  const d = toUtcDate(date);
+  return d.toLocaleDateString("en-SG", { weekday: "short", timeZone: "UTC" });
 };
 ---
 
@@ -68,7 +73,7 @@ const formatWeekday = (date: Date | string) => {
           <div class="month-events">
             {events.map((event) => {
               const isTentative = event.data.tentative ?? false;
-              const eventDate = new Date(event.data.date);
+              const eventDate = toUtcDate(event.data.date);
               const isPast = eventDate < today;
               return (
                 <a
