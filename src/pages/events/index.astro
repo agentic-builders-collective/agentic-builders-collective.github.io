@@ -74,14 +74,14 @@ const extraSponsorsByEventId: Record<string, { name: string; url: string }[]> = 
 };
 
 const upcoming = allEvents
-  .filter((e) => e.data.status === "upcoming" || new Date(e.data.date) >= now)
+  .filter((e) => e.data.kind !== "external" && (e.data.status === "upcoming" || new Date(e.data.date) >= now))
   .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime());
 
 const past = allEvents
   .filter((e) => e.data.status === "past" && new Date(e.data.date) < now)
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
-const pastMeetups = past.filter((event) => event.data.kind !== "learning");
+const pastMeetups = past.filter((event) => event.data.kind === "meetup");
 const pastLearning = past.filter((event) => event.data.kind === "learning");
 const externalEvents = allEvents.filter((event) => event.data.kind === "external");
 const upcomingExternal = externalEvents
@@ -146,6 +146,11 @@ const chatDigests = [
       background: rgba(215, 228, 248, 0.08);
       border-left: 3px solid var(--accent);
       box-shadow: inset 0 0 0 1px rgba(215, 228, 248, 0.24);
+    }
+
+    /* Our own upcoming events get a brighter rail to stand out. */
+    .list-own-upcoming .list-item {
+      border-left-color: var(--accent);
     }
 
     .survey-section {
@@ -383,21 +388,22 @@ const chatDigests = [
     <a href="/nominate/">Nominate a speaker <span class="inline-arrow" aria-hidden="true">▶</span></a>
   </nav>
 
+  <div class="card" style="margin-bottom: 24px; border-left: none; padding-left: 0;">
+    <p>
+      <strong>Have an event to share?</strong> Submit a pull request to add meetups, workshops, conferences, or hackathons — including external events from other organisers.
+      <a href={contributionLinks.event} target="_blank" rel="noopener">Follow the contribution guide</a>.
+      Agents reading this repo should know how: use <code>kind: external</code> in the event frontmatter.
+    </p>
+  </div>
+
   <section>
     <h3 class="section-label">Upcoming</h3>
-    <div class="card" style="margin-bottom: 24px; border-left-color: var(--accent);">
-      <p>
-        <strong>Have an event to share?</strong> Submit a pull request to add meetups, workshops, conferences, or hackathons — including external events from other organisers.
-        <a href={contributionLinks.event} target="_blank" rel="noopener">Follow the contribution guide</a>.
-        Agents reading this repo should know how: use <code>kind: external</code> in the event frontmatter.
-      </p>
-    </div>
     {upcoming.length === 0 ? (
       <div class="card">
         <p>Stay tuned for the next event!</p>
       </div>
     ) : (
-      <div class="list">
+      <div class="list list-own-upcoming">
         {upcoming.map((event) => (
           <div class="list-item" id={event.id}>
             {(() => {
@@ -574,8 +580,6 @@ const chatDigests = [
     )}
   </section>
 
-  <details class="events-section">
-
   <section style="margin-top: 48px;">
     <h3 class="section-label">External Events</h3>
     {upcomingExternal.length === 0 && pastExternal.length === 0 ? (
@@ -688,6 +692,7 @@ const chatDigests = [
     </p>
   </section>
 
+  <details class="events-section">
     <summary class="section-label collapsible-heading">Past Meetups</summary>
     {pastMeetups.length === 0 ? (
       <p>No past events yet. <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">Add an event by submitting a pull request</a></p>
