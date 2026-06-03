@@ -139,7 +139,7 @@ a {
   flex-direction: column;
   gap: 8px;
   justify-content: center;
-  padding: 20px 0 16px;
+  padding: 20px 0 22px;
   position: relative;
   transition: background-color 200ms ease;
   width: 100%;
@@ -310,7 +310,7 @@ a {
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    padding: 20px 20px 16px;
+    padding: 20px 20px 22px;
     pointer-events: none;
   }
 
@@ -350,6 +350,8 @@ a {
   align-self: center;
   background: var(--box-bg);
   border-top: 1px solid var(--line);
+  /* Extend the footer colour into any empty space below it (short pages). */
+  box-shadow: 0 50vh 0 50vh var(--box-bg);
   margin: 48px calc(50% - 50vw) 0;
   padding: 32px max(20px, calc((100vw - 800px) / 2 + 20px)) 24px;
   width: 100vw;

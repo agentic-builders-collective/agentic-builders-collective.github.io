@@ -12,6 +12,6 @@ attendance: 0
 speakers: []
 hosts: ["Chris Pecaut", "Ian Choo", "YJ Soon", "Trevor Lum", "Jensen"]
 tags: ["meetup"]
-status: "upcoming"
+status: "past"
 ---
 An evening of agentic coding, hands-on building, and community time with friendly folks at AmChamSG. Expect practical, applied talks from experienced AI builders using Claude, Codex, Gemini, OpenClaw, and friends — plus space to eat, mingle, and connect.

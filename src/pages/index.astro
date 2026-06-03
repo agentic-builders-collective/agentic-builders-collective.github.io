@@ -13,7 +13,7 @@ const homepageFaq = allFaq.sort((a, b) => a.data.order - b.data.order);
 
 const now = new Date();
 const upcomingEvent = allEvents
-  .filter((e) => e.data.status === "upcoming" || new Date(e.data.date) >= now)
+  .filter((e) => e.data.kind !== "external" && (e.data.status === "upcoming" || new Date(e.data.date) >= now))
   .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime())[0] ?? null;
 
 const whatsappUrl = "https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn";

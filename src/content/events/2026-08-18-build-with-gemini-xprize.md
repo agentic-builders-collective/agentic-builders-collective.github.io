@@ -1,7 +1,7 @@
 ---
 title: "Build with Gemini XPRIZE"
 date: 2026-08-18
-kind: "learning"
+kind: "external"
 time: "Submissions end on August 18th"
 venue: "Online"
 venueUrl: "https://www.geminixprize.com/"

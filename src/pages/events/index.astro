@@ -1,12 +1,20 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import QRCode from "../../components/QRCode.astro";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import { contributionLinks } from "../../lib/contribution-links";
 import { buildEventIndex, buildPeopleIndex, getLinkedEvent, resolvePersonRefs } from "../../lib/relations";
 import { recaps } from "../../lib/recaps";
 
 const allEvents = await getCollection("events");
+// Render markdown bodies for external events (shown as their description).
+const eventBodies = new Map<string, Awaited<ReturnType<typeof render>>["Content"]>();
+for (const event of allEvents) {
+  if (event.data.kind === "external") {
+    const { Content } = await render(event);
+    eventBodies.set(event.id, Content);
+  }
+}
 const allPresentations = await getCollection("presentations");
 const allMembers = await getCollection("members");
 const organisers = await getCollection("organisers");
@@ -74,14 +82,14 @@ const extraSponsorsByEventId: Record<string, { name: string; url: string }[]> = 
 };
 
 const upcoming = allEvents
-  .filter((e) => e.data.status === "upcoming" || new Date(e.data.date) >= now)
+  .filter((e) => e.data.kind !== "external" && (e.data.status === "upcoming" || new Date(e.data.date) >= now))
   .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime());
 
 const past = allEvents
   .filter((e) => e.data.status === "past" && new Date(e.data.date) < now)
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
-const pastMeetups = past.filter((event) => event.data.kind !== "learning");
+const pastMeetups = past.filter((event) => event.data.kind === "meetup");
 const pastLearning = past.filter((event) => event.data.kind === "learning");
 const externalEvents = allEvents.filter((event) => event.data.kind === "external");
 const upcomingExternal = externalEvents
@@ -107,6 +115,49 @@ const chatDigests = [
   description="See upcoming meetups, workshops, and past sessions from Agentic Builders Collective in Singapore."
 >
   <style>
+    .events-title {
+      align-items: center;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+
+    .events-title::before {
+      flex: 0 0 auto;
+    }
+
+    .events-section-nav {
+      align-items: center;
+      color: var(--logo-gradient-end);
+      display: inline-flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      margin-left: 8px;
+      white-space: nowrap;
+    }
+
+    .events-title-label {
+      color: var(--logo-gradient-start);
+    }
+
+    .events-title-colon {
+      color: #555;
+    }
+
+    .events-section-nav a {
+      color: var(--logo-gradient-end);
+      text-decoration: none;
+    }
+
+    .events-section-separator {
+      color: #555;
+    }
+
+    .events-section-nav a:hover,
+    .events-section-nav a:focus-visible {
+      text-decoration: underline;
+    }
+
     .events-muted-link::after {
       content: none;
     }
@@ -146,6 +197,11 @@ const chatDigests = [
       background: rgba(215, 228, 248, 0.08);
       border-left: 3px solid var(--accent);
       box-shadow: inset 0 0 0 1px rgba(215, 228, 248, 0.24);
+    }
+
+    /* Our own upcoming events get a brighter rail to stand out. */
+    .list-own-upcoming .list-item {
+      border-left-color: var(--accent);
     }
 
     .survey-section {
@@ -376,28 +432,40 @@ const chatDigests = [
     }
   </style>
 
-  <h1 class="page-title">Events</h1>
+  <h1 class="page-title events-title">
+    <span class="events-title-label">Events</span><span class="events-title-colon">:</span>
+    <span class="events-section-nav" role="navigation" aria-label="Events sections">
+      <a href="#upcoming">Upcoming</a>
+      <span class="events-section-separator" aria-hidden="true">/</span>
+      <a href="#external">External</a>
+      <span class="events-section-separator" aria-hidden="true">/</span>
+      <a href="#recaps">Recaps</a>
+      <span class="events-section-separator" aria-hidden="true">/</span>
+      <a href="#learning">Learning</a>
+      <span class="events-section-separator" aria-hidden="true">/</span>
+      <a href="#past-meetups">Past Meetups</a>
+    </span>
+  </h1>
 
   <nav class="events-page-actions" aria-label="Event actions">
     <a href="/calendar/">Calendar view <span class="inline-arrow" aria-hidden="true">▶</span></a>
     <a href="/nominate/">Nominate a speaker <span class="inline-arrow" aria-hidden="true">▶</span></a>
   </nav>
 
-  <section>
+  <p class="collection-guide">
+    <strong>Have an event to share?</strong> Submit a pull request to add meetups, workshops, conferences, or hackathons — including external events from other organisers.
+    <a href={contributionLinks.event} target="_blank" rel="noopener">Follow the contribution guide</a>.
+    Agents reading this repo should know how: use <code>kind: external</code> in the event frontmatter.
+  </p>
+
+  <section id="upcoming">
     <h3 class="section-label">Upcoming</h3>
-    <div class="card" style="margin-bottom: 24px; border-left-color: var(--accent);">
-      <p>
-        <strong>Have an event to share?</strong> Submit a pull request to add meetups, workshops, conferences, or hackathons — including external events from other organisers.
-        <a href={contributionLinks.event} target="_blank" rel="noopener">Follow the contribution guide</a>.
-        Agents reading this repo should know how: use <code>kind: external</code> in the event frontmatter.
-      </p>
-    </div>
     {upcoming.length === 0 ? (
       <div class="card">
         <p>Stay tuned for the next event!</p>
       </div>
     ) : (
-      <div class="list">
+      <div class="list list-own-upcoming">
         {upcoming.map((event) => (
           <div class="list-item" id={event.id}>
             {(() => {
@@ -574,9 +642,7 @@ const chatDigests = [
     )}
   </section>
 
-  <details class="events-section">
-
-  <section style="margin-top: 48px;">
+  <section id="external" style="margin-top: 48px;">
     <h3 class="section-label">External Events</h3>
     {upcomingExternal.length === 0 && pastExternal.length === 0 ? (
       <div class="card">
@@ -632,7 +698,10 @@ const chatDigests = [
               </ul>
             )}
             <div class="list-item-body">
-              <slot />
+              {(() => {
+                const Body = eventBodies.get(event.id);
+                return Body ? <Body /> : null;
+              })()}
             </div>
           </div>
         ))}
@@ -677,7 +746,10 @@ const chatDigests = [
               </ul>
             )}
             <div class="list-item-body">
-              <slot />
+              {(() => {
+                const Body = eventBodies.get(event.id);
+                return Body ? <Body /> : null;
+              })()}
             </div>
           </div>
         ))}
@@ -688,12 +760,85 @@ const chatDigests = [
     </p>
   </section>
 
-    <summary class="section-label collapsible-heading">Past Meetups</summary>
-    {pastMeetups.length === 0 ? (
-      <p>No past events yet. <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">Add an event by submitting a pull request</a></p>
+  <details class="events-section" id="recaps" open>
+    <summary class="section-label collapsible-heading">Recaps</summary>
+    <p class="collection-guide">
+      AI-generated audio summaries of the past week's WhatsApp chat highlights — handy if you missed anything.
+    </p>
+    {recaps.length === 0 ? (
+      <p>No recaps yet.</p>
     ) : (
       <div class="list">
-        {pastMeetups.map((event) => (
+        {recaps.map((recap) => {
+          const panelId = `recap-panel-${recap.id}`;
+          return (
+            <div class="list-item" id={recap.id}>
+              <div class="list-item-header">
+                <span class="list-item-title">{recap.title}</span>
+                <div class="card-meta">
+                  <span>{new Date(recap.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
+                  <span>{recap.durationLabel}</span>
+                  <span>AI-generated</span>
+                </div>
+              </div>
+              <div class="survey-actions">
+                <button
+                  type="button"
+                  class="button button-secondary events-panel-toggle recap-listen-toggle"
+                  data-panel-toggle={panelId}
+                  data-show-label="Listen to recap"
+                  data-hide-label="Hide recap"
+                  data-show-text="Listen"
+                  data-hide-text="Hide"
+                  aria-controls={panelId}
+                  aria-expanded="false"
+                  aria-label="Listen to recap"
+                  title="Listen to recap"
+                >
+                  <span>Listen</span>
+                  <span class="inline-arrow" aria-hidden="true">▶</span>
+                </button>
+              </div>
+              <div id={panelId} class="recap-section events-panel-section is-hidden" data-panel>
+                <p>{recap.description}</p>
+                <audio class="recap-player" controls preload="metadata" src={recap.audio}>
+                  <a href={recap.audio}>Download audio (m4a)</a>
+                </audio>
+                <a class="muted-link" href={recap.audio} download>Download m4a</a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )}
+    {chatDigests.length > 0 && (
+      <div class="recap-companion-section">
+        <h3 class="recap-companion-heading">Unofficial rough notes</h3>
+        <div class="list">
+          {chatDigests.map((digest) => (
+            <div class="list-item" id={digest.id}>
+              <div class="list-item-header">
+                <a class="list-item-title" href={digest.href}>{digest.title}</a>
+                <div class="card-meta">
+                  <span>{new Date(digest.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
+                  <span>{digest.label}</span>
+                </div>
+              </div>
+              <p>{digest.summary}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </details>
+
+  <details class="events-section" id="learning" open>
+    <summary class="section-label collapsible-heading">Learning</summary>
+    {pastLearning.length === 0 ? (
+      <p>No learning sessions yet. <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">Add a learning event by submitting a pull request</a></p>
+    ) : (
+      <div class="list">
+        {pastLearning.map((event) => (
           <div class="list-item" id={event.id}>
             <div class="list-item-header">
               <a class="list-item-title" href={getEventHref(event.id)}>{event.data.title}</a>
@@ -789,85 +934,13 @@ const chatDigests = [
     )}
   </details>
 
-  <details class="events-section" open>
-    <summary class="section-label collapsible-heading">Recaps</summary>
-    <p class="collection-guide">
-      AI-generated audio summaries of the past week's WhatsApp chat highlights — handy if you missed anything.
-    </p>
-    {recaps.length === 0 ? (
-      <p>No recaps yet.</p>
+  <details class="events-section" id="past-meetups">
+    <summary class="section-label collapsible-heading">Past Meetups</summary>
+    {pastMeetups.length === 0 ? (
+      <p>No past events yet. <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">Add an event by submitting a pull request</a></p>
     ) : (
       <div class="list">
-        {recaps.map((recap) => {
-          const panelId = `recap-panel-${recap.id}`;
-          return (
-            <div class="list-item" id={recap.id}>
-              <div class="list-item-header">
-                <span class="list-item-title">{recap.title}</span>
-                <div class="card-meta">
-                  <span>{new Date(recap.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
-                  <span>{recap.durationLabel}</span>
-                  <span>AI-generated</span>
-                </div>
-              </div>
-              <div class="survey-actions">
-                <button
-                  type="button"
-                  class="button button-secondary events-panel-toggle recap-listen-toggle"
-                  data-panel-toggle={panelId}
-                  data-show-label="Listen to recap"
-                  data-hide-label="Hide recap"
-                  data-show-text="Listen"
-                  data-hide-text="Hide"
-                  aria-controls={panelId}
-                  aria-expanded="false"
-                  aria-label="Listen to recap"
-                  title="Listen to recap"
-                >
-                  <span>Listen</span>
-                  <span class="inline-arrow" aria-hidden="true">▶</span>
-                </button>
-              </div>
-              <div id={panelId} class="recap-section events-panel-section is-hidden" data-panel>
-                <p>{recap.description}</p>
-                <audio class="recap-player" controls preload="metadata" src={recap.audio}>
-                  <a href={recap.audio}>Download audio (m4a)</a>
-                </audio>
-                <a class="muted-link" href={recap.audio} download>Download m4a</a>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    )}
-    {chatDigests.length > 0 && (
-      <div class="recap-companion-section">
-        <h3 class="recap-companion-heading">Unofficial rough notes</h3>
-        <div class="list">
-          {chatDigests.map((digest) => (
-            <div class="list-item" id={digest.id}>
-              <div class="list-item-header">
-                <a class="list-item-title" href={digest.href}>{digest.title}</a>
-                <div class="card-meta">
-                  <span>{new Date(digest.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
-                  <span>{digest.label}</span>
-                </div>
-              </div>
-              <p>{digest.summary}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
-  </details>
-
-  <details class="events-section" open>
-    <summary class="section-label collapsible-heading">Learning</summary>
-    {pastLearning.length === 0 ? (
-      <p>No learning sessions yet. <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">Add a learning event by submitting a pull request</a></p>
-    ) : (
-      <div class="list">
-        {pastLearning.map((event) => (
+        {pastMeetups.map((event) => (
           <div class="list-item" id={event.id}>
             <div class="list-item-header">
               <a class="list-item-title" href={getEventHref(event.id)}>{event.data.title}</a>
