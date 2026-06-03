@@ -264,3 +264,17 @@
   twitter: ""
   addedAt: "2026-05-28T10:50:45Z"
   featured: false
+
+- id: chia-min-jun-lennon
+  name: Chia Min Jun Lennon
+  aliases:
+    - Lennon Chia
+    - 13ernkastel
+    - Hinotoi-agent
+  tagline: AI agent security, retrieval, and backend hardening. Views are individual and do not represent the firm.
+  company: EY
+  website: https://www.ey.com/en_sg
+  linkedin: https://www.linkedin.com/in/lennon-chia/
+  github: https://github.com/Hinotoi-agent
+  addedAt: "2026-06-03T02:55:39Z"
+  featured: false
