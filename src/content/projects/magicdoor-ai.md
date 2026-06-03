@@ -4,7 +4,6 @@ makers:
   - personId: gijs-verheijke
 url: https://www.magicdoor.ai
 github: ""
-screenshot: ""
 builtWith:
   - Next.js
   - TypeScript

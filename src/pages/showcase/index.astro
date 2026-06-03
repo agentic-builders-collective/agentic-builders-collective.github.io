@@ -166,17 +166,6 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
       <div class="list">
         {projects.map((project) => (
           <article class="list-item" id={project.id}>
-            {project.data.screenshot && (
-              <img
-                src={project.data.screenshot}
-                alt={project.data.title}
-                loading="lazy"
-                decoding="async"
-                width="800"
-                height="450"
-                class="showcase-image"
-              />
-            )}
             <div class="list-item-header">
               <span class="list-item-title">
                 {project.data.url ? (

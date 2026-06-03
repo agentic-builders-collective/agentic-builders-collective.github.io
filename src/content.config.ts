@@ -81,7 +81,6 @@ const projects = defineCollection({
     makers: personRefs,
     url: optionalUrl,
     github: optionalUrl,
-    screenshot: z.string().optional().default(""),
     builtWith: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
     summary: z.string().optional().default(""),
