@@ -1,12 +1,20 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import QRCode from "../../components/QRCode.astro";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import { contributionLinks } from "../../lib/contribution-links";
 import { buildEventIndex, buildPeopleIndex, getLinkedEvent, resolvePersonRefs } from "../../lib/relations";
 import { recaps } from "../../lib/recaps";
 
 const allEvents = await getCollection("events");
+// Render markdown bodies for external events (shown as their description).
+const eventBodies = new Map<string, Awaited<ReturnType<typeof render>>["Content"]>();
+for (const event of allEvents) {
+  if (event.data.kind === "external") {
+    const { Content } = await render(event);
+    eventBodies.set(event.id, Content);
+  }
+}
 const allPresentations = await getCollection("presentations");
 const allMembers = await getCollection("members");
 const organisers = await getCollection("organisers");
@@ -690,7 +698,10 @@ const chatDigests = [
               </ul>
             )}
             <div class="list-item-body">
-              <slot />
+              {(() => {
+                const Body = eventBodies.get(event.id);
+                return Body ? <Body /> : null;
+              })()}
             </div>
           </div>
         ))}
@@ -735,7 +746,10 @@ const chatDigests = [
               </ul>
             )}
             <div class="list-item-body">
-              <slot />
+              {(() => {
+                const Body = eventBodies.get(event.id);
+                return Body ? <Body /> : null;
+              })()}
             </div>
           </div>
         ))}
