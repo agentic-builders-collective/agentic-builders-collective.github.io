@@ -157,6 +157,18 @@ An evening of demos, discussions, and community building.
 
 Use `sharedBy` when a listed member or organiser contributed the event listing or surfaced an external opportunity for the community.
 
+Events can link a site-local photo gallery after the event. Store compressed images under `public/images/events/<eventId>/`, never original high-resolution phone files.
+
+```yaml
+photoGallery:
+  label: Event photos
+  href: /events/2026-05-28-example-event/photos/
+  photos:
+    - src: /images/events/2026-05-28-example-event/photos/img-0001.jpg
+      thumbSrc: /images/events/2026-05-28-example-event/thumbs/img-0001.jpg
+      alt: Example event photo 1
+```
+
 #### Event surveys
 
 Events can include pre-event and post-event surveys using Google Forms:

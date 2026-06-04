@@ -177,6 +177,15 @@ const events = defineCollection({
       responses: z.number().optional().default(0),
       highlights: z.array(z.string()).default([]),
     }).optional(),
+    photoGallery: z.object({
+      label: z.string().optional().default("Event photos"),
+      href: z.string().regex(/^\/[^\s]*$/, "Use a site-relative path starting with /"),
+      photos: z.array(z.object({
+        src: z.string().regex(/^\/[^\s]*$/, "Use a site-relative path starting with /"),
+        thumbSrc: z.string().regex(/^\/[^\s]*$/, "Use a site-relative path starting with /"),
+        alt: z.string(),
+      })),
+    }).optional(),
   }),
 });
 
