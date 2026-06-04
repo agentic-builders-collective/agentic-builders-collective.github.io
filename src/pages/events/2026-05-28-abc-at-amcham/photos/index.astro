@@ -1,0 +1,293 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const events = await getCollection("events");
+const event = events.find((entry) => entry.id === "2026-05-28-abc-at-amcham");
+
+if (!event?.data.photoGallery) {
+  throw new Error("Expected photoGallery for 2026-05-28-abc-at-amcham.");
+}
+
+const gallery = event.data.photoGallery;
+const eventHref = "/events/#2026-05-28-abc-at-amcham";
+---
+
+<BaseLayout
+  title="AmChamSG event photos"
+  description="Photos from the 28 May 2026 Agentic Builders Collective meetup at AmChamSG."
+>
+  <style>
+    .gallery-header {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .gallery-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .gallery-meta {
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      font-size: 1rem;
+      gap: 8px;
+      margin: 0;
+    }
+
+    .gallery-back-link {
+      color: var(--accent);
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    .gallery-back-link:hover,
+    .gallery-back-link:focus-visible {
+      text-decoration: underline;
+    }
+
+    .gallery-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin: 0;
+      padding: 0;
+    }
+
+    .gallery-item {
+      list-style: none;
+      margin: 0;
+      min-width: 0;
+    }
+
+    .gallery-link {
+      background: var(--box-bg, rgba(30, 30, 40, 0.45));
+      border: 1px solid var(--line);
+      display: block;
+      overflow: hidden;
+      text-decoration: none;
+    }
+
+    .gallery-link:hover,
+    .gallery-link:focus-visible {
+      border-color: var(--accent);
+    }
+
+    .gallery-image {
+      aspect-ratio: 4 / 3;
+      display: block;
+      height: 100%;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .gallery-lightbox {
+      align-items: center;
+      background: rgba(3, 5, 12, 0.92);
+      border: 0;
+      color: var(--text);
+      gap: 12px;
+      height: 100%;
+      inset: 0;
+      margin: 0;
+      max-height: none;
+      max-width: none;
+      padding: 20px;
+      width: 100%;
+    }
+
+    .gallery-lightbox[open] {
+      display: grid;
+      grid-template-areas:
+        "close close close"
+        "prev image next"
+        "caption caption caption";
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .gallery-lightbox::backdrop {
+      background: rgba(3, 5, 12, 0.92);
+    }
+
+    .gallery-lightbox-close,
+    .gallery-lightbox-nav {
+      background: rgba(215, 228, 248, 0.08);
+      border: 1px solid rgba(215, 228, 248, 0.28);
+      color: var(--accent);
+      cursor: pointer;
+      font: inherit;
+      font-size: 1rem;
+      min-height: 44px;
+      padding: 8px 12px;
+    }
+
+    .gallery-lightbox-close:hover,
+    .gallery-lightbox-close:focus-visible,
+    .gallery-lightbox-nav:hover,
+    .gallery-lightbox-nav:focus-visible {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .gallery-lightbox-close {
+      grid-area: close;
+      justify-self: end;
+    }
+
+    .gallery-lightbox-nav {
+      align-self: center;
+      min-width: 44px;
+    }
+
+    .gallery-lightbox-prev {
+      grid-area: prev;
+    }
+
+    .gallery-lightbox-next {
+      grid-area: next;
+    }
+
+    .gallery-lightbox-image {
+      grid-area: image;
+      justify-self: center;
+      max-height: calc(100vh - 150px);
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .gallery-lightbox-caption {
+      color: var(--muted);
+      font-size: 1rem;
+      grid-area: caption;
+      margin: 0;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .gallery-lightbox {
+        padding: 12px;
+      }
+
+      .gallery-lightbox[open] {
+        grid-template-areas:
+          "close close"
+          "image image"
+          "prev next"
+          "caption caption";
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .gallery-lightbox-prev {
+        justify-self: start;
+      }
+
+      .gallery-lightbox-next {
+        justify-self: end;
+      }
+    }
+  </style>
+
+  <header class="gallery-header">
+    <a class="gallery-back-link" href={eventHref}>Back to event <span class="inline-arrow" aria-hidden="true">▶</span></a>
+    <h1 class="page-title gallery-title">{gallery.label}: {event.data.title}</h1>
+    <p class="gallery-meta">
+      <span>{new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
+      {event.data.time && <span>{event.data.time.replace(/\s*SGT$/, "")}</span>}
+      {event.data.venue && <span>{event.data.venue}</span>}
+      <span>{gallery.photos.length} photos</span>
+    </p>
+  </header>
+
+  <ul class="gallery-grid" aria-label="AmChamSG event photos">
+    {gallery.photos.map((photo, index) => (
+      <li class="gallery-item">
+        <a
+          class="gallery-link"
+          href={photo.src}
+          data-gallery-link
+          data-gallery-index={index}
+          data-full-src={photo.src}
+          data-alt={photo.alt}
+        >
+          <img
+            class="gallery-image"
+            src={photo.thumbSrc}
+            alt={photo.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <dialog class="gallery-lightbox" aria-label="Event photo viewer" data-gallery-lightbox>
+    <button class="gallery-lightbox-close" type="button" data-gallery-close>Close</button>
+    <button class="gallery-lightbox-nav gallery-lightbox-prev" type="button" aria-label="Previous photo" data-gallery-prev>&lt;</button>
+    <img class="gallery-lightbox-image" alt="" data-gallery-image />
+    <button class="gallery-lightbox-nav gallery-lightbox-next" type="button" aria-label="Next photo" data-gallery-next>&gt;</button>
+    <p class="gallery-lightbox-caption" data-gallery-caption></p>
+  </dialog>
+
+  <script>
+    const links = Array.from(document.querySelectorAll("[data-gallery-link]"));
+    const lightbox = document.querySelector("[data-gallery-lightbox]");
+    const image = document.querySelector("[data-gallery-image]");
+    const caption = document.querySelector("[data-gallery-caption]");
+    const closeButton = document.querySelector("[data-gallery-close]");
+    const previousButton = document.querySelector("[data-gallery-prev]");
+    const nextButton = document.querySelector("[data-gallery-next]");
+    let currentIndex = 0;
+
+    const showPhoto = (index: number) => {
+      if (!(lightbox instanceof HTMLDialogElement) || !(image instanceof HTMLImageElement) || !(caption instanceof HTMLElement)) return;
+      currentIndex = (index + links.length) % links.length;
+      const link = links[currentIndex];
+      if (!(link instanceof HTMLElement)) return;
+      const fullSrc = link.dataset.fullSrc || "";
+      const alt = link.dataset.alt || "";
+      image.src = fullSrc;
+      image.alt = alt;
+      caption.textContent = `${currentIndex + 1} / ${links.length}`;
+      if (!lightbox.open) {
+        lightbox.showModal();
+      }
+    };
+
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        if (!(link instanceof HTMLElement)) return;
+        showPhoto(Number(link.dataset.galleryIndex || "0"));
+      });
+    });
+
+    previousButton?.addEventListener("click", () => showPhoto(currentIndex - 1));
+    nextButton?.addEventListener("click", () => showPhoto(currentIndex + 1));
+    closeButton?.addEventListener("click", () => {
+      if (lightbox instanceof HTMLDialogElement) {
+        lightbox.close();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (!(lightbox instanceof HTMLDialogElement) || !lightbox.open) return;
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        showPhoto(currentIndex - 1);
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        showPhoto(currentIndex + 1);
+      }
+      if (event.key === "Escape") {
+        lightbox.close();
+      }
+    });
+  </script>
+</BaseLayout>

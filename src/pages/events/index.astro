@@ -497,6 +497,12 @@ const chatDigests = [
                               <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
                             </>
                           ))}
+                          {event.data.photoGallery && (
+                            <>
+                              {" + "}
+                              <a class="muted-link events-muted-link" href={event.data.photoGallery.href}>{event.data.photoGallery.label}</a>
+                            </>
+                          )}
                         </span>
                       )}
                       {sharedBy.length > 0 && (
@@ -858,6 +864,12 @@ const chatDigests = [
                         <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
                       </>
                     ))}
+                    {event.data.photoGallery && (
+                      <>
+                        {" + "}
+                        <a class="muted-link events-muted-link" href={event.data.photoGallery.href}>{event.data.photoGallery.label}</a>
+                      </>
+                    )}
                   </span>
                 )}
                 {getSharedBy(event).length > 0 && (
@@ -960,6 +972,12 @@ const chatDigests = [
                         <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
                       </>
                     ))}
+                    {event.data.photoGallery && (
+                      <>
+                        {" + "}
+                        <a class="muted-link events-muted-link" href={event.data.photoGallery.href}>{event.data.photoGallery.label}</a>
+                      </>
+                    )}
                   </span>
                 )}
                 {getSharedBy(event).length > 0 && (
