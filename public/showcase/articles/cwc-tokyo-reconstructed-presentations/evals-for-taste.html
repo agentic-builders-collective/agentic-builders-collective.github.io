@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Evals For Taste - V3 Reconstruction</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>Evals For Taste</h1>
+      <p>Hill-climbing a slide-generation agent.</p>
+      <div class="meta">
+        <span class="pill">13:00 - 13:45</span>
+        <span class="pill">Presenter shown: Koki Yoshida</span>
+        <span class="pill">Workshop</span>
+        <span class="pill">IMG_7451 to IMG_7459</span>
+      </div>
+      <p style="margin-top:18px"><a href="index.html">Index</a></p>
+    </header>
+
+    <main>
+      <div class="note">
+        This page reconstructs the readable workshop material from IMG_7451 through IMG_7459. The source images are appended beneath each section and can be clicked to expand.
+      </div>
+
+      <section class="slide">
+        <h3>Title</h3>
+        <p class="source">Source: IMG_7451</p>
+        <p><strong>Evals for taste: Hill-climbing a slide-generation agent</strong></p>
+        <p>The title slide shows the session running from 13:00 to 13:45 and lists Koki Yoshida as presenter.</p>
+      </section>
+
+      <section class="slide">
+        <h3>What Are Evals?</h3>
+        <p class="source">Source: IMG_7452</p>
+        <div class="grid">
+          <div class="card">
+            <h3>Systematic tests</h3>
+            <p>Evals measure how well an AI system performs on a specific domain or use case.</p>
+          </div>
+          <div class="card">
+            <h3>Tasks + grading logic</h3>
+            <p>They are made up of tasks that define scenarios and encode expectations through grading logic.</p>
+          </div>
+          <div class="card">
+            <h3>Confidence bridge</h3>
+            <p>They bridge the gap between "it seems to work" and "we know it works", so a team can ship confidently.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Some Famous Evals</h3>
+        <p class="source">Source: IMG_7453</p>
+        <p>The slide groups public benchmarks into three broad families.</p>
+        <table>
+          <tr><th>Category</th><th>Examples shown</th></tr>
+          <tr><td><strong>Agentic coding</strong></td><td>SWE-bench, Terminal-bench</td></tr>
+          <tr><td><strong>Tool use and agents</strong></td><td>tauBench, MCP Atlas, OSWorld, BrowseComp</td></tr>
+          <tr><td><strong>Reasoning and knowledge</strong></td><td>GPQA Diamond, MMMLU, MMMU, ARC-AGI-2</td></tr>
+        </table>
+        <p>The benchmark table compares models across agentic coding, terminal coding, multidisciplinary reasoning, agentic search, scaled tool use, computer use, financial analysis, cybersecurity vulnerability reproduction, graduate-level reasoning, visual reasoning, and multilingual Q&amp;A.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Why Are Evals Important?</h3>
+        <p class="source">Sources: IMG_7454, IMG_7455</p>
+        <div class="compare">
+          <div class="card bad">
+            <h3>Without evals</h3>
+            <p>Teams are flying blind and get stuck in reactive loops:</p>
+            <ul>
+              <li>Catching issues only in production.</li>
+              <li>Fixing one failure creates others.</li>
+              <li>Cannot distinguish genuine feedback from noise.</li>
+              <li>No way to verify improvements or regressions except guess and check.</li>
+            </ul>
+          </div>
+          <div class="card good">
+            <h3>With evals</h3>
+            <p>Teams can streamline AI system development:</p>
+            <ul>
+              <li>Forcing clarity: what does success look like?</li>
+              <li>Iterating on optimal agent configs.</li>
+              <li>Adopting new models fast, gaining insights into performance, latency, cost, error rates, etc.</li>
+              <li>Making problems visible before launch, upholding a consistent quality bar.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Evals In The Prompt Engineering Lifecycle</h3>
+        <p class="source">Sources: IMG_7456, IMG_7457</p>
+        <ol>
+          <li>Develop eval test cases, also called tasks.</li>
+          <li>Write a preliminary prompt or agent config.</li>
+          <li>Run the prompt or agent against tasks.</li>
+          <li>Refine the prompt or agent config.</li>
+          <li>Ship the polished prompt or agent config.</li>
+        </ol>
+        <div class="callout">
+          <p>Evals sit in the iteration loop between running the agent against tasks and refining the prompt or agent config.</p>
+        </div>
+        <p><strong>Agent config</strong> means architecture, system prompt, tool design, context engineering techniques, and related choices.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Graders: Code-Based</h3>
+        <p class="source">Source: IMG_7458</p>
+        <ul>
+          <li>String match, regex, fuzzy.</li>
+          <li>Unit tests: fail-to-pass, pass-to-pass.</li>
+          <li>Static analysis: lint, type.</li>
+          <li>Final state and tool call checks.</li>
+        </ul>
+        <div class="compare">
+          <div class="card good">
+            <h3>Strength</h3>
+            <p>Fast, cheap, deterministic.</p>
+          </div>
+          <div class="card bad">
+            <h3>Weakness</h3>
+            <p>Brittle, lacking in nuance.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Graders: Code, Model, Human</h3>
+        <p class="source">Source: IMG_7459</p>
+        <table>
+          <tr><th>Grader type</th><th>Methods</th><th>Strength</th><th>Weakness</th></tr>
+          <tr>
+            <td><strong>Code-based graders</strong></td>
+            <td>String match, regex, fuzzy; unit tests; static analysis; final state and tool call checks.</td>
+            <td>Fast, cheap, deterministic.</td>
+            <td>Brittle, lacking in nuance.</td>
+          </tr>
+          <tr>
+            <td><strong>Model-based graders</strong></td>
+            <td>Rubric-based scoring, pairwise comparison, multi-judge consensus.</td>
+            <td>Flexible, scalable, nuanced.</td>
+            <td>Non-deterministic, costs money, requires calibration.</td>
+          </tr>
+          <tr>
+            <td><strong>Human graders</strong></td>
+            <td>SME review, crowdsourced judgment, spot-check sampling, A/B testing.</td>
+            <td>Flexible, high quality, nuanced.</td>
+            <td>Slow and expensive.</td>
+          </tr>
+        </table>
+      </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button class="lightbox-close" type="button" aria-label="Close expanded image">&times;</button>
+      <img id="lightbox-image" alt="">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
+    <script>
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      const lightboxCaption = document.getElementById("lightbox-caption");
+      const closeButton = lightbox.querySelector(".lightbox-close");
+
+      function appendOriginalImages() {
+        document.querySelectorAll(".slide").forEach((slide) => {
+          const source = slide.querySelector(".source")?.textContent || "";
+          const names = [...new Set(source.match(/IMG_\d{4}/g) || [])];
+          if (names.length === 0) {
+            return;
+          }
+
+          const originals = document.createElement("div");
+          originals.className = "shots source-originals";
+
+          names.forEach((name) => {
+            const src = `assets/photos/${name}.jpg`;
+            if (slide.querySelector(`img[src="${src}"]`)) {
+              return;
+            }
+
+            const figure = document.createElement("figure");
+            const image = document.createElement("img");
+            const caption = document.createElement("figcaption");
+
+            image.src = src;
+            image.alt = `${name} original source image`;
+            caption.textContent = `${name} - original source image for this reconstructed slide. Click to expand.`;
+            figure.append(image, caption);
+            originals.append(figure);
+          });
+
+          if (originals.children.length > 0) {
+            slide.append(originals);
+          }
+        });
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        lightboxImage.removeAttribute("src");
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+      }
+
+      appendOriginalImages();
+
+      document.querySelectorAll("figure img").forEach((image) => {
+        image.addEventListener("click", () => {
+          const caption = image.closest("figure")?.querySelector("figcaption")?.textContent || image.alt;
+          lightboxImage.src = image.src;
+          lightboxImage.alt = image.alt;
+          lightboxCaption.textContent = caption;
+          lightbox.classList.add("open");
+          lightbox.setAttribute("aria-hidden", "false");
+        });
+      });
+
+      closeButton.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", (event) => {
+        if (event.target === lightbox || event.target === lightboxImage) {
+          closeLightbox();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeLightbox();
+        }
+      });
+    </script>
+  </body>
+</html>

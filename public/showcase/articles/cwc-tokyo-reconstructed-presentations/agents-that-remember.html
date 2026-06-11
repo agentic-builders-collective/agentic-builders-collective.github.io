@@ -1,0 +1,271 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agents That Remember - V3 Reconstruction</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>Agents That Remember</h1>
+      <p>Workshop reconstruction from IMG_7435 through IMG_7448.</p>
+      <div class="meta">
+        <span class="pill">12:00 - 12:45</span>
+        <span class="pill">Sam Jiang / Anthropic</span>
+        <span class="pill">Workshop</span>
+        <span class="pill">IMG_7435 to IMG_7448</span>
+      </div>
+      <p style="margin-top:18px"><a href="index.html">Index</a></p>
+    </header>
+
+    <main>
+      <div class="note">
+        This page reconstructs the readable workshop material from IMG_7435 through IMG_7448. Console-heavy demo photos are summarized as workflow evidence, and every original image is appended beneath its reconstructed section for inspection.
+      </div>
+
+      <section class="slide">
+        <h3>What You'll Learn</h3>
+        <p class="source">Source: IMG_7435</p>
+        <div class="grid">
+          <div class="card">
+            <h3>Diagnose the amnesia</h3>
+            <p>See why isolated sessions limit agent usefulness.</p>
+          </div>
+          <div class="card">
+            <h3>Give an agent live memory</h3>
+            <p>Create a memory store, attach it as a session resource, and steer what gets written with the prompt field.</p>
+          </div>
+          <div class="card">
+            <h3>Consolidate history with Dreaming</h3>
+            <p>Run a dream over past transcripts, inspect the output store, and swap it into your next session.</p>
+          </div>
+          <div class="card">
+            <h3>Inspect it all in Console</h3>
+            <p>Read what the agent chose to remember, and compare memory stores.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Core Concepts</h3>
+        <p class="source">Source: IMG_7436</p>
+        <p>The slide labels these as two new nouns, but places them beside the existing agent/session primitives.</p>
+        <table>
+          <tr><th>Concept</th><th>Meaning</th></tr>
+          <tr><td><strong>Agent</strong></td><td>Model + system prompt + tool config. Reusable across sessions.</td></tr>
+          <tr><td><strong>Environment</strong></td><td>The container spec for a session. Also reusable.</td></tr>
+          <tr><td><strong>Session</strong></td><td>One conversation thread between a user and an agent.</td></tr>
+          <tr><td><strong>Memory store</strong></td><td>Persistent filesystem-like store. Attach as a resource so the agent can read and write across sessions.</td></tr>
+          <tr><td><strong>Dream</strong></td><td>Async batch job: reads transcripts and stores, distills them, writes a new memory store.</td></tr>
+        </table>
+      </section>
+
+      <section class="slide">
+        <h3>Step 1: The Problem</h3>
+        <p class="source">Sources: IMG_7437, IMG_7441</p>
+        <div class="callout">
+          <p>Without a memory store, each session is a silo. A fact you give the agent in one conversation is gone in the next.</p>
+        </div>
+        <h3>The amnesiac baseline</h3>
+        <div class="compare">
+          <div class="card">
+            <h3>Session A - tell it something</h3>
+            <pre><code>ant beta:sessions create \
+  --agent "$AGENT" --environment-id "$ENV"
+
+ant beta:sessions:events send \
+  --session-id "$SES_A" \
+  --event '{"type":"user.message","content":[{"type":"text",
+  "text":"Just attended the subagent orchestration talk. Slides at go/cwc-subagents."}]}'</code></pre>
+          </div>
+          <div class="card">
+            <h3>Session B - ask about it</h3>
+            <pre><code>ant beta:sessions create ...
+
+ant beta:sessions:events send \
+  --session-id "$SES_B" \
+  --event '{"type":"user.message","content":[{"type":"text",
+  "text":"Which talks have I been to so far, and where are the slides?"}]}'</code></pre>
+          </div>
+        </div>
+        <p><strong>Result:</strong> the agent has no idea.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Console Demo: No-Memory Recall</h3>
+        <p class="source">Sources: IMG_7438, IMG_7439, IMG_7440</p>
+        <p>The Claude Console demo shows a session named <strong>[no memory] recall</strong>. The user asks:</p>
+        <pre><code>What features did they announce at the CMA talk?
+Give me the go link for my notes.</code></pre>
+        <p>The agent replies that it does not have access to internal notes, go links, or context about the specific "CMA talk". It asks for more context such as which talk, roughly when it happened, and the notes or link directly.</p>
+        <div class="callout">
+          <p>The demo proves the baseline behavior: the agent can answer the current message, but it cannot retrieve a fact from a previous session without attached memory.</p>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Step 2: Attach A Memory Store</h3>
+        <p class="source">Source: IMG_7442</p>
+        <p>A memory store is a persistent, filesystem-like store the agent can read and write across sessions. Mount the same store on two sessions and they share memory.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Create It, Then Mount It On Every Session</h3>
+        <p class="source">Source: IMG_7443</p>
+        <pre><code># 3a - one store
+MEM=$(ant beta:memory-stores create --name "$DOMAIN-memory" \
+  --description "My CwC attendance and resources" --format json | jq -r .id)
+
+# 3b - attach via --resource at session create
+MEM_RESOURCE='{"type":"memory_store","memory_store_id":"'"$MEM"'",
+  "name":"cwc_memory",
+  "prompt":"Check cwc_memory before answering. Record attended sessions
+  under attended/ and links under resources/.",
+  "access":"read_write"}'
+
+SES_C=$(ant beta:sessions create --agent "$AGENT" --environment-id "$ENV" \
+  --resource "$MEM_RESOURCE" --format json | jq -r .id)</code></pre>
+        <div class="compare">
+          <div class="card good">
+            <h3>prompt</h3>
+            <p>The lever: steer what gets written and where.</p>
+          </div>
+          <div class="card">
+            <h3>access</h3>
+            <p><code>read_write</code> by default; lock to read-only when you want it immutable.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Inspect Memory Stores In Console</h3>
+        <p class="source">Sources: IMG_7444, IMG_7445</p>
+        <p>The Console view exposes memory stores directly. In the demo, a memory store named <strong>demo</strong> is listed as active, and the slide shows CLI commands for inspecting what the agent chose to remember.</p>
+        <pre><code>ant beta:memory-stores:memories list \
+  --memory-store-id "$MEM"
+
+ant beta:memory-stores:memory-versions list \
+  --memory-store-id "$MEM"</code></pre>
+        <div class="callout">
+          <p>Console route shown on the slide: Memory Stores &rarr; search by <code>$MEM</code>.</p>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Step 3: Dreaming</h3>
+        <p class="source">Source: IMG_7446</p>
+        <p>A batch job reads past transcripts and an existing store, runs a model over them, and writes distilled memories into a new store. Raw history becomes structured recall.</p>
+      </section>
+
+      <section class="slide">
+        <h3>How Dreaming Works</h3>
+        <p class="source">Source: IMG_7447</p>
+        <ol>
+          <li>Clone the input memory store <code>$MEM</code> into an output memory store <code>$MEM_OUT</code>.</li>
+          <li>An orchestrator runs one subagent per session transcript.</li>
+          <li>Subagents read and write to reorganize the output memory store.</li>
+        </ol>
+        <table>
+          <tr><th>Input</th><th>Processing</th><th>Output</th></tr>
+          <tr>
+            <td>Input memory store + Session 1/2/3 transcripts</td>
+            <td>Orchestrator creates subagents, one per session</td>
+            <td>Output memory store reorganized into structured recall</td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="slide">
+        <h3>Three Layers</h3>
+        <p class="source">Source: IMG_7448</p>
+        <table>
+          <tr><th>Layer</th><th>Role</th></tr>
+          <tr><td><strong>Session</strong></td><td>One conversation thread. Ephemeral by design.</td></tr>
+          <tr><td><strong>Memory store</strong></td><td>Live persistence. Agent reads and writes across sessions, steered by your prompt.</td></tr>
+          <tr><td><strong>Dreaming</strong></td><td>Dedicated job for consolidation and re-organization.</td></tr>
+        </table>
+      </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button class="lightbox-close" type="button" aria-label="Close expanded image">&times;</button>
+      <img id="lightbox-image" alt="">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
+    <script>
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      const lightboxCaption = document.getElementById("lightbox-caption");
+      const closeButton = lightbox.querySelector(".lightbox-close");
+
+      function appendOriginalImages() {
+        document.querySelectorAll(".slide").forEach((slide) => {
+          const source = slide.querySelector(".source")?.textContent || "";
+          const names = [...new Set(source.match(/IMG_\d{4}/g) || [])];
+          if (names.length === 0) {
+            return;
+          }
+
+          const originals = document.createElement("div");
+          originals.className = "shots source-originals";
+
+          names.forEach((name) => {
+            const src = `assets/photos/${name}.jpg`;
+            if (slide.querySelector(`img[src="${src}"]`)) {
+              return;
+            }
+
+            const figure = document.createElement("figure");
+            const image = document.createElement("img");
+            const caption = document.createElement("figcaption");
+
+            image.src = src;
+            image.alt = `${name} original source image`;
+            caption.textContent = `${name} - original source image for this reconstructed slide. Click to expand.`;
+            figure.append(image, caption);
+            originals.append(figure);
+          });
+
+          if (originals.children.length > 0) {
+            slide.append(originals);
+          }
+        });
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        lightboxImage.removeAttribute("src");
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+      }
+
+      appendOriginalImages();
+
+      document.querySelectorAll("figure img").forEach((image) => {
+        image.addEventListener("click", () => {
+          const caption = image.closest("figure")?.querySelector("figcaption")?.textContent || image.alt;
+          lightboxImage.src = image.src;
+          lightboxImage.alt = image.alt;
+          lightboxCaption.textContent = caption;
+          lightbox.classList.add("open");
+          lightbox.setAttribute("aria-hidden", "false");
+        });
+      });
+
+      closeButton.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", (event) => {
+        if (event.target === lightbox || event.target === lightboxImage) {
+          closeLightbox();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeLightbox();
+        }
+      });
+    </script>
+  </body>
+</html>

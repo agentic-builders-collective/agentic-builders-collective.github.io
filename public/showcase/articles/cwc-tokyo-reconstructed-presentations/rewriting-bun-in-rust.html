@@ -1,0 +1,290 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rewriting Bun In Rust - V3 Reconstruction</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>Rewriting Bun In Rust</h1>
+      <p>Founder-stage talk reconstruction from IMG_7475 through IMG_7490.</p>
+      <div class="meta">
+        <span class="pill">15:30 - 16:00</span>
+        <span class="pill">Jarred Sumner / Anthropic</span>
+        <span class="pill">Founder stage</span>
+        <span class="pill">IMG_7475 to IMG_7490</span>
+      </div>
+      <p style="margin-top:18px"><a href="index.html">Index</a></p>
+    </header>
+
+    <main>
+      <div class="note">
+        This page reconstructs the readable content from the available photos. Original images are appended beneath each section and can be clicked to expand.
+      </div>
+
+      <section class="slide">
+        <h3>Session Frame</h3>
+        <p class="source">Source: session page</p>
+        <p>The official session description says Jarred Sumner, creator of Bun, walks through why and how the team rewrote Bun to Rust using dynamic workflows in Claude Code.</p>
+        <p><a href="https://claude.com/code-with-claude/session/tyo-ext-rewriting-bun-in-rust">Original Code w/ Claude session page</a></p>
+      </section>
+
+      <section class="slide">
+        <h3>Problem: Rust Demands Structure The Old Code Never Had</h3>
+        <p class="source">Source: IMG_7475</p>
+        <div class="compare">
+          <div class="card">
+            <h3>A strict dependency order between ~100 crates</h3>
+            <p>Five years of Zig and C++ had none.</p>
+          </div>
+          <div class="card">
+            <h3>Classify every cyclical dependency</h3>
+            <p>Delete it, move the code, or restructure.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Problem: Rust Has Lifetimes, Zig Does Not</h3>
+        <p class="source">Source: IMG_7476</p>
+        <p>Use a workflow to read every file and figure out lifetimes up front.</p>
+        <div class="grid">
+          <div class="card"><h3>Who creates it?</h3></div>
+          <div class="card"><h3>Who frees it?</h3></div>
+          <div class="card"><h3>Can it outlive its owner?</h3></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>One Loop, Four Phases</h3>
+        <p class="source">Source: IMG_7477</p>
+        <ol>
+          <li>Generate.</li>
+          <li>Adversarial review.</li>
+          <li>Apply fixes.</li>
+          <li>Count what is left until zero.</li>
+        </ol>
+        <p>Each phase zooms out and groups work its own way:</p>
+        <table>
+          <tr><th>Phase</th><th>Scope</th></tr>
+          <tr><td>Phase 1</td><td>Files x 1,300</td></tr>
+          <tr><td>Phase 2</td><td>Crates x ~100</td></tr>
+          <tr><td>Phase 3</td><td>Binary x 1</td></tr>
+          <tr><td>Phase 4</td><td>Behavior x 4,174 tests</td></tr>
+        </table>
+        <div class="callout">
+          <p>Ground rule: the old code never leaves. Every original file stays beside its translation as the spec.</p>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Adversarial Review</h3>
+        <p class="source">Source: IMG_7478</p>
+        <div class="grid">
+          <div class="card"><h3>2+ adversarial reviewers for every change</h3></div>
+          <div class="card"><h3>Author and reviewer: separate context windows</h3><p>A fresh reviewer cannot be talked into the author's justifications.</p></div>
+          <div class="card"><h3>Instruction</h3><p>Assume it is wrong. Only report what you can prove.</p></div>
+        </div>
+        <div class="callout"><p>Spend the tokens. It is worth it.</p></div>
+      </section>
+
+      <section class="slide">
+        <h3>Maximize Throughput</h3>
+        <p class="source">Source: IMG_7479</p>
+        <div class="grid">
+          <div class="card"><h3>16 agents x 4 worktrees = 64 Claudes</h3></div>
+          <div class="card"><h3>Ban Git</h3><p>One reset in a shared tree equals 16x slowdown.</p></div>
+          <div class="card"><h3>Ban cargo, ban slow commands</h3><p>Own checkout, build, memory budget per worktree.</p></div>
+          <div class="card"><h3>cgroups is good</h3></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Translate All 1,300 Files, All At Once</h3>
+        <p class="source">Source: IMG_7480</p>
+        <p>For each file:</p>
+        <ol>
+          <li>Write the <code>.rs</code> file.</li>
+          <li>Run two adversarial reviews against the original and the rules.</li>
+          <li>Apply fixes.</li>
+        </ol>
+        <div class="callout"><p>None of it has to work yet.</p></div>
+      </section>
+
+      <section class="slide">
+        <h3>Fix All Compiler Errors, All At Once</h3>
+        <p class="source">Source: IMG_7481</p>
+        <p>Each round:</p>
+        <ol>
+          <li>Build once per round: the only compile.</li>
+          <li>Split errors by file.</li>
+          <li>Run 30 fixers in parallel with no compiler access.</li>
+          <li>Commit.</li>
+          <li>Next build grades everyone and loops.</li>
+        </ol>
+      </section>
+
+      <section class="slide">
+        <h3>Make It Run</h3>
+        <p class="source">Source: IMG_7482</p>
+        <p>Many failures, few causes. Dedupe before you assign agents, or pay 4x for the same fix.</p>
+        <ol>
+          <li>Build.</li>
+          <li>Run 15 smoke tests.</li>
+          <li>Dedupe crashes by location.</li>
+          <li>Assign one agent per crash.</li>
+          <li>Loop.</li>
+        </ol>
+        <p class="source">Slide aside: the day <code>console.log(1)</code> printed 1 was a very good day.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Fix The Process That Generates The Code</h3>
+        <p class="source">Source: IMG_7483</p>
+        <p>Do not fix the code. Fix the process that generates the code.</p>
+        <ol>
+          <li>Sample some of the results.</li>
+          <li>Edit prompts to handle things that went wrong.</li>
+          <li>Regenerate the code.</li>
+        </ol>
+      </section>
+
+      <section class="slide">
+        <h3>Round 1's Postmortem Is Round 2's Prompt</h3>
+        <p class="source">Source: IMG_7484</p>
+        <table>
+          <tr><th>Round 1 postmortem</th><th>Round 2 prompt carry-forward</th></tr>
+          <tr><td>Converted only 9% - agents played it safe.</td><td>Converted only 9% - agents played it safe.</td></tr>
+          <tr><td>A pattern that moves memory C still points at.</td><td>A pattern that moves memory C still points at.</td></tr>
+          <tr><td>Re-discovered settled findings.</td><td>Re-discovered settled findings.</td></tr>
+          <tr><td>Linux-only checks shipped a macOS break.</td><td>Linux-only checks shipped a macOS break.</td></tr>
+        </table>
+      </section>
+
+      <section class="slide">
+        <h3>Even The Reviewers Get Reviewed</h3>
+        <p class="source">Source: IMG_7485</p>
+        <div class="grid">
+          <div class="card"><h3>Hallucinated bugs</h3><p>Solo findings default to "not confirmed".</p></div>
+          <div class="card"><h3>Over-correction</h3><p>Itself a named, rejectable finding.</p></div>
+          <div class="card"><h3>Laundering</h3><p>"Did the hazard go away, or just move?"</p></div>
+        </div>
+        <div class="callout"><p>Never take one agent's word for it, including the skeptics.</p></div>
+      </section>
+
+      <section class="slide">
+        <h3>It Works</h3>
+        <p class="source">Sources: IMG_7486, IMG_7487</p>
+        <p><strong>+1,009,257 lines. And it works.</strong></p>
+        <div class="grid">
+          <div class="card"><h3>11 days</h3><p>May 3 -> merged May 14</p></div>
+          <div class="card"><h3>6,778</h3><p>commits</p></div>
+          <div class="card good"><h3>0</h3><p>tests skipped or deleted</p></div>
+        </div>
+        <table>
+          <tr><th>Platform</th><th>Expect() calls</th><th>Tests</th><th>Files</th></tr>
+          <tr><td>Debian 13 x64</td><td>1,386,826</td><td>60,624</td><td>4,174</td></tr>
+          <tr><td>macOS 14 arm64</td><td>1,259,953</td><td>58,850</td><td>4,175</td></tr>
+          <tr><td>Windows 2019 x64</td><td>1,007,544</td><td>57,337</td><td>4,173</td></tr>
+        </table>
+        <p>The team kept going: 10 rounds of fixes from Claude Security, 24/7 coverage-guided fuzzing of all 14 parsers, every LeakSanitizer-detectable memory leak fixed, plus a Windows bug hunt and an audit of every Rust-C boundary.</p>
+      </section>
+
+      <section class="slide">
+        <h3>What 1.39M Assertions Missed</h3>
+        <p class="source">Source: IMG_7488</p>
+        <div class="grid">
+          <div class="card"><h3>JavaScript tests cannot see Rust-level mistakes</h3></div>
+          <div class="card"><h3>13,000+ uses of the unsafe escape hatch</h3></div>
+          <div class="card"><h3>Untested corners are untranslated corners</h3></div>
+        </div>
+        <div class="callout"><p>Every gap the test suite had became a bug the team shipped.</p></div>
+      </section>
+
+      <section class="slide">
+        <h3>Rewrites Make Sense Now</h3>
+        <p class="source">Source: IMG_7489</p>
+        <div class="compare">
+          <div class="card"><h3>1 team x 1 year</h3><p>The old price.</p></div>
+          <div class="card good"><h3>1 engineer x 11 days</h3><p>The price with Claude Code workflows.</p></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Large Rewrites With Claude Code</h3>
+        <p class="source">Source: IMG_7490</p>
+        <p>Most of the human job during those 11 days: reading code, reading reviews, and waiting.</p>
+        <ol>
+          <li>Get an independent judge: a test suite that does not care how the code is written.</li>
+          <li>Write the rules.</li>
+          <li>Bound every task and regroup the work at each phase.</li>
+          <li>Review adversarially, then sample.</li>
+          <li>Fix the instructions, not the code; regenerate.</li>
+          <li>Loop until a number is zero.</li>
+        </ol>
+      </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button class="lightbox-close" type="button" aria-label="Close expanded image">&times;</button>
+      <img id="lightbox-image" alt="">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
+    <script>
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      const lightboxCaption = document.getElementById("lightbox-caption");
+      const closeButton = lightbox.querySelector(".lightbox-close");
+      function appendOriginalImages() {
+        document.querySelectorAll(".slide").forEach((slide) => {
+          const source = slide.querySelector(".source")?.textContent || "";
+          const names = [...new Set(source.match(/IMG_\d{4}/g) || [])];
+          if (names.length === 0) return;
+          const originals = document.createElement("div");
+          originals.className = "shots source-originals";
+          names.forEach((name) => {
+            const src = `assets/photos/${name}.jpg`;
+            if (slide.querySelector(`img[src="${src}"]`)) return;
+            const figure = document.createElement("figure");
+            const image = document.createElement("img");
+            const caption = document.createElement("figcaption");
+            image.src = src;
+            image.alt = `${name} original source image`;
+            caption.textContent = `${name} - original source image for this reconstructed slide. Click to expand.`;
+            figure.append(image, caption);
+            originals.append(figure);
+          });
+          if (originals.children.length > 0) slide.append(originals);
+        });
+      }
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        lightboxImage.removeAttribute("src");
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+      }
+      appendOriginalImages();
+      document.querySelectorAll("figure img").forEach((image) => {
+        image.addEventListener("click", () => {
+          const caption = image.closest("figure")?.querySelector("figcaption")?.textContent || image.alt;
+          lightboxImage.src = image.src;
+          lightboxImage.alt = image.alt;
+          lightboxCaption.textContent = caption;
+          lightbox.classList.add("open");
+          lightbox.setAttribute("aria-hidden", "false");
+        });
+      });
+      closeButton.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", (event) => {
+        if (event.target === lightbox || event.target === lightboxImage) closeLightbox();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeLightbox();
+      });
+    </script>
+  </body>
+</html>
