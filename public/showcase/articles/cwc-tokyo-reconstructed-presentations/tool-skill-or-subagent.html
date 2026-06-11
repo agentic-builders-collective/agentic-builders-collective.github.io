@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tool, Skill, Or Subagent - V3 Reconstruction</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>Tool, Skill, Or Subagent?</h1>
+      <p>Decomposing an agent that outgrew its prompt.</p>
+      <div class="meta">
+        <span class="pill">14:00 - 14:45</span>
+        <span class="pill">Karan Sampath / Anthropic</span>
+        <span class="pill">Workshop</span>
+        <span class="pill">IMG_7462, IMG_7469 to IMG_7474</span>
+      </div>
+      <p style="margin-top:18px"><a href="index.html">Index</a></p>
+    </header>
+
+    <main>
+      <div class="note">
+        This page reconstructs the available second-half workshop photos. IMG_7463 through IMG_7468 are not present in the source folder, so the page starts with the live Managed Agents demo at IMG_7462 and continues from IMG_7469 through IMG_7474. Original images are appended beneath every section.
+      </div>
+
+      <section class="slide">
+        <h3>Session Frame</h3>
+        <p class="source">Source: session page</p>
+        <p>The session asks when logic belongs in a tool, a skill, or a subagent. The workshop frame is to inherit a large inventory agent, decompose it live on Claude Managed Agents, and run evals after each change.</p>
+        <p><a href="https://claude.com/code-with-claude/session/tyo-ext-tool-skill-or-subagent">Original Code w/ Claude session page</a></p>
+      </section>
+
+      <section class="slide">
+        <h3>Live Demo: Workshop Food Agent</h3>
+        <p class="source">Source: IMG_7462</p>
+        <p>The Console demo shows a session named <strong>workshop-food</strong> running in Claude Managed Agents. The visible user task begins:</p>
+        <pre><code>Create a 5-slide presentation introducing th...</code></pre>
+        <p>The debug view shows a Bash tool call and a session resource named <code>workshop-pptx</code>, indicating the agent is creating presentation artifacts through tools/resources rather than only prompt text.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Three Ways To Give Your Agent A Forecaster</h3>
+        <p class="source">Source: IMG_7469</p>
+        <table>
+          <tr><th></th><th>callable_agents</th><th>Custom client tool</th><th>Inline</th></tr>
+          <tr>
+            <th>What</th>
+            <td>Declare a forecaster up front; coordinator delegates to it in an isolated session thread sharing the same sandbox.</td>
+            <td>Define a <code>spawn_subagent</code> tool; your harness handles the call by creating a fresh session.</td>
+            <td>Main agent reads the history and computes via Bash.</td>
+          </tr>
+          <tr>
+            <th>Why</th>
+            <td>Native primitive, persistent threads, parallelizable.</td>
+            <td>Dynamic prompts; works on any CMA tier; closest to Agent-SDK Task.</td>
+            <td>Simplest; zero plumbing.</td>
+          </tr>
+          <tr>
+            <th>Watch out</th>
+            <td>One level of delegation only; 20-agent cap.</td>
+            <td>You own routing and lifecycle; most surface area.</td>
+            <td>90-day history sits in main context.</td>
+          </tr>
+          <tr>
+            <th>Docs</th>
+            <td><code>.../managed-agents/multi-agent</code></td>
+            <td><code>.../managed-agents/tools</code> and custom tooling docs.</td>
+            <td>-</td>
+          </tr>
+        </table>
+        <div class="callout">
+          <p>Workshop prompt: after finishing one approach, redeploy with another and diff the F2 session threads. If F2 is still red, inspect the structure the forecaster hands back to the orchestrator; it may matter more than which transport you pick.</p>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Final Shape: One Agent, Five Skills</h3>
+        <p class="source">Source: IMG_7470</p>
+        <div class="grid">
+          <div class="card"><h3>15</h3><p>lines of system prompt</p></div>
+          <div class="card"><h3>5</h3><p>skills loaded on demand</p></div>
+          <div class="card"><h3>0</h3><p>hardcoded subagents</p></div>
+          <div class="card good"><h3>92%</h3><p>eval score: 11/12</p></div>
+        </div>
+        <p>The final agent is <strong>StockPilot</strong> on Claude Managed Agents, using Claude Sonnet 4.6 with a 15-line system prompt.</p>
+        <table>
+          <tr><th>Component</th><th>Contents</th></tr>
+          <tr><td>Skills</td><td><code>reorder-policy</code>, <code>supplier-selection</code>, <code>forecasting</code>, <code>notify-templates</code>, <code>weekly-report</code></td></tr>
+          <tr><td>Agent toolset</td><td>Bash, Read, Write</td></tr>
+          <tr><td>callable_agents</td><td>Forecaster, using CMA's multiagent primitive</td></tr>
+        </table>
+        <p>Summary line from the slide: <code>12 inline tools -> agent_toolset + 5 skills + callable_agents</code>.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Fewer Tokens, Higher Score</h3>
+        <p class="source">Sources: IMG_7471, IMG_7472</p>
+        <table>
+          <tr><th>Metric</th><th>Before</th><th>After</th><th>Delta</th></tr>
+          <tr><td>Eval score</td><td>71% (8.5/12)</td><td>92% (11/12)</td><td>+21 pt</td></tr>
+          <tr><td>R2</td><td>521 s</td><td>313 s</td><td>1.7x faster</td></tr>
+          <tr><td>R3-R5</td><td>~$6.50</td><td>~$1.06</td><td>-84%</td></tr>
+          <tr><td>R8</td><td>2 turns, 154 output tokens</td><td>3 turns, 421 output tokens</td><td>+267 output tokens</td></tr>
+          <tr><td>R9</td><td>2 turns, 5,937 output tokens</td><td>4 turns, 1,290 output tokens</td><td>-4,647 output tokens</td></tr>
+          <tr><td>F1</td><td>5 turns, 27,283 output tokens</td><td>11 turns, 8,488 output tokens</td><td>-18,795 output tokens</td></tr>
+          <tr><td>F2</td><td>7 turns, 42,619 output tokens, 102 tool calls</td><td>20 turns, 9,327 output tokens, 3 scripts</td><td>-33,292 output tokens</td></tr>
+          <tr><td>F3</td><td>4 turns, 7,076 output tokens</td><td>16 turns, 10,079 output tokens</td><td>+3,003 output tokens</td></tr>
+          <tr><td>R6-R7</td><td>5 turns, 7,345 output tokens, slow</td><td>4 turns, &lt;5,000 output tokens</td><td>-2,345+ output tokens</td></tr>
+        </table>
+        <p class="source">Note shown on slide: after runs on CMA, wall times include ~40s/task session overhead.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Take What You Learned Back Home</h3>
+        <p class="source">Source: IMG_7473</p>
+        <div class="grid">
+          <div class="card">
+            <h3>1. Simple composable agents scale with model intelligence</h3>
+            <p>Architecting around foundational primitives such as Bash, skills, or subagents improves agent capability while enabling more efficient context management.</p>
+          </div>
+          <div class="card">
+            <h3>2. Load organizational procedures on demand</h3>
+            <p>Offload context from your system prompt into skills so agents only load what they need for a given task.</p>
+          </div>
+          <div class="card">
+            <h3>3. Evals should evolve with your product vision</h3>
+            <p>As model capabilities continue to evolve, so should your evals.</p>
+          </div>
+        </div>
+        <p>Docs path shown: <code>platform.claude.com/docs</code> -> <code>managed-agents</code>, <code>callable_agents</code>, <code>skills</code>.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Your Whole Agent Is A Dict. Four Levers.</h3>
+        <p class="source">Source: IMG_7474</p>
+        <pre><code># my_agent.py
+AGENT = dict(
+  model = "claude-sonnet-4-6",
+  system = "",
+  skills = [# SKILL_MINING],
+  mcp_servers = [# MCP_MINECRAFT_WIKI],
+)
+
+ALLOWED_TOOLS = None # or a subset
+
+client.beta.agents.create(**AGENT)</code></pre>
+        <table>
+          <tr><th>Lever</th><th>Meaning</th></tr>
+          <tr><td>system</td><td>The prompt. Your main lever. Every sentence rides every turn.</td></tr>
+          <tr><td>model</td><td>Haiku, Sonnet, Opus.</td></tr>
+          <tr><td>skills</td><td>A markdown doc that rides every turn. Versioned, reusable across agents.</td></tr>
+          <tr><td>mcp_servers</td><td>Optional tools, such as wiki lookup. Free until called; the agent must choose.</td></tr>
+        </table>
+        <p>Footer note: Anthropic runs the loop. No while-loop, no schemas, no retries. Tools are auto-discovered over MCP.</p>
+      </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button class="lightbox-close" type="button" aria-label="Close expanded image">&times;</button>
+      <img id="lightbox-image" alt="">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
+    <script>
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      const lightboxCaption = document.getElementById("lightbox-caption");
+      const closeButton = lightbox.querySelector(".lightbox-close");
+      function appendOriginalImages() {
+        document.querySelectorAll(".slide").forEach((slide) => {
+          const source = slide.querySelector(".source")?.textContent || "";
+          const names = [...new Set(source.match(/IMG_\d{4}/g) || [])];
+          if (names.length === 0) return;
+          const originals = document.createElement("div");
+          originals.className = "shots source-originals";
+          names.forEach((name) => {
+            const src = `assets/photos/${name}.jpg`;
+            if (slide.querySelector(`img[src="${src}"]`)) return;
+            const figure = document.createElement("figure");
+            const image = document.createElement("img");
+            const caption = document.createElement("figcaption");
+            image.src = src;
+            image.alt = `${name} original source image`;
+            caption.textContent = `${name} - original source image for this reconstructed slide. Click to expand.`;
+            figure.append(image, caption);
+            originals.append(figure);
+          });
+          if (originals.children.length > 0) slide.append(originals);
+        });
+      }
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        lightboxImage.removeAttribute("src");
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+      }
+      appendOriginalImages();
+      document.querySelectorAll("figure img").forEach((image) => {
+        image.addEventListener("click", () => {
+          const caption = image.closest("figure")?.querySelector("figcaption")?.textContent || image.alt;
+          lightboxImage.src = image.src;
+          lightboxImage.alt = image.alt;
+          lightboxCaption.textContent = caption;
+          lightbox.classList.add("open");
+          lightbox.setAttribute("aria-hidden", "false");
+        });
+      });
+      closeButton.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", (event) => {
+        if (event.target === lightbox || event.target === lightboxImage) closeLightbox();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeLightbox();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How We Claude Code - V3 Reconstruction</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>How We Claude Code</h1>
+      <p>Workshop 1 reconstruction from IMG_7391 through IMG_7408.</p>
+      <div class="meta">
+        <span class="pill">10:00 - 10:45</span>
+        <span class="pill">Jason Schwartz / Anthropic</span>
+        <span class="pill">Code w/ Claude Tokyo</span>
+      </div>
+      <p style="margin-top:18px"><a href="index.html">Index</a></p>
+    </header>
+
+    <main>
+      <div class="note">
+        This v3 page only covers workshop 1. Content slides are rebuilt as HTML. Demo-only screenshots are kept at the bottom. IMG_7403 and IMG_7404 are treated as extractable content because they expose the A/B/C verification-contract structure.
+      </div>
+
+      <h2>Workshop Frame</h2>
+      <section class="slide">
+        <h3>Title and Repo</h3>
+        <p class="source">Sources: IMG_7391, IMG_7392, IMG_7393</p>
+        <p><strong>How We Claude Code</strong> was presented by Jason Schwartz from Anthropic.</p>
+        <p>The workshop repo slide points to:</p>
+        <pre><code>https://cwc26.short.gy/workshops</code></pre>
+      </section>
+
+      <section class="slide">
+        <h3>Three Tools For Working With Long-Running Agents</h3>
+        <p class="source">Source: IMG_7394</p>
+        <div class="grid">
+          <div class="card">
+            <h3>Removing ambiguity</h3>
+            <p>Make the agent interview you before it commits to anything.</p>
+          </div>
+          <div class="card">
+            <h3>Understanding and planning</h3>
+            <p>Plans you can actually read: HTML, not Markdown.</p>
+          </div>
+          <div class="card">
+            <h3>Integrated verification</h3>
+            <p>Build verification in from the start, not bolted on at the end.</p>
+          </div>
+        </div>
+      </section>
+
+      <h2>Running Example</h2>
+      <section class="slide">
+        <h3>A Bill-Splitting App</h3>
+        <p class="source">Source: IMG_7395</p>
+        <p>The workshop uses one small product idea to show the three tools: a no-account bill-splitting app.</p>
+        <table>
+          <tr><th>Bill</th><th>Value</th></tr>
+          <tr><td>Dinner</td><td>Friday</td></tr>
+          <tr><td>Aanya</td><td>$28.40</td></tr>
+          <tr><td>Marco</td><td>$31.10</td></tr>
+          <tr><td>Priya</td><td>$24.80</td></tr>
+          <tr><td>You</td><td>$28.40</td></tr>
+          <tr><td>Total</td><td>$112.70</td></tr>
+        </table>
+      </section>
+
+      <h2>1. Removing Ambiguity</h2>
+      <section class="slide">
+        <h3>Do Not Start By Asking The Agent To Build</h3>
+        <p class="source">Source: IMG_7396</p>
+        <div class="callout">
+          <p>Do not ask the agent to build it yet. Ask the agent to interview you about it.</p>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>A Small Prompt Change Gives A Much Better First Hour</h3>
+        <p class="source">Source: IMG_7397</p>
+        <div class="compare">
+          <div class="card bad">
+            <h3>Bad prompt</h3>
+            <p>"Create a bill-splitting app for friends for me."</p>
+            <p>Why it is bad: under-specified. The agent picks a direction and you do not see it for an hour.</p>
+          </div>
+          <div class="card good">
+            <h3>Good prompt</h3>
+            <p>"I want to make this bill-splitting app into something people might want. I'm not sure what my target audience is - can you help me brainstorm different ways I could take this?"</p>
+            <p>Why it is better: the agent surfaces edge cases, audiences, and unknowns before any code is written.</p>
+          </div>
+        </div>
+      </section>
+
+      <h2>2. Understanding And Planning</h2>
+      <section class="slide">
+        <h3>HTML Plans Are Easier To Read</h3>
+        <p class="source">Source: IMG_7398</p>
+        <p>HTML plans are easier to read and capture more of the model's thinking.</p>
+        <div class="compare">
+          <div class="card">
+            <h3>Markdown - yesterday</h3>
+            <pre><code># Bill Splitter Plan
+
+## Scope
+- Split bills evenly
+- Track who paid
+- Export to Venmo
+
+## Open questions
+- Tip handling?
+- Multi-currency?
+- Auth?</code></pre>
+          </div>
+          <div class="card">
+            <h3>HTML - today</h3>
+            <table>
+              <tr><th>Scope</th><td>Even split, tracking, Venmo</td></tr>
+              <tr><th>Open</th><td>Tip, currency, auth</td></tr>
+              <tr><th>Flow</th><td>Add bill -> Split -> Send</td></tr>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <h2>3. Integrated Verification</h2>
+      <section class="slide">
+        <h3>Three Principles</h3>
+        <p class="source">Source: IMG_7399</p>
+        <div class="grid">
+          <div class="card">
+            <h3>1. Build for it from the start</h3>
+            <p>Think of verification while you build.</p>
+          </div>
+          <div class="card">
+            <h3>2. Modularize by verifiability</h3>
+            <p>Group code by what is testable independently.</p>
+          </div>
+          <div class="card">
+            <h3>3. Verify across the stack</h3>
+            <p>Use unit, integration, visual, and behavioral checks.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>Verification Contract Demo</h3>
+        <p class="source">Sources: IMG_7403, IMG_7404</p>
+        <p>The demo asks: <strong>What if the app declared what "correct" means?</strong></p>
+        <p>The screen labels this as <strong>the contract</strong>: state published on the page plus rules declared beside the code.</p>
+
+        <div class="card">
+          <h3><span class="label">A</span>The component stamps its state onto the row</h3>
+          <p>The rendered page becomes machine-readable. When the user ticks "oat milk", the app remembers it in memory as a variable such as <code>todo.done = true</code>. The contract adds one line that copies that variable onto the row as a label.</p>
+          <pre><code>before  &lt;li class="todo-item"&gt;
+after   &lt;li class="todo-item" data-verify-done="true"&gt;
+        copied from todo.done</code></pre>
+        </div>
+
+        <div class="card">
+          <h3><span class="label">B</span>You ask Claude to write a verify spec for the component</h3>
+          <p>The spec lists example states to render, called fixtures, and rules that must hold on the page, called invariants. Using the repo's existing specs as a template, Claude reads the component and writes the same shape.</p>
+          <p>The specific bug fails the invariant <code>done-class-matches</code>: the row's stamped state says done, but the class does not.</p>
+          <pre><code>fixtures (states to render)
+  - active
+  - done
+  - empty-text
+  - long-text
+
+invariants (rules to check)
+  - done-class-matches
+  - checkbox-state-matches
+  - visible-text-never-empty</code></pre>
+        </div>
+
+        <div class="card">
+          <h3><span class="label">C</span>Put together: state on the page, rules in a file, a harness that checks them</h3>
+          <p>A makes the state machine-readable. B defines what good looks like upfront. The harness from the repo runs that check programmatically, the same way every time.</p>
+          <pre><code>A  page says  data-verify-done = "true"
+B  rule says  class must include "done"
+   harness   class is "todo-item" -> FAIL
+
+-> localhost:5199/verify</code></pre>
+        </div>
+      </section>
+
+      <h2>Closing Frame</h2>
+      <section class="slide">
+        <h3>The Work Has Shifted</h3>
+        <p class="source">Source: IMG_7408</p>
+        <div class="callout">
+          <p>The work is no longer writing the code. The work is setting up the conditions in which the code gets written well.</p>
+        </div>
+      </section>
+
+      <h2>Demo Slides Kept As Screenshots</h2>
+      <p>These are useful visual evidence, but not rebuilt as primary content here. IMG_7403 and IMG_7404 were extracted above because the A/B/C contract content is readable.</p>
+      <div class="shots">
+        <figure>
+          <img src="assets/photos/IMG_7400.jpg" alt="Demo slide IMG_7400">
+          <figcaption>IMG_7400 - live demo: todo app, editor, and browser workflow.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/photos/IMG_7401.jpg" alt="Demo slide IMG_7401">
+          <figcaption>IMG_7401 - live demo continuation.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/photos/IMG_7403.jpg" alt="Demo slide IMG_7403">
+          <figcaption>IMG_7403 - verification contract A/B content, extracted above.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/photos/IMG_7404.jpg" alt="Demo slide IMG_7404">
+          <figcaption>IMG_7404 - verification contract B/C content, extracted above.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/photos/IMG_7405.jpg" alt="Demo slide IMG_7405">
+          <figcaption>IMG_7405 - anatomy/system diagram from the demo.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/photos/IMG_7406.jpg" alt="Demo slide IMG_7406">
+          <figcaption>IMG_7406 - anatomy/system diagram duplicate/continuation.</figcaption>
+        </figure>
+      </div>
+    </main>
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button class="lightbox-close" type="button" aria-label="Close expanded image">&times;</button>
+      <img id="lightbox-image" alt="">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+    <script>
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      const lightboxCaption = document.getElementById("lightbox-caption");
+      const closeButton = lightbox.querySelector(".lightbox-close");
+
+      function appendOriginalImages() {
+        document.querySelectorAll(".slide").forEach((slide) => {
+          const source = slide.querySelector(".source")?.textContent || "";
+          const names = [...new Set(source.match(/IMG_\d{4}/g) || [])];
+          if (names.length === 0) {
+            return;
+          }
+
+          const originals = document.createElement("div");
+          originals.className = "shots source-originals";
+
+          names.forEach((name) => {
+            const src = `assets/photos/${name}.jpg`;
+            if (slide.querySelector(`img[src="${src}"]`)) {
+              return;
+            }
+
+            const figure = document.createElement("figure");
+            const image = document.createElement("img");
+            const caption = document.createElement("figcaption");
+
+            image.src = src;
+            image.alt = `${name} original source image`;
+            caption.textContent = `${name} - original source image for this reconstructed slide. Click to expand.`;
+            figure.append(image, caption);
+            originals.append(figure);
+          });
+
+          if (originals.children.length > 0) {
+            slide.append(originals);
+          }
+        });
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        lightboxImage.removeAttribute("src");
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+      }
+
+      appendOriginalImages();
+
+      document.querySelectorAll("figure img").forEach((image) => {
+        image.addEventListener("click", () => {
+          const caption = image.closest("figure")?.querySelector("figcaption")?.textContent || image.alt;
+          lightboxImage.src = image.src;
+          lightboxImage.alt = image.alt;
+          lightboxCaption.textContent = caption;
+          lightbox.classList.add("open");
+          lightbox.setAttribute("aria-hidden", "false");
+        });
+      });
+
+      closeButton.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", (event) => {
+        if (event.target === lightbox || event.target === lightboxImage) {
+          closeLightbox();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeLightbox();
+        }
+      });
+    </script>
+  </body>
+</html>

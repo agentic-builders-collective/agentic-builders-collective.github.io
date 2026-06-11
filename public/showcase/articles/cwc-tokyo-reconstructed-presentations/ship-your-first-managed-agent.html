@@ -1,0 +1,366 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ship Your First Managed Agent - V3 Reconstruction</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>Ship Your First Managed Agent</h1>
+      <p>Workshop 2 reconstruction from IMG_7411 through IMG_7423.</p>
+      <div class="meta">
+        <span class="pill">11:00 - 11:45</span>
+        <span class="pill">Jonah Dueck / Anthropic</span>
+        <span class="pill">Code w/ Claude Tokyo</span>
+      </div>
+      <p style="margin-top:18px"><a href="index.html">Index</a></p>
+    </header>
+
+    <main>
+      <div class="note">
+        This v3 page recreates the content slides as HTML. One blurry duplicate demo photo is omitted. IMG_7416 is kept as the only screenshot because it captures the live Incident-2277 demo state.
+      </div>
+
+      <h2>Workshop Goal</h2>
+      <section class="slide">
+        <h3>Title</h3>
+        <p class="source">Source: IMG_7411</p>
+        <p><strong>Ship your first Managed Agent</strong> introduces Claude Managed Agents through a hands-on SRE incident investigator.</p>
+        <p>The repo material frames the exercise around <strong>Incident-2277</strong>: checkout p99 latency spikes to 10x baseline, and the agent must do the forty-minute human investigation loop for you.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Incident-2277 Exercise</h3>
+        <p class="source">Repo material plus live demo context</p>
+        <p>The app is a fictional e-commerce incident dashboard. Metrics, Logs, and Deploys work from local mock data. The SRE Agent panel starts offline; the workshop brings it online by implementing a small set of Managed Agents API calls.</p>
+        <table>
+          <tr><th>Evidence</th><th>Where it lives</th><th>What the agent does</th></tr>
+          <tr><td>70,000 JSON log lines</td><td><code>app.log</code></td><td>Greps the log inside its managed sandbox.</td></tr>
+          <tr><td>Metrics</td><td><code>metrics.json</code></td><td>Checks p99 latency and failure rate.</td></tr>
+          <tr><td>Deploys</td><td><code>deploys.json</code></td><td>Correlates the incident with a deployment timestamp.</td></tr>
+          <tr><td>Diff</td><td><code>diff.txt</code></td><td>Finds the code change that introduced the N+1 query.</td></tr>
+        </table>
+      </section>
+
+      <h2>Interface Evolution</h2>
+      <section class="slide">
+        <h3>Evolution Of Interfaces Used To Build Agents</h3>
+        <p class="source">Source: IMG_7412</p>
+        <table>
+          <tr><th>Messages API</th><th>Agent SDK</th><th>Managed Agents</th></tr>
+          <tr>
+            <td>
+              <p><strong>You manage:</strong></p>
+              <ul>
+                <li>Agent loop and context management</li>
+                <li>Tool execution runtime</li>
+                <li>Session state and recovery</li>
+                <li>Hosting, auth, and observability</li>
+                <li>Custom tool logic</li>
+              </ul>
+              <p><strong>Anthropic provides:</strong> tokens in and out.</p>
+            </td>
+            <td>
+              <p><strong>You manage:</strong></p>
+              <ul>
+                <li>Hosting and scaling</li>
+                <li>Session state, auth, and observability</li>
+                <li>Custom tool logic and MCP</li>
+              </ul>
+              <p><strong>SDK handles:</strong> agent loop, context management, caching, compaction, built-in tool execution, and retries.</p>
+            </td>
+            <td>
+              <p><strong>You provide:</strong></p>
+              <ul>
+                <li>Task and agent config</li>
+                <li>Custom tool logic through MCP or skills</li>
+              </ul>
+              <p><strong>Anthropic handles:</strong> purpose-built harness, context, sandbox, persistence, checkpointing, auth/OAuth, credential vault, hosting, scaling, observability, and tokens.</p>
+            </td>
+          </tr>
+        </table>
+      </section>
+
+      <h2>Primary Resources</h2>
+      <section class="slide">
+        <h3>Three Primary Resources</h3>
+        <p class="source">Source: IMG_7413</p>
+        <div class="grid">
+          <div class="card">
+            <h3><code>/v1/agents</code></h3>
+            <p><strong>Persona and capabilities.</strong></p>
+            <p>What the agent is: model, system prompt, tools, MCP servers, skills.</p>
+            <p>Versioned and immutable.</p>
+          </div>
+          <div class="card">
+            <h3><code>/v1/environments</code></h3>
+            <p><strong>Infrastructure and guardrails.</strong></p>
+            <p>Where the agent runs: container config, networking, allowed hosts.</p>
+            <p>Set up once and reuse everywhere.</p>
+          </div>
+          <div class="card">
+            <h3><code>/v1/sessions</code></h3>
+            <p><strong>Spin up the conversation.</strong></p>
+            <p>Pair the agent and environment, kick off one interaction, stream events back, and resume anytime.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>The Brain Left The Box</h3>
+        <p class="source">Source: IMG_7414</p>
+        <p>The architectural shift is that the agent loop is no longer trapped inside one session container.</p>
+        <div class="compare">
+          <div class="card">
+            <h3>Before</h3>
+            <p>One container per session held both the agent loop and tool execution. If the box died, the brain went with it.</p>
+          </div>
+          <div class="card">
+            <h3>Now</h3>
+            <p>The brain is an Anthropic-managed agent loop: one service, many sessions, and crash survival. The hands are sandboxes provisioned on demand only when a tool needs one.</p>
+          </div>
+        </div>
+      </section>
+
+      <h2>Demo Screenshot</h2>
+      <section class="slide">
+        <h3>Incident-2277 Live Demo</h3>
+        <p class="source">Source: IMG_7416. One blurry duplicate demo photo omitted.</p>
+        <p>This is the only screenshot retained for this workshop page. It preserves the live dashboard and agent/debug UI state that would be misleading to flatten into text.</p>
+        <div class="shots">
+          <figure>
+            <img src="assets/photos/IMG_7416.jpg" alt="Incident-2277 live Managed Agent demo screenshot">
+            <figcaption>IMG_7416 - live Incident-2277 dashboard and agent demo. Click to expand.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <h2>Event Model</h2>
+      <section class="slide">
+        <h3>Sessions Speak In Events, Not Request/Response</h3>
+        <p class="source">Source: IMG_7417</p>
+        <p>Types follow a <code>{domain}.{action}</code> convention. The highlighted gap is the custom-tool round trip where the cloud agent calls a function on your laptop.</p>
+        <table>
+          <tr><th>Events you send</th><th>Events you receive</th></tr>
+          <tr>
+            <td>
+              <ul>
+                <li><code>user.message</code>: user message</li>
+                <li><code>user.custom_tool_result</code>: response to a custom tool call</li>
+                <li><code>user.tool_confirmation</code>: approve or deny permission-gated tool</li>
+                <li><code>user.interrupt</code>: user-initiated interrupt</li>
+              </ul>
+              <pre><code>POST /v1/sessions/{id}/events</code></pre>
+            </td>
+            <td>
+              <ul>
+                <li><code>agent.message</code>: Claude's response</li>
+                <li><code>agent.tool_use</code>: Claude calls a built-in tool</li>
+                <li><code>agent.custom_tool_use</code>: Claude calls one of your tools</li>
+                <li><code>agent.mcp_tool_use</code>: Claude calls an MCP tool</li>
+                <li><code>session.status_idle</code>: loop paused with a stop reason</li>
+                <li><code>session.error</code>: something failed</li>
+              </ul>
+              <pre><code>GET /v1/sessions/{id}/stream</code></pre>
+            </td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="slide">
+        <h3>The Cloud Agent Calls A Function On Your Laptop</h3>
+        <p class="source">Source: IMG_7418</p>
+        <p>No inbound networking is required. Your script holds the stream open; the cloud agent emits a custom-tool event over that stream, your local handler runs, and your script posts a result back into the session.</p>
+        <div class="grid">
+          <div class="card">
+            <h3>1. Cloud emits</h3>
+            <pre><code>agent.custom_tool_use</code></pre>
+          </div>
+          <div class="card">
+            <h3>2. Local script handles</h3>
+            <pre><code>handle_tool(name, args)</code></pre>
+          </div>
+          <div class="card">
+            <h3>3. Script posts result</h3>
+            <pre><code>user.custom_tool_result</code></pre>
+          </div>
+        </div>
+        <p>Swap <code>json.load("data/metrics.json")</code> for a Datadog client and it is the same wire protocol.</p>
+      </section>
+
+      <section class="slide">
+        <h3>Open The Stream, Send The Message, Answer Tool Calls Inline</h3>
+        <p class="source">Source: IMG_7419</p>
+        <pre><code>with client.beta.sessions.events.stream(session_id) as stream:
+    client.beta.sessions.events.send(session_id, events=[
+        {
+            "type": "user.message",
+            "content": [{"type": "text", "text": q}],
+        }
+    ])
+
+    for ev in stream:
+        if ev.type == "agent.custom_tool_use":
+            result = handle_tool(ev.name, ev.input)
+            client.beta.sessions.events.send(session_id, events=[
+                {
+                    "type": "user.custom_tool_result",
+                    "custom_tool_use_id": ev.id,
+                    "content": [{"type": "text", "text": result}],
+                }
+            ])
+
+        yield ev</code></pre>
+      </section>
+
+      <h2>Session Lifecycle</h2>
+      <section class="slide">
+        <h3>Four Session Statuses</h3>
+        <p class="source">Source: IMG_7420</p>
+        <div class="grid">
+          <div class="card">
+            <h3>Idle</h3>
+            <p>Waiting for input: user messages or tool confirmations. This is the starting state.</p>
+          </div>
+          <div class="card">
+            <h3>Running</h3>
+            <p>The agent is actively executing the loop.</p>
+          </div>
+          <div class="card">
+            <h3>Rescheduling</h3>
+            <p>A transient error happened and the system is retrying automatically.</p>
+          </div>
+          <div class="card">
+            <h3>Terminated</h3>
+            <p>The session ended due to an unrecoverable error.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>The Conversation Lives In The Cloud</h3>
+        <p class="source">Source: IMG_7421</p>
+        <p>Hard-refresh the page and the session is still there. The session list and event replay are platform resources, not a local database you have to maintain.</p>
+        <pre><code>client.beta.sessions.list(agent_id=...)
+client.beta.sessions.events.list(session_id)</code></pre>
+      </section>
+
+      <h2>Beyond The Basics</h2>
+      <section class="slide">
+        <h3>More Managed Agent Capabilities</h3>
+        <p class="source">Source: IMG_7422</p>
+        <div class="grid">
+          <div class="card"><h3>Subagents</h3><p>Callable agents that spawn and coordinate other agents.</p></div>
+          <div class="card"><h3>Memory</h3><p>Persistent agent memory mounted into the container.</p></div>
+          <div class="card"><h3>Outcomes</h3><p>Structured artifacts of what the agent produced, separate from events.</p></div>
+          <div class="card"><h3>Vaults</h3><p>Per-user credentials registered once and referenced by vault IDs.</p></div>
+          <div class="card"><h3>MCP servers</h3><p>Remote tool servers attached through MCP toolset entries.</p></div>
+          <div class="card"><h3>Webhooks</h3><p>Console settings that fire on session events such as idle status.</p></div>
+          <div class="card"><h3>Permission policies</h3><p><code>always_ask</code> pauses a tool call for confirmation.</p></div>
+          <div class="card"><h3>Interrupt</h3><p>Post <code>user.interrupt</code> mid-run to force the agent to idle.</p></div>
+          <div class="card"><h3>Console agent builder</h3><p>Iterate interactively before dropping to the API.</p></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h3>What We Did Today</h3>
+        <p class="source">Source: IMG_7423</p>
+        <div class="grid">
+          <div class="card">
+            <h3>Got the mental model</h3>
+            <p>Where managed agents sit in the stack and what the resources mean.</p>
+          </div>
+          <div class="card">
+            <h3>Shipped a working agent</h3>
+            <p>Created an Agent and Environment, spun up a Session, streamed events back, and handled tool calls.</p>
+          </div>
+          <div class="card">
+            <h3>Know where to go next</h3>
+            <p>Subagents, vaults, memory, webhooks, MCP, and other production surfaces.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button class="lightbox-close" type="button" aria-label="Close expanded image">&times;</button>
+      <img id="lightbox-image" alt="">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+    <script>
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      const lightboxCaption = document.getElementById("lightbox-caption");
+      const closeButton = lightbox.querySelector(".lightbox-close");
+
+      function appendOriginalImages() {
+        document.querySelectorAll(".slide").forEach((slide) => {
+          const source = slide.querySelector(".source")?.textContent || "";
+          const names = [...new Set(source.match(/IMG_\d{4}/g) || [])];
+          if (names.length === 0) {
+            return;
+          }
+
+          const originals = document.createElement("div");
+          originals.className = "shots source-originals";
+
+          names.forEach((name) => {
+            const src = `assets/photos/${name}.jpg`;
+            if (slide.querySelector(`img[src="${src}"]`)) {
+              return;
+            }
+
+            const figure = document.createElement("figure");
+            const image = document.createElement("img");
+            const caption = document.createElement("figcaption");
+
+            image.src = src;
+            image.alt = `${name} original source image`;
+            caption.textContent = `${name} - original source image for this reconstructed slide. Click to expand.`;
+            figure.append(image, caption);
+            originals.append(figure);
+          });
+
+          if (originals.children.length > 0) {
+            slide.append(originals);
+          }
+        });
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        lightboxImage.removeAttribute("src");
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+      }
+
+      appendOriginalImages();
+
+      document.querySelectorAll("figure img").forEach((image) => {
+        image.addEventListener("click", () => {
+          const caption = image.closest("figure")?.querySelector("figcaption")?.textContent || image.alt;
+          lightboxImage.src = image.src;
+          lightboxImage.alt = image.alt;
+          lightboxCaption.textContent = caption;
+          lightbox.classList.add("open");
+          lightbox.setAttribute("aria-hidden", "false");
+        });
+      });
+
+      closeButton.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", (event) => {
+        if (event.target === lightbox || event.target === lightboxImage) {
+          closeLightbox();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeLightbox();
+        }
+      });
+    </script>
+  </body>
+</html>

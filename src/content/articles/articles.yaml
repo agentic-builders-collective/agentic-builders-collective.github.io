@@ -11,3 +11,16 @@
     - agents
     - llm
     - bot
+- id: cwc-tokyo-reconstructed-presentations
+  title: Code with Claude Tokyo reconstructed workshop presentations
+  authors:
+    - personId: jensen-loke
+  url: https://www.agenticbuilders.sg/showcase/articles/cwc-tokyo-reconstructed-presentations/
+  publication: Agentic Builders Collective
+  date: 2026-06-12
+  summary: A rebuilt HTML archive of Code with Claude Tokyo workshop and founder-stage sessions, reconstructed from attendee photos with the original source images appended beneath each section.
+  tags:
+    - claude-code
+    - workshops
+    - agents
+    - presentations
