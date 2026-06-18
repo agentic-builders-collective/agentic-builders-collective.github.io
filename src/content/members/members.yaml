@@ -289,3 +289,30 @@
   github: https://github.com/Guaaaaaaaan
   addedAt: "2026-06-14T12:39:00Z"
   featured: false
+
+- id: eric-tan
+  name: Eric Tan
+  aliases:
+    - erictisme
+  tagline: co-host of code riff pod for people to use ai for flourishing and fun, about to join an sme to transform it with ai and consulting expertise
+  company: code riff
+  website: https://www.linkedin.com/company/code-riff/
+  linkedin: https://www.linkedin.com/in/erictisme/
+  github: https://github.com/erictisme
+  youtube: https://www.youtube.com/@CodeRiffAI
+  addedAt: "2026-06-18T10:35:25Z"
+  featured: false
+
+- id: yaohong-chng
+  name: Yaohong Chng
+  aliases:
+    - mrkre
+    - Yaohong C
+  tagline: AI consulting with Superuser HQ, and co-host of code riff.
+  company: Superuser HQ
+  website: https://superuserhq.com/
+  linkedin: https://www.linkedin.com/in/yaohongchng/
+  github: https://github.com/mrkre
+  youtube: https://www.youtube.com/@CodeRiffAI
+  addedAt: "2026-06-18T10:35:30Z"
+  featured: false
