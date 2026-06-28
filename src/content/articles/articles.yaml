@@ -24,3 +24,17 @@
     - workshops
     - agents
     - presentations
+- id: code-riff-gaurav-keerthi-cybersecurity
+  title: "Cybersecurity shouldn't be a luxury | Gaurav Keerthi (CEO of StrongKeep)"
+  authors:
+    - personId: eric-tan
+    - personId: yaohong-chng
+  url: https://www.youtube.com/watch?v=UNBkWOIw-IM
+  publication: code riff
+  date: 2026-06-16
+  summary: a code riff conversation with Gaurav Keerthi, former Deputy Chief Executive of Singapore's Cyber Security Agency and now CEO of StrongKeep, on using AI without leaking your data or API keys, building your own lightweight harnesses, and why good cybersecurity shouldn't be a luxury for small teams.
+  tags:
+    - security
+    - cybersecurity
+    - ai
+    - podcast
