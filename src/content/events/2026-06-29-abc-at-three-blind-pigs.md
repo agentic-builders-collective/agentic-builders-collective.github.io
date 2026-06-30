@@ -12,6 +12,6 @@ attendance: 0
 speakers: []
 hosts: ["Chris Pecaut", "Ian Choo", "Jensen", "YJ Soon"]
 tags: ["meetup", "social"]
-status: "upcoming"
+status: "past"
 ---
 A casual evening of agentic coding, hands-on building, and good vibes at Three Blind Pigs. Meet fellow AI builders, catch talks from experienced developers using Claude and friends, and mingle with Singapore's agentic coding community over drinks.
