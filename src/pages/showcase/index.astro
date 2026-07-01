@@ -24,6 +24,19 @@ const articles = allArticles.sort(
 
 type PresentationEntry = (typeof allPresentations)[number];
 
+const getPresentationUrlLabel = (presentation: PresentationEntry) => {
+  const explicitLabel = presentation.data.urlLabel?.trim();
+  if (explicitLabel) {
+    return explicitLabel;
+  }
+
+  if (presentation.data.url.includes("/blog/") || presentation.data.url.includes("/posts/")) {
+    return "Blog Post";
+  }
+
+  return "Page";
+};
+
 const presentationsByEvent = new Map<string, { event: ReturnType<typeof getLinkedEvent>; presentations: PresentationEntry[] }>();
 for (const presentation of allPresentations) {
   const event = getLinkedEvent(presentation.data.eventId, eventsById, `presentation "${presentation.data.id}"`);
@@ -136,7 +149,7 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
                           <a class="muted-link" href={presentation.data.videoUrl} target="_blank" rel="noopener">Video</a>
                         )}
                         {presentation.data.url && presentation.data.url !== presentation.data.slidesUrl && (
-                          <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">Page</a>
+                          <a class="muted-link" href={presentation.data.url} target="_blank" rel="noopener">{getPresentationUrlLabel(presentation)}</a>
                         )}
                         {presentation.data.links.map((link) => (
                           <TerminalNoteLink href={link.url} label={link.label} note={link.note} />

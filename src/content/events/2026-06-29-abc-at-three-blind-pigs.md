@@ -9,9 +9,13 @@ sponsorName: ""
 sponsorUrl: ""
 registrationUrl: "https://luma.com/lfqu9yrk"
 attendance: 0
-speakers: []
+speakers:
+  - personId: yish-sheng-lim
+  - personId: brendan-graetz
+  - personId: anton-eliasson
+  - personId: yj-soon
 hosts: ["Chris Pecaut", "Ian Choo", "Jensen", "YJ Soon"]
-tags: ["meetup", "social"]
+tags: ["meetup", "social", "presentations"]
 status: "past"
 ---
-A casual evening of agentic coding, hands-on building, and good vibes at Three Blind Pigs. Meet fellow AI builders, catch talks from experienced developers using Claude and friends, and mingle with Singapore's agentic coding community over drinks.
+A casual evening of agentic coding, hands-on building, and good vibes at Three Blind Pigs, featuring community presentations from Yish Sheng Lim, Brendan Graetz, Anton Eliasson, and YJ Soon.

@@ -316,3 +316,25 @@
   youtube: https://www.youtube.com/@CodeRiffAI
   addedAt: "2026-06-18T10:35:30Z"
   featured: false
+
+- id: yish-sheng-lim
+  name: Yish Sheng Lim
+  aliases: []
+  tagline: Building bounded-context tooling for agentic workflows.
+  company: ""
+  website: ""
+  linkedin: https://www.linkedin.com/in/yi-sheng-lim-8a98a5138
+  github: https://github.com/yish91
+  addedAt: "2026-07-01T12:01:18Z"
+  featured: false
+
+- id: anton-eliasson
+  name: Anton Eliasson
+  aliases: []
+  tagline: Building software surfaces that agents can use.
+  company: Atoll
+  website: https://atollhq.com
+  linkedin: ""
+  github: ""
+  addedAt: "2026-07-01T12:01:18Z"
+  featured: false

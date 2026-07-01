@@ -39,6 +39,7 @@ The `eventId` is the event filename without `.md`, for example `2026-05-14-agent
     - name: External Speaker
   eventId: 2026-05-14-agentic-builders-at-example-labs
   url: https://example.com/talk
+  urlLabel: Page
   slidesUrl: https://example.com/slides
   videoUrl: https://example.com/video
   summary: A practical walkthrough of eval loops for agentic coding.
@@ -52,5 +53,6 @@ The `eventId` is the event filename without `.md`, for example `2026-05-14-agent
 - `personId` must match an entry in `members` or `organisers`; otherwise `pnpm build` fails.
 - Use `name` for speakers who are not listed on the Community page.
 - `eventId` must match an existing event; otherwise `pnpm build` fails.
+- Use `urlLabel` when the primary URL should render as something more specific than `Page`, for example `Blog Post`.
 - Do not use random numeric suffixes. If the presentation title collides, add the event or year to the `id`.
 - Presentations appear on `/showcase` and are linked from their event.

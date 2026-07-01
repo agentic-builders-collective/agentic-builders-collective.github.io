@@ -97,3 +97,77 @@
     - prompting
     - agents
     - llms
+
+- id: context-shrinker
+  title: "Context Shrinker"
+  speakers:
+    - personId: yish-sheng-lim
+  eventId: 2026-06-29-abc-at-three-blind-pigs
+  url: /showcase/presentations/context-shrinker.pdf
+  slidesUrl: /showcase/presentations/context-shrinker.pdf
+  videoUrl: ""
+  screenshot: /showcase/presentations/context-shrinker.jpg
+  summary: A quick-start walkthrough for bounded context workflows, with pointers to context-compiler, repo maps, and custom workflow tradeoffs.
+  links:
+    - label: context-compiler
+      url: https://github.com/yish91/context-compiler
+      note: |
+        Yish shared this as a quick start for bounded context work. For teams with many custom workflows, he noted that it may be cheaper to fork or build a tailored approach.
+    - label: Aider repo map
+      url: https://aider.chat/docs/repomap.html
+      note: Another reference implementation for mapping repository context.
+  tags:
+    - context
+    - agents
+    - workflow
+
+- id: hard-parts-building-gen-ai
+  title: "Hard parts: Building with Gen AI"
+  speakers:
+    - personId: brendan-graetz
+  eventId: 2026-06-29-abc-at-three-blind-pigs
+  url: https://blog.bguiz.com/presentations/hard-parts-building-gen-ai/
+  slidesUrl: https://blog.bguiz.com/presentations/hard-parts-building-gen-ai/
+  videoUrl: https://www.youtube.com/watch?v=VPjUgp1YFtg&list=PLjyCRcs63y804L55-eIJtrNxMBFbbroL8
+  screenshot: /showcase/presentations/hard-parts-building-gen-ai.jpg
+  summary: A practical presentation on the hard parts of building with generative AI, from engineering constraints to production workflow decisions.
+  noteTeaser: The linked video is Brendan's practice run.
+  links: []
+  tags:
+    - gen-ai
+    - engineering
+    - workflow
+
+- id: making-software-agents-can-use
+  title: "Making Software Agents Can Use"
+  speakers:
+    - personId: anton-eliasson
+  eventId: 2026-06-29-abc-at-three-blind-pigs
+  url: https://atollhq.com/blog/making-software-agents-can-use
+  urlLabel: "Blog Post"
+  slidesUrl: ""
+  videoUrl: ""
+  screenshot: /showcase/presentations/making-software-agents-can-use.jpg
+  summary: Notes on designing software surfaces and workflows that agents can use effectively.
+  links: []
+  tags:
+    - agents
+    - software-design
+    - workflow
+
+- id: introduction-to-claw-breeding-for-youths
+  title: "Introduction to Claw Breeding for Youths"
+  speakers:
+    - personId: yj-soon
+  eventId: 2026-06-29-abc-at-three-blind-pigs
+  url: https://yjsoon.com/posts/2026-06-24-introduction-claw-breeding-youths/
+  urlLabel: "Blog Post"
+  slidesUrl: ""
+  videoUrl: ""
+  screenshot: /showcase/presentations/introduction-claw-breeding-youths.png
+  summary: Notes from running an OpenClaw bootcamp for nearly a hundred high school students for DSTA's Young Defence Scientists Programme.
+  links: []
+  tags:
+    - openclaw
+    - education
+    - agents
