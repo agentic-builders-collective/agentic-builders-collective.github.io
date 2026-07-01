@@ -278,6 +278,7 @@ Use YAML for talk, demo, and workshop presentation links.
     - personId: jane-doe
   eventId: 2026-05-14-agentic-builders-at-example-labs
   url: https://example.com/talk
+  urlLabel: Page
   slidesUrl: https://example.com/slides
   videoUrl: https://example.com/video
   summary: A practical walkthrough of eval loops for agentic coding.

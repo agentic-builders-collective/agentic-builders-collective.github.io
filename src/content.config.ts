@@ -119,6 +119,7 @@ const presentations = defineCollection({
     speakers: personRefs,
     eventId: kebabCaseId,
     url: optionalUrlOrPath,
+    urlLabel: z.string().optional().default("Page"),
     slidesUrl: optionalUrlOrPath,
     videoUrl: optionalUrlOrPath,
     screenshot: z.string().optional().default(""),
