@@ -18,4 +18,4 @@ hosts: ["Chris Pecaut", "Ian Choo", "Jensen", "YJ Soon"]
 tags: ["meetup", "social", "presentations"]
 status: "past"
 ---
-A casual evening of agentic coding, hands-on building, and good vibes at Three Blind Pigs, featuring community presentations from Yish Sheng Lim, Brendan Graetz, Anton Eliasson, and YJ Soon.
+A casual evening of agentic coding, hands-on building, and good vibes at Three Blind Pigs, featuring community presentations from Yi Sheng Lim, Brendan Graetz, Anton Eliasson, and YJ Soon.

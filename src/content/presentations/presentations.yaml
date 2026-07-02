@@ -112,7 +112,7 @@
     - label: context-compiler
       url: https://github.com/yish91/context-compiler
       note: |
-        Yish shared this as a quick start for bounded context work. For teams with many custom workflows, he noted that it may be cheaper to fork or build a tailored approach.
+        Yi shared this as a quick start for bounded context work. For teams with many custom workflows, he noted that it may be cheaper to fork or build a tailored approach.
     - label: Aider repo map
       url: https://aider.chat/docs/repomap.html
       note: Another reference implementation for mapping repository context.
