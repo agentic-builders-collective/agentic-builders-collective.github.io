@@ -24,6 +24,7 @@ Job:
 - Location:
 - Work mode: onsite | hybrid | remote
 - Employment type: full-time | part-time | contract | internship | fractional
+- Employment types, for a combined post:
 - Apply URL:
 - Contact email:
 - Posted at:
@@ -79,6 +80,7 @@ Short role description here.
 - `location`: role location, for example `Singapore`, `Remote`, or `APAC`.
 - `workMode`: one of `onsite`, `hybrid`, or `remote`.
 - `employmentType`: one of `full-time`, `part-time`, `contract`, `internship`, or `fractional`.
+- `employmentTypes`: optional array of the same values for a combined post covering multiple roles.
 - `applyUrl`: application link. Required unless `contactEmail` is present.
 - `contactEmail`: fallback contact email. Required unless `applyUrl` is present.
 - `postedAt`: date the post should appear as published.
