@@ -3,6 +3,23 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
 const partners = await getCollection("partners");
+const byOrder = (a: (typeof partners)[number], b: (typeof partners)[number]) => a.data.order - b.data.order;
+const mainPartners = partners.filter((partner) => partner.data.type === "main").sort(byOrder);
+const hostingPartners = partners.filter((partner) => partner.data.type === "hosting").sort(byOrder);
+const getEventLinks = (partner: (typeof partners)[number]) => {
+  if (partner.data.eventLinks.length > 0) {
+    return partner.data.eventLinks;
+  }
+
+  if (partner.data.eventUrl) {
+    return [{
+      href: partner.data.eventUrl,
+      label: partner.data.eventLabel || "View event",
+    }];
+  }
+
+  return [];
+};
 ---
 
 <BaseLayout
@@ -15,28 +32,66 @@ const partners = await getCollection("partners");
     Organisations we collaborate with regularly for meetups, workshops, and community building.
   </p>
 
-  <div class="partners-grid">
-    {partners.map((partner) => (
-      <a
-        href={partner.data.url || undefined}
-        target={partner.data.url ? "_blank" : undefined}
-        rel={partner.data.url ? "noopener noreferrer" : undefined}
-        class="partner-card"
-      >
-        <div class="partner-logo">
-          {partner.data.logo ? (
-            <img src={partner.data.logo} alt={`${partner.data.name} logo`} loading="lazy" />
-          ) : (
-            <div class="partner-logo-placeholder">{partner.data.name.charAt(0)}</div>
+  <section class="partner-section" aria-labelledby="main-partners">
+    <h2 id="main-partners" class="section-label">Main Partners</h2>
+
+    <div class="partners-grid">
+      {mainPartners.map((partner) => (
+        <a
+          href={partner.data.url || undefined}
+          target={partner.data.url ? "_blank" : undefined}
+          rel={partner.data.url ? "noopener noreferrer" : undefined}
+          class="partner-card"
+        >
+          <div class="partner-logo">
+            {partner.data.logo ? (
+              <img src={partner.data.logo} alt={`${partner.data.name} logo`} loading="lazy" />
+            ) : (
+              <div class="partner-logo-placeholder">{partner.data.name.charAt(0)}</div>
+            )}
+          </div>
+          <h3 class="partner-name">{partner.data.name}</h3>
+          {partner.data.description && (
+            <p class="partner-description">{partner.data.description}</p>
           )}
-        </div>
-        <h3 class="partner-name">{partner.data.name}</h3>
-        {partner.data.description && (
-          <p class="partner-description">{partner.data.description}</p>
-        )}
-      </a>
-    ))}
-  </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="partner-section" aria-labelledby="hosting-partners">
+    <h2 id="hosting-partners" class="section-label">Hosting Partners</h2>
+
+    <div class="hosting-list">
+      {hostingPartners.map((partner) => (
+        <article class="hosting-card">
+          <div>
+            <h3 class="partner-name">
+              {partner.data.url ? (
+                <a href={partner.data.url} target="_blank" rel="noopener noreferrer">{partner.data.name}</a>
+              ) : (
+                partner.data.name
+              )}
+            </h3>
+            {getEventLinks(partner).length > 0 ? (
+              <div class="event-links">
+                {getEventLinks(partner).map((eventLink) => (
+                  <a class="event-link" href={eventLink.href}>
+                    {eventLink.label}
+                    <span class="inline-arrow" aria-hidden="true">▶</span>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              partner.data.description && (
+                <p class="partner-description">{partner.data.description}</p>
+              )
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
 
   <section class="partner-cta">
     <h2 class="section-label">Become a Partner</h2>
@@ -54,11 +109,14 @@ const partners = await getCollection("partners");
     max-width: 640px;
   }
 
+  .partner-section {
+    margin-bottom: 48px;
+  }
+
   .partners-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 20px;
-    margin-bottom: 48px;
   }
 
   .partner-card {
@@ -78,8 +136,8 @@ const partners = await getCollection("partners");
   }
 
   .partner-logo {
-    width: 80px;
-    height: 80px;
+    width: 100%;
+    height: 86px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -99,22 +157,68 @@ const partners = await getCollection("partners");
     align-items: center;
     justify-content: center;
     background: var(--box-bg);
-    font-size: 28px;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--accent);
   }
 
   .partner-name {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     margin: 0 0 8px 0;
   }
 
+  .partner-name a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .partner-name a:hover {
+    color: var(--accent);
+  }
+
   .partner-description {
-    font-size: 13px;
+    font-size: 1rem;
     color: var(--muted);
     margin: 0;
     line-height: 1.4;
+  }
+
+  .hosting-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .hosting-card {
+    padding: 18px 20px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+  }
+
+  .event-links {
+    display: grid;
+    gap: 6px;
+  }
+
+  .event-link {
+    align-items: center;
+    color: var(--muted);
+    column-gap: 8px;
+    display: inline-flex;
+    width: fit-content;
+    font-size: 1rem;
+    font-weight: 400;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .event-link .inline-arrow {
+    margin-left: 0;
+    transform: none;
+  }
+
+  .event-link:hover {
+    color: var(--accent);
   }
 
   .partner-cta {
@@ -131,6 +235,10 @@ const partners = await getCollection("partners");
   @media (max-width: 480px) {
     .partners-grid {
       grid-template-columns: 1fr;
+    }
+
+    .event-link {
+      white-space: normal;
     }
   }
 </style>

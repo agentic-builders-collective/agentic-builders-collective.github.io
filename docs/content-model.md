@@ -114,6 +114,34 @@ Use YAML for sponsor names, links, and optional logos.
   url: https://example.com
 ```
 
+### `partners`
+
+File: `src/content/partners/partners.yaml`
+
+Use YAML for regular community partners and venue hosts. `type: main` entries can include logos and should appear before `type: hosting` entries. Hosting partners can link back to one relevant archived event with `eventUrl`, or multiple archived events with `eventLinks`.
+
+```yaml
+- id: example-labs
+  name: Example Labs
+  type: main
+  order: 1
+  logo: /images/partners/example-labs.svg
+  url: https://example.com
+  description: Example partner description
+
+- id: example-venue
+  name: Example Venue
+  type: hosting
+  order: 1
+  url: https://example-venue.com
+  eventLinks:
+    - href: /events/#2026-01-01-example-workshop
+      label: Example Workshop
+    - href: /events/#2026-02-01-example-meetup
+      label: "#9 - ABC at Example Venue"
+  description: Hosted an ABC meetup
+```
+
 ### `faq`
 
 File: `src/content/faq/faq.yaml`

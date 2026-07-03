@@ -1,29 +1,62 @@
-- id: tinkercademy
-  name: Tinkercademy
-  logo: "/images/partners/tinkercademy.svg"
-  url: "https://tinkercademy.com"
-  description: "Coding and making education for kids and adults"
-
 - id: sg-code-campus
   name: SG Code Campus
+  type: main
+  order: 1
   logo: "/images/partners/sg-code-campus.svg"
-  url: "https://sgcodecampus.com"
-  description: "Singapore's leading coding school for kids and teens"
+  url: "https://www.sgcodecampus.com"
+  description: "Tech training for students, professionals, and teams"
 
 - id: success-it
   name: Success IT
-  logo: "/images/partners/success-it.svg"
-  url: "https://successit.net"
-  description: "IT solutions and digital transformation"
+  type: main
+  order: 2
+  logo: "/images/partners/success-it.webp"
+  url: "https://successit.com.sg"
+  description: "ERP software and digital workflow solutions for SMEs"
+
+- id: tinkercademy
+  name: Tinkercademy
+  type: main
+  order: 3
+  logo: "/images/partners/tinkercademy.png"
+  url: "https://tinkercademy.com"
+  description: "Coding, digital making, and AI education"
+
+- id: google
+  name: Google
+  type: hosting
+  order: 1
+  url: "https://about.google/company-info/locations/"
+  eventUrl: "/events/#2026-03-27-abc-at-google"
+  eventLabel: "#5 - ABC at Google"
+  description: "Hosted ABC at Google Singapore"
 
 - id: lorong-ai
   name: Lorong AI
-  logo: "/images/partners/lorong-ai.svg"
+  type: hosting
+  order: 2
   url: "https://lorong.ai"
-  description: "AI community and co-working space"
+  eventLinks:
+    - href: "/events/#2026-03-06-agentic-coding-in-terminal"
+      label: "Agentic Coding in Terminal"
+    - href: "/events/#2026-04-23-abc-at-lorong-ai"
+      label: "#6 - ABC at Lorong AI"
+  description: "Hosted an ABC meetup with Singapore's AI community"
 
-- id: amcham
-  name: AmCham Singapore
-  logo: "/images/partners/amcham.svg"
-  url: "https://www.amcham.com.sg"
-  description: "American Chamber of Commerce in Singapore"
+- id: amchamsg
+  name: AmChamSG
+  type: hosting
+  order: 3
+  url: "https://amcham.com.sg"
+  eventUrl: "/events/#2026-05-28-abc-at-amcham"
+  eventLabel: "#7 - ABC at AmChamSG"
+  description: "Hosted ABC at the AmChamSG Hub"
+
+- id: lifelong-learning-institute
+  name: Lifelong Learning Institute
+  type: hosting
+  order: 4
+  url: "https://www.lifelonglearningsg.org/"
+  eventUrl: "/events/#2026-02-06-abc-at-lifelong-learning-institute"
+  eventLabel: "#4 - ABC at Lifelong Learning Institute"
+  description: "Hosted ABC meetups at the Paya Lebar campus"

@@ -59,8 +59,16 @@ const partners = defineCollection({
   schema: z.object({
     id: kebabCaseId,
     name: z.string(),
-    logo: z.string().optional().default(""),
-    url: z.string().optional().default(""),
+    type: z.enum(["main", "hosting"]).default("main"),
+    order: z.number().int().positive().default(999),
+    logo: optionalUrlOrPath,
+    url: optionalUrl,
+    eventUrl: optionalUrlOrPath,
+    eventLabel: z.string().optional().default(""),
+    eventLinks: z.array(z.object({
+      href: optionalUrlOrPath,
+      label: z.string(),
+    })).default([]),
     description: z.string().optional().default(""),
   }),
 });
