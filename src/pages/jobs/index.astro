@@ -25,6 +25,11 @@ const formatDate = (date: Date) =>
   date.toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" });
 
 const formatLabel = (value: string) => value.replaceAll("-", " ");
+const formatEmploymentTypes = (job: { data: { employmentType?: string; employmentTypes?: string[] } }) => {
+  const employmentTypes = job.data.employmentTypes ?? [];
+  const types = employmentTypes.length > 0 ? employmentTypes : [job.data.employmentType];
+  return types.filter(Boolean).map((type) => formatLabel(type as string)).join(" / ");
+};
 ---
 
 <BaseLayout
@@ -53,7 +58,7 @@ const formatLabel = (value: string) => value.replaceAll("-", " ");
                   <span>{job.data.company}</span>
                   <span>{job.data.location}</span>
                   <span>{formatLabel(job.data.workMode)}</span>
-                  <span>{formatLabel(job.data.employmentType)}</span>
+                  <span>{formatEmploymentTypes(job)}</span>
                 </div>
               </div>
               <p>

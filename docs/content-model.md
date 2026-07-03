@@ -291,7 +291,7 @@ status: open
 Short role description here.
 ```
 
-`workMode` must be `onsite`, `hybrid`, or `remote`. `employmentType` must be `full-time`, `part-time`, `contract`, `internship`, or `fractional`. Use `status: closed` to close a post before expiry. Use `status: draft` only for local review because draft posts do not render.
+`workMode` must be `onsite`, `hybrid`, or `remote`. `employmentType` must be `full-time`, `part-time`, `contract`, `internship`, or `fractional`. Use `employmentTypes` with the same values for a combined post covering multiple roles. Use `status: closed` to close a post before expiry. Use `status: draft` only for local review because draft posts do not render.
 
 ### `presentations`
 

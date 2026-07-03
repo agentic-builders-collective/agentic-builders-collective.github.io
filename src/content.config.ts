@@ -9,6 +9,7 @@ const optionalUrlOrPath = z.union([
   z.string().regex(/^\/[^\s]*$/, "Use a site-relative path starting with /"),
   z.literal(""),
 ]).optional().default("");
+const jobEmploymentType = z.enum(["full-time", "part-time", "contract", "internship", "fractional"]);
 const personRef = z.object({
   personId: kebabCaseId.optional(),
   name: z.string().optional(),
@@ -104,7 +105,8 @@ const jobs = defineCollection({
     companyUrl: optionalUrl,
     location: z.string(),
     workMode: z.enum(["onsite", "hybrid", "remote"]),
-    employmentType: z.enum(["full-time", "part-time", "contract", "internship", "fractional"]),
+    employmentType: jobEmploymentType.optional(),
+    employmentTypes: z.array(jobEmploymentType).default([]),
     applyUrl: optionalUrl,
     contactEmail: z.email().optional().default(""),
     postedAt: z.coerce.date(),
@@ -114,6 +116,8 @@ const jobs = defineCollection({
     status: z.enum(["open", "closed", "draft"]).default("open"),
   }).refine((job) => job.applyUrl || job.contactEmail, {
     message: "Expected either applyUrl or contactEmail.",
+  }).refine((job) => job.employmentType || job.employmentTypes.length > 0, {
+    message: "Expected employmentType or employmentTypes.",
   }).refine((job) => job.expiresAt >= job.postedAt, {
     message: "expiresAt must be on or after postedAt.",
   }),
