@@ -27,11 +27,15 @@ After the release commit is merged to `main`, create and push the next version t
 ```sh
 git switch main
 git pull --ff-only origin main
-git tag v1.0.16
-git push origin v1.0.16
+git tag v1.0.40
+git push origin v1.0.40
 ```
 
-Use the next appropriate `v*` version. The current latest tag is `v1.0.15`, so the next patch tag would be `v1.0.16`.
+Replace `v1.0.40` with the next appropriate `v*` version for the repo state. Check the latest existing tag before tagging:
+
+```sh
+git tag --sort=-version:refname | head -5
+```
 
 ## Production notification
 
