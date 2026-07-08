@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import SiteHead from "../components/SiteHead.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import { whatsappUrl } from "../lib/community";
 import { navLinks } from "../lib/navigation";
 
 interface Props {
@@ -10,8 +11,6 @@ interface Props {
 }
 
 const { title, description = "Agentic Builders Collective" } = Astro.props;
-
-const whatsappUrl = "https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn";
 
 const isCurrent = (href: string) => {
   if (href === "/") {

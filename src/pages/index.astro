@@ -3,6 +3,7 @@ import "../styles/global.css";
 import SiteHead from "../components/SiteHead.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import { getCollection } from "astro:content";
+import { whatsappUrl } from "../lib/community";
 import { contributionLinks } from "../lib/contribution-links";
 import { navLinks } from "../lib/navigation";
 import { latestRecap } from "../lib/recaps";
@@ -16,7 +17,6 @@ const upcomingEvent = allEvents
   .filter((e) => e.data.kind !== "external" && (e.data.status === "upcoming" || new Date(e.data.date) >= now))
   .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime())[0] ?? null;
 
-const whatsappUrl = "https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn";
 const getEventHref = (eventId: string) => `/events/#${eventId}`;
 
 /** Scales base timings (0.8 then ×0.75 ≈ another 25% faster). */

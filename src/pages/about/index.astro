@@ -1,9 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
+import { whatsappUrl } from "../../lib/community";
 
 const sponsors = await getCollection("sponsors");
-const whatsappUrl = "https://chat.whatsapp.com/Be8X9lVJQET4JfkKMW5Qxn";
 ---
 
 <BaseLayout
