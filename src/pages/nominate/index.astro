@@ -1,5 +1,24 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const allEvents = await getCollection("events");
+const now = new Date();
+const upcomingMeetupOptions = allEvents
+  .filter((event) => event.data.kind !== "external" && new Date(event.data.date) >= now)
+  .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime())
+  .map((event) => {
+    const label = `${event.data.title} (${new Date(event.data.date).toLocaleDateString("en-SG", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    })})`;
+
+    return {
+      value: label,
+      label,
+    };
+  });
 ---
 
 <BaseLayout
@@ -16,7 +35,6 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   <form
     id="nomination-form"
     class="nomination-form"
-    onsubmit="(function(e){e.preventDefault(); handleSubmit();})(event)"
   >
     <div class="form-group">
       <label for="nominator-name">Your Name</label>
@@ -52,10 +70,9 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       <label for="event-preference">Preferred Event (optional)</label>
       <select id="event-preference" name="eventPreference">
         <option value="">Any upcoming meetup</option>
-        <option value="2026-07">July 2026</option>
-        <option value="2026-08">August 2026</option>
-        <option value="2026-09">September 2026</option>
-        <option value="2026-10">October 2026</option>
+        {upcomingMeetupOptions.map((option) => (
+          <option value={option.value}>{option.label}</option>
+        ))}
       </select>
     </div>
 
@@ -82,7 +99,11 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 </BaseLayout>
 
 <script is:inline>
-  function handleSubmit() {
+  const nominationForm = document.getElementById('nomination-form');
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
     const form = document.getElementById('nomination-form');
     const formData = new FormData(form);
     
@@ -132,6 +153,8 @@ Submitted via agenticbuilders.sg/nominate
     form.style.opacity = '0.5';
     form.style.pointerEvents = 'none';
   }
+
+  nominationForm?.addEventListener('submit', handleSubmit);
 </script>
 
 <style>
