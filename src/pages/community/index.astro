@@ -17,7 +17,7 @@ const getAddedAtTime = (value: Date | undefined) => value?.getTime() ?? 0;
 const members = allMembers
   .filter((person) => !orgNames.has(person.data.name))
   .sort((a, b) => {
-    const addedAtDelta = getAddedAtTime(a.data.addedAt) - getAddedAtTime(b.data.addedAt);
+    const addedAtDelta = getAddedAtTime(b.data.addedAt) - getAddedAtTime(a.data.addedAt);
     if (addedAtDelta !== 0) {
       return addedAtDelta;
     }
@@ -93,6 +93,21 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
     return items.length > 0 ? [{ label, items }] : [];
   });
 };
+
+const handleFromUrl = (url: string) => url.split("/").filter(Boolean).pop() ?? "";
+
+const memberSearchText = (person: (typeof members)[number]) =>
+  [
+    person.data.name,
+    ...person.data.aliases,
+    person.data.company,
+    person.data.tagline,
+    handleFromUrl(person.data.github),
+    handleFromUrl(person.data.twitter),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 ---
 
 <BaseLayout
@@ -101,7 +116,7 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
 >
   <h1 class="page-title">Community</h1>
   <p class="collection-guide">
-    A snapshot of our 800+ members as of May 2026. <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">Add yourself on GitHub</a>.
+    800+ members as of May 2026 — {members.length} listed here so far. <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">Add yourself on GitHub</a>.
   </p>
 
   <section>
@@ -134,7 +149,7 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
                   <div class="person-card-backref-group">
                     <span class="person-card-backref-label">{group.label}</span>
                     {group.items.map((item, index) => (
-                      <a class="person-card-backref-link" href={item.href} title={item.title}>[{index + 1}]</a>
+                      <a class="person-card-backref-link" href={item.href} title={item.title} aria-label={item.title}>[{index + 1}]</a>
                     ))}
                   </div>
                 ))}
@@ -146,18 +161,47 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
     </div>
   </section>
 
-  <section>
+  <section class="members-section">
     <h3 class="section-label">Members</h3>
+    {members.length > 0 && (
+      <div class="people-controls" data-people-controls hidden>
+        <label class="people-search">
+          <span class="people-search-label">search:</span>
+          <input
+            type="search"
+            data-people-search
+            placeholder="name, company, handle"
+            title="press / to focus"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </label>
+        <div class="people-sort" role="group" aria-labelledby="people-sort-label">
+          <span id="people-sort-label">sort:</span>
+          <button type="button" class="sort-option" data-sort="newest" aria-pressed="true" title="Most recently added first">newest</button>
+          <button type="button" class="sort-option" data-sort="earliest" aria-pressed="false" title="Earliest members first">earliest</button>
+          <button type="button" class="sort-option" data-sort="name" aria-pressed="false" title="Alphabetical by name">name</button>
+        </div>
+        <span class="people-count" data-people-count aria-live="polite" data-idle>{members.length} of {members.length} shown</span>
+      </div>
+    )}
     {members.length > 0 ? (
-      <div class="grid columns-2">
+      <>
+      <div class="grid people-grid" id="members-grid">
         {members.map((person) => (
-          <div class="person-card" id={person.data.id}>
+          <div
+            class="person-card"
+            id={person.data.id}
+            data-search={memberSearchText(person)}
+            data-name={person.data.name.toLowerCase()}
+            data-added={getAddedAtTime(person.data.addedAt)}
+          >
             <div class="person-card-header">
               <span class="person-card-title">{person.data.name}</span>
               {(person.data.company || person.data.featured) && (
                 <div class="person-card-meta">
                   {person.data.company && <span>{person.data.company}</span>}
-                  {person.data.featured && <span>Featured</span>}
+                  {person.data.featured && <span class="person-card-featured">featured</span>}
                 </div>
               )}
             </div>
@@ -171,7 +215,7 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
                     <div class="person-card-backref-group">
                       <span class="person-card-backref-label">{group.label}</span>
                       {group.items.map((item, index) => (
-                        <a class="person-card-backref-link" href={item.href} title={item.title}>[{index + 1}]</a>
+                        <a class="person-card-backref-link" href={item.href} title={item.title} aria-label={item.title}>[{index + 1}]</a>
                       ))}
                     </div>
                   ))}
@@ -181,13 +225,240 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
           </div>
         ))}
       </div>
+      <p class="people-empty" data-people-empty hidden>
+        No members match <span data-people-empty-query></span>. <button type="button" class="sort-option" data-people-clear>clear</button>
+      </p>
+      </>
     ) : (
       <p>No members listed yet. <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">Add a person by submitting a pull request</a></p>
     )}
   </section>
 </BaseLayout>
 
+<script>
+  const controls = document.querySelector<HTMLElement>("[data-people-controls]");
+  const grid = document.getElementById("members-grid");
+
+  if (controls && grid) {
+    controls.hidden = false;
+
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-search]"));
+    const searchInput = controls.querySelector<HTMLInputElement>("[data-people-search]");
+    const countLabel = controls.querySelector<HTMLElement>("[data-people-count]");
+    const sortButtons = Array.from(controls.querySelectorAll<HTMLButtonElement>("[data-sort]"));
+    const emptyState = document.querySelector<HTMLElement>("[data-people-empty]");
+    const queryEcho = document.querySelector<HTMLElement>("[data-people-empty-query]");
+    const clearButton = document.querySelector<HTMLButtonElement>("[data-people-clear]");
+
+    const byName = (a: HTMLElement, b: HTMLElement) =>
+      (a.dataset.name ?? "").localeCompare(b.dataset.name ?? "");
+    const byAdded = (a: HTMLElement, b: HTMLElement) =>
+      Number(a.dataset.added) - Number(b.dataset.added) || byName(a, b);
+    const comparators: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
+      earliest: byAdded,
+      newest: (a, b) => Number(b.dataset.added) - Number(a.dataset.added) || byName(a, b),
+      name: byName,
+    };
+
+    const applySearch = () => {
+      const query = (searchInput?.value ?? "").trim().toLowerCase();
+      const terms = query.split(/\s+/).filter(Boolean);
+      let shown = 0;
+      for (const card of cards) {
+        const haystack = card.dataset.search ?? "";
+        const matches = terms.every((term) => haystack.includes(term));
+        card.hidden = !matches;
+        if (matches) shown += 1;
+      }
+      if (countLabel) {
+        countLabel.toggleAttribute("data-idle", terms.length === 0);
+        countLabel.textContent = `${shown} of ${cards.length} shown`;
+      }
+      if (queryEcho) {
+        const display = query.length > 60 ? `${query.slice(0, 60)}…` : query;
+        queryEcho.textContent = `"${display}"`;
+      }
+      if (emptyState) emptyState.hidden = shown > 0;
+    };
+
+    const clearSearch = () => {
+      if (!searchInput) return;
+      searchInput.value = "";
+      applySearch();
+      searchInput.focus();
+    };
+
+    searchInput?.addEventListener("input", applySearch);
+    clearButton?.addEventListener("click", clearSearch);
+
+    sortButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const comparator = comparators[button.dataset.sort ?? ""];
+        if (!comparator) return;
+        sortButtons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+        cards.sort(comparator).forEach((card) => grid.appendChild(card));
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (!searchInput || event.isComposing) return;
+      const target = event.target as HTMLElement | null;
+      const isTyping =
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        Boolean(target?.isContentEditable);
+
+      if (event.key === "/" && !isTyping && !event.ctrlKey && !event.metaKey && !event.altKey) {
+        event.preventDefault();
+        searchInput.focus();
+      } else if (event.key === "Escape" && document.activeElement === searchInput && searchInput.value) {
+        clearSearch();
+      }
+    });
+  }
+</script>
+
 <style>
+  .members-section {
+    --members-width: max(100%, min(1200px, calc(100vw - 40px)));
+    margin-inline: calc((100% - var(--members-width)) / 2);
+    width: var(--members-width);
+  }
+
+  .people-controls {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin-bottom: 16px;
+  }
+
+  .people-controls[hidden] {
+    display: none;
+  }
+
+  .people-search {
+    align-items: baseline;
+    display: flex;
+    flex: 1 1 240px;
+    gap: 8px;
+  }
+
+  .people-search-label {
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  .people-search input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(174, 201, 244, 0.45);
+    color: var(--text);
+    flex: 1;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    min-width: 120px;
+    outline: none;
+    padding: 2px 0;
+  }
+
+  .people-search input:focus {
+    border-bottom-color: var(--accent);
+  }
+
+  .people-search input::placeholder {
+    color: var(--muted);
+    opacity: 0.65;
+  }
+
+  .people-sort {
+    align-items: baseline;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1rem;
+    gap: 6px;
+  }
+
+  .sort-option {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    padding: 4px 0;
+  }
+
+  /* the "/ ''" alternative text keeps brackets out of accessible names */
+  .sort-option::before {
+    content: "[" / "";
+    opacity: 0.6;
+  }
+
+  .sort-option::after {
+    content: "]" / "";
+    opacity: 0.6;
+  }
+
+  .sort-option:hover,
+  .sort-option:focus-visible {
+    text-decoration: underline;
+  }
+
+  .sort-option:focus-visible {
+    box-shadow: var(--focus-ring);
+    outline: none;
+  }
+
+  .sort-option[aria-pressed="true"] {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* reserve the counter's row space even while idle so the controls row
+     doesn't reflow on the first keystroke of a filter */
+  .people-count {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-left: auto;
+    min-width: 14ch;
+    opacity: 0.8;
+    text-align: right;
+  }
+
+  .people-count[data-idle] {
+    visibility: hidden;
+  }
+
+  .people-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+
+  .person-card[hidden] {
+    display: none;
+  }
+
+  .people-empty {
+    color: var(--muted);
+    margin-top: 16px;
+    overflow-wrap: anywhere;
+  }
+
+  .person-card-featured {
+    color: var(--accent);
+  }
+
+  .person-card-meta .person-card-featured::before {
+    content: "[" / "";
+    opacity: 0.6;
+  }
+
+  .person-card-meta .person-card-featured::after {
+    content: "]" / "";
+    opacity: 0.6;
+  }
+
   .person-card-backrefs {
     color: var(--muted);
     display: grid;
