@@ -152,7 +152,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
     </div>
   </section>
 
-  <section>
+  <section class="members-section">
     <h3 class="section-label">Members</h3>
     {members.length > 0 && (
       <div class="people-controls" data-people-controls hidden>
@@ -289,6 +289,12 @@ const memberSearchText = (person: (typeof members)[number]) =>
 </script>
 
 <style>
+  .members-section {
+    --members-width: min(1200px, calc(100vw - 48px));
+    margin-inline: calc((100% - var(--members-width)) / 2);
+    width: var(--members-width);
+  }
+
   .people-controls {
     align-items: baseline;
     display: flex;
