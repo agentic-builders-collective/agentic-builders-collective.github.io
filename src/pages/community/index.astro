@@ -182,7 +182,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
           <button type="button" class="sort-option" data-sort="earliest" aria-pressed="false" title="Earliest members first">earliest</button>
           <button type="button" class="sort-option" data-sort="name" aria-pressed="false" title="Alphabetical by name">name</button>
         </div>
-        <span class="people-count" data-people-count aria-live="polite" hidden></span>
+        <span class="people-count" data-people-count aria-live="polite" data-idle>{members.length} of {members.length} shown</span>
       </div>
     )}
     {members.length > 0 ? (
@@ -201,7 +201,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
               {(person.data.company || person.data.featured) && (
                 <div class="person-card-meta">
                   {person.data.company && <span>{person.data.company}</span>}
-                  {person.data.featured && <span class="person-card-featured">[featured]</span>}
+                  {person.data.featured && <span class="person-card-featured">featured</span>}
                 </div>
               )}
             </div>
@@ -271,10 +271,13 @@ const memberSearchText = (person: (typeof members)[number]) =>
         if (matches) shown += 1;
       }
       if (countLabel) {
-        countLabel.hidden = terms.length === 0;
+        countLabel.toggleAttribute("data-idle", terms.length === 0);
         countLabel.textContent = `${shown} of ${cards.length} shown`;
       }
-      if (queryEcho) queryEcho.textContent = `"${query}"`;
+      if (queryEcho) {
+        const display = query.length > 60 ? `${query.slice(0, 60)}…` : query;
+        queryEcho.textContent = `"${display}"`;
+      }
       if (emptyState) emptyState.hidden = shown > 0;
     };
 
@@ -298,7 +301,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
     });
 
     document.addEventListener("keydown", (event) => {
-      if (!searchInput) return;
+      if (!searchInput || event.isComposing) return;
       const target = event.target as HTMLElement | null;
       const isTyping =
         target instanceof HTMLInputElement ||
@@ -413,11 +416,19 @@ const memberSearchText = (person: (typeof members)[number]) =>
     font-weight: 700;
   }
 
+  /* reserve the counter's row space even while idle so the controls row
+     doesn't reflow on the first keystroke of a filter */
   .people-count {
     color: var(--muted);
     font-size: 1rem;
     margin-left: auto;
+    min-width: 14ch;
     opacity: 0.8;
+    text-align: right;
+  }
+
+  .people-count[data-idle] {
+    visibility: hidden;
   }
 
   .people-grid {
@@ -431,10 +442,21 @@ const memberSearchText = (person: (typeof members)[number]) =>
   .people-empty {
     color: var(--muted);
     margin-top: 16px;
+    overflow-wrap: anywhere;
   }
 
   .person-card-featured {
     color: var(--accent);
+  }
+
+  .person-card-meta .person-card-featured::before {
+    content: "[" / "";
+    opacity: 0.6;
+  }
+
+  .person-card-meta .person-card-featured::after {
+    content: "]" / "";
+    opacity: 0.6;
   }
 
   .person-card-backrefs {
