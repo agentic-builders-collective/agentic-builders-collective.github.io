@@ -166,8 +166,8 @@ const memberSearchText = (person: (typeof members)[number]) =>
             spellcheck="false"
           />
         </label>
-        <div class="people-sort">
-          <span>sort:</span>
+        <div class="people-sort" role="group" aria-labelledby="people-sort-label">
+          <span id="people-sort-label">sort:</span>
           <button type="button" class="sort-option" data-sort="joined" aria-pressed="true" title="Earliest members first">joined</button>
           <button type="button" class="sort-option" data-sort="newest" aria-pressed="false" title="Most recently added first">newest</button>
           <button type="button" class="sort-option" data-sort="name" aria-pressed="false" title="Alphabetical by name">name</button>
@@ -248,9 +248,11 @@ const memberSearchText = (person: (typeof members)[number]) =>
 
     const applySearch = () => {
       const query = (searchInput?.value ?? "").trim().toLowerCase();
+      const terms = query.split(/\s+/).filter(Boolean);
       let shown = 0;
       for (const card of cards) {
-        const matches = query === "" || (card.dataset.search ?? "").includes(query);
+        const haystack = card.dataset.search ?? "";
+        const matches = terms.every((term) => haystack.includes(term));
         card.hidden = !matches;
         if (matches) shown += 1;
       }
@@ -277,7 +279,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
         target instanceof HTMLTextAreaElement ||
         Boolean(target?.isContentEditable);
 
-      if (event.key === "/" && !isTyping) {
+      if (event.key === "/" && !isTyping && !event.ctrlKey && !event.metaKey && !event.altKey) {
         event.preventDefault();
         searchInput.focus();
       } else if (event.key === "Escape" && document.activeElement === searchInput && searchInput.value) {
@@ -290,7 +292,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
 
 <style>
   .members-section {
-    --members-width: min(1200px, calc(100vw - 48px));
+    --members-width: max(100%, min(1200px, calc(100vw - 40px)));
     margin-inline: calc((100% - var(--members-width)) / 2);
     width: var(--members-width);
   }
@@ -322,7 +324,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
   .people-search input {
     background: transparent;
     border: none;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid rgba(174, 201, 244, 0.45);
     color: var(--text);
     flex: 1;
     font-family: var(--font-sans);
@@ -338,7 +340,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
 
   .people-search input::placeholder {
     color: var(--muted);
-    opacity: 0.6;
+    opacity: 0.65;
   }
 
   .people-sort {
@@ -357,22 +359,28 @@ const memberSearchText = (person: (typeof members)[number]) =>
     cursor: pointer;
     font-family: var(--font-sans);
     font-size: 1rem;
-    padding: 0;
+    padding: 4px 0;
   }
 
+  /* the "/ ''" alternative text keeps brackets out of accessible names */
   .sort-option::before {
-    content: "[";
+    content: "[" / "";
     opacity: 0.6;
   }
 
   .sort-option::after {
-    content: "]";
+    content: "]" / "";
     opacity: 0.6;
   }
 
   .sort-option:hover,
   .sort-option:focus-visible {
     text-decoration: underline;
+  }
+
+  .sort-option:focus-visible {
+    box-shadow: var(--focus-ring);
+    outline: none;
   }
 
   .sort-option[aria-pressed="true"] {
