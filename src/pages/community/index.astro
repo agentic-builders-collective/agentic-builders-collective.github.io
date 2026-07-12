@@ -17,7 +17,7 @@ const getAddedAtTime = (value: Date | undefined) => value?.getTime() ?? 0;
 const members = allMembers
   .filter((person) => !orgNames.has(person.data.name))
   .sort((a, b) => {
-    const addedAtDelta = getAddedAtTime(a.data.addedAt) - getAddedAtTime(b.data.addedAt);
+    const addedAtDelta = getAddedAtTime(b.data.addedAt) - getAddedAtTime(a.data.addedAt);
     if (addedAtDelta !== 0) {
       return addedAtDelta;
     }
@@ -94,8 +94,17 @@ const getBackrefGroups = (personId: string): BackrefGroup[] => {
   });
 };
 
+const handleFromUrl = (url: string) => url.split("/").filter(Boolean).pop() ?? "";
+
 const memberSearchText = (person: (typeof members)[number]) =>
-  [person.data.name, ...person.data.aliases, person.data.company, person.data.tagline]
+  [
+    person.data.name,
+    ...person.data.aliases,
+    person.data.company,
+    person.data.tagline,
+    handleFromUrl(person.data.github),
+    handleFromUrl(person.data.twitter),
+  ]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
@@ -107,7 +116,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
 >
   <h1 class="page-title">Community</h1>
   <p class="collection-guide">
-    A snapshot of our 800+ members as of May 2026. <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">Add yourself on GitHub</a>.
+    800+ members as of May 2026 — {members.length} listed here so far. <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">Add yourself on GitHub</a>.
   </p>
 
   <section>
@@ -140,7 +149,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
                   <div class="person-card-backref-group">
                     <span class="person-card-backref-label">{group.label}</span>
                     {group.items.map((item, index) => (
-                      <a class="person-card-backref-link" href={item.href} title={item.title}>[{index + 1}]</a>
+                      <a class="person-card-backref-link" href={item.href} title={item.title} aria-label={item.title}>[{index + 1}]</a>
                     ))}
                   </div>
                 ))}
@@ -161,18 +170,19 @@ const memberSearchText = (person: (typeof members)[number]) =>
           <input
             type="search"
             data-people-search
-            placeholder="name, company, tagline"
+            placeholder="name, company, handle"
+            title="press / to focus"
             autocomplete="off"
             spellcheck="false"
           />
         </label>
         <div class="people-sort" role="group" aria-labelledby="people-sort-label">
           <span id="people-sort-label">sort:</span>
-          <button type="button" class="sort-option" data-sort="joined" aria-pressed="true" title="Earliest members first">joined</button>
-          <button type="button" class="sort-option" data-sort="newest" aria-pressed="false" title="Most recently added first">newest</button>
+          <button type="button" class="sort-option" data-sort="newest" aria-pressed="true" title="Most recently added first">newest</button>
+          <button type="button" class="sort-option" data-sort="earliest" aria-pressed="false" title="Earliest members first">earliest</button>
           <button type="button" class="sort-option" data-sort="name" aria-pressed="false" title="Alphabetical by name">name</button>
         </div>
-        <span class="people-count" data-people-count aria-live="polite">{members.length} of {members.length} shown</span>
+        <span class="people-count" data-people-count aria-live="polite" hidden></span>
       </div>
     )}
     {members.length > 0 ? (
@@ -191,7 +201,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
               {(person.data.company || person.data.featured) && (
                 <div class="person-card-meta">
                   {person.data.company && <span>{person.data.company}</span>}
-                  {person.data.featured && <span>Featured</span>}
+                  {person.data.featured && <span class="person-card-featured">[featured]</span>}
                 </div>
               )}
             </div>
@@ -205,7 +215,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
                     <div class="person-card-backref-group">
                       <span class="person-card-backref-label">{group.label}</span>
                       {group.items.map((item, index) => (
-                        <a class="person-card-backref-link" href={item.href} title={item.title}>[{index + 1}]</a>
+                        <a class="person-card-backref-link" href={item.href} title={item.title} aria-label={item.title}>[{index + 1}]</a>
                       ))}
                     </div>
                   ))}
@@ -215,7 +225,9 @@ const memberSearchText = (person: (typeof members)[number]) =>
           </div>
         ))}
       </div>
-      <p class="people-empty" data-people-empty hidden>No members match your search.</p>
+      <p class="people-empty" data-people-empty hidden>
+        No members match <span data-people-empty-query></span>. <button type="button" class="sort-option" data-people-clear>clear</button>
+      </p>
       </>
     ) : (
       <p>No members listed yet. <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">Add a person by submitting a pull request</a></p>
@@ -235,13 +247,15 @@ const memberSearchText = (person: (typeof members)[number]) =>
     const countLabel = controls.querySelector<HTMLElement>("[data-people-count]");
     const sortButtons = Array.from(controls.querySelectorAll<HTMLButtonElement>("[data-sort]"));
     const emptyState = document.querySelector<HTMLElement>("[data-people-empty]");
+    const queryEcho = document.querySelector<HTMLElement>("[data-people-empty-query]");
+    const clearButton = document.querySelector<HTMLButtonElement>("[data-people-clear]");
 
     const byName = (a: HTMLElement, b: HTMLElement) =>
       (a.dataset.name ?? "").localeCompare(b.dataset.name ?? "");
     const byAdded = (a: HTMLElement, b: HTMLElement) =>
       Number(a.dataset.added) - Number(b.dataset.added) || byName(a, b);
     const comparators: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
-      joined: byAdded,
+      earliest: byAdded,
       newest: (a, b) => Number(b.dataset.added) - Number(a.dataset.added) || byName(a, b),
       name: byName,
     };
@@ -256,11 +270,23 @@ const memberSearchText = (person: (typeof members)[number]) =>
         card.hidden = !matches;
         if (matches) shown += 1;
       }
-      if (countLabel) countLabel.textContent = `${shown} of ${cards.length} shown`;
+      if (countLabel) {
+        countLabel.hidden = terms.length === 0;
+        countLabel.textContent = `${shown} of ${cards.length} shown`;
+      }
+      if (queryEcho) queryEcho.textContent = `"${query}"`;
       if (emptyState) emptyState.hidden = shown > 0;
     };
 
+    const clearSearch = () => {
+      if (!searchInput) return;
+      searchInput.value = "";
+      applySearch();
+      searchInput.focus();
+    };
+
     searchInput?.addEventListener("input", applySearch);
+    clearButton?.addEventListener("click", clearSearch);
 
     sortButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -283,8 +309,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
         event.preventDefault();
         searchInput.focus();
       } else if (event.key === "Escape" && document.activeElement === searchInput && searchInput.value) {
-        searchInput.value = "";
-        applySearch();
+        clearSearch();
       }
     });
   }
@@ -406,6 +431,10 @@ const memberSearchText = (person: (typeof members)[number]) =>
   .people-empty {
     color: var(--muted);
     margin-top: 16px;
+  }
+
+  .person-card-featured {
+    color: var(--accent);
   }
 
   .person-card-backrefs {
