@@ -17,7 +17,7 @@ const getAddedAtTime = (value: Date | undefined) => value?.getTime() ?? 0;
 const members = allMembers
   .filter((person) => !orgNames.has(person.data.name))
   .sort((a, b) => {
-    const addedAtDelta = getAddedAtTime(b.data.addedAt) - getAddedAtTime(a.data.addedAt);
+    const addedAtDelta = getAddedAtTime(a.data.addedAt) - getAddedAtTime(b.data.addedAt);
     if (addedAtDelta !== 0) {
       return addedAtDelta;
     }
@@ -116,7 +116,7 @@ const memberSearchText = (person: (typeof members)[number]) =>
 >
   <h1 class="page-title">Community</h1>
   <p class="collection-guide">
-    800+ members as of May 2026 — {members.length} listed here so far. <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">Add yourself on GitHub</a>.
+    1000+ members as of July 2026 — {members.length} listed here so far. <a class="muted-link" href={contributionLinks.person} target="_blank" rel="noopener">Add yourself on GitHub</a>.
   </p>
 
   <section>
@@ -178,8 +178,8 @@ const memberSearchText = (person: (typeof members)[number]) =>
         </label>
         <div class="people-sort" role="group" aria-labelledby="people-sort-label">
           <span id="people-sort-label">sort:</span>
-          <button type="button" class="sort-option" data-sort="newest" aria-pressed="true" title="Most recently added first">newest</button>
-          <button type="button" class="sort-option" data-sort="earliest" aria-pressed="false" title="Earliest members first">earliest</button>
+          <button type="button" class="sort-option" data-sort="newest" aria-pressed="false" title="Most recently added first">newest</button>
+          <button type="button" class="sort-option" data-sort="earliest" aria-pressed="true" title="Earliest members first">earliest</button>
           <button type="button" class="sort-option" data-sort="name" aria-pressed="false" title="Alphabetical by name">name</button>
         </div>
         <span class="people-count" data-people-count aria-live="polite" data-idle>{members.length} of {members.length} shown</span>

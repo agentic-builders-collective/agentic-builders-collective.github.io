@@ -102,18 +102,6 @@ Use YAML for community-curated articles, external coverage, interviews, guides, 
     - agents
 ```
 
-### `sponsors`
-
-File: `src/content/sponsors/sponsors.yaml`
-
-Use YAML for sponsor names, links, and optional logos.
-
-```yaml
-- name: Example Labs
-  logo: /images/sponsors/example-labs.svg
-  url: https://example.com
-```
-
 ### `partners`
 
 File: `src/content/partners/partners.yaml`

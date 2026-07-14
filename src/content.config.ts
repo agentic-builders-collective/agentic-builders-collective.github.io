@@ -74,15 +74,6 @@ const partners = defineCollection({
   }),
 });
 
-const sponsors = defineCollection({
-  loader: file("src/content/sponsors/sponsors.yaml"),
-  schema: z.object({
-    name: z.string(),
-    logo: z.string().optional().default(""),
-    url: z.string().optional().default(""),
-  }),
-});
-
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/projects" }),
   schema: z.object({
@@ -230,7 +221,6 @@ export const collections = {
   partners,
   members,
   organisers,
-  sponsors,
   projects,
   jobs,
   presentations,

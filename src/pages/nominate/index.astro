@@ -56,17 +56,17 @@ const upcomingMeetupOptions = allEvents
       <input type="email" id="speaker-email" name="speakerEmail" placeholder="speaker@example.com" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group form-group-wide">
       <label for="topic">Proposed Topic or Title</label>
       <input type="text" id="topic" name="topic" required placeholder="What would they talk about?" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group form-group-wide">
       <label for="description">Brief Description</label>
       <textarea id="description" name="description" rows="4" placeholder="A few sentences about the topic, why it is relevant, and what the audience would learn."></textarea>
     </div>
 
-    <div class="form-group">
+    <div class="form-group form-group-wide">
       <label for="event-preference">Preferred Event (optional)</label>
       <select id="event-preference" name="eventPreference">
         <option value="">Any upcoming meetup</option>
@@ -76,12 +76,12 @@ const upcomingMeetupOptions = allEvents
       </select>
     </div>
 
-    <div class="form-group">
+    <div class="form-group form-group-wide">
       <label for="speaker-background">Speaker Background (optional)</label>
       <textarea id="speaker-background" name="speakerBackground" rows="3" placeholder="Links to previous talks, LinkedIn, GitHub, or any relevant background."></textarea>
     </div>
 
-    <div class="form-group">
+    <div class="form-group form-group-wide">
       <label class="checkbox-label">
         <input type="checkbox" id="self-nomination" name="selfNomination" />
         <span>I am nominating myself</span>
@@ -161,38 +161,49 @@ Submitted via agenticbuilders.sg/nominate
   .page-intro {
     color: var(--muted);
     margin-bottom: 32px;
-    max-width: 640px;
+    max-width: 72ch;
   }
 
   .nomination-form {
-    max-width: 560px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    border-block: 1px solid var(--line);
+    display: grid;
+    gap: 20px 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-block: 24px;
+    width: 100%;
   }
 
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .form-group-wide {
+    grid-column: 1 / -1;
   }
 
   .form-group label {
-    font-size: 13px;
-    font-weight: 500;
     color: var(--accent);
+    font-size: 1rem;
+    font-weight: 600;
   }
 
   .form-group input,
   .form-group textarea,
   .form-group select {
-    padding: 10px 12px;
-    background: var(--panel);
+    background: var(--box-bg);
     border: 1px solid var(--line);
+    box-sizing: border-box;
     color: var(--text);
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: 1rem;
+    min-height: 44px;
     outline: none;
+    padding: 10px 12px;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    width: 100%;
   }
 
   .form-group input:focus,
@@ -209,6 +220,7 @@ Submitted via agenticbuilders.sg/nominate
   .form-group select {
     appearance: none;
     cursor: pointer;
+    padding-right: 36px;
   }
 
   .form-group select option {
@@ -224,22 +236,27 @@ Submitted via agenticbuilders.sg/nominate
   }
 
   .checkbox-label input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
     accent-color: var(--accent);
+    flex: 0 0 auto;
+    height: 1rem;
+    min-height: 0;
+    padding: 0;
+    width: 1rem;
   }
 
   .submit-btn {
-    padding: 12px 24px;
     background: var(--accent);
-    color: var(--bg);
     border: none;
+    color: var(--bg);
+    font-size: 1rem;
     font-family: var(--font-sans);
-    font-size: 14px;
     font-weight: 600;
+    grid-column: 1 / -1;
+    min-height: 44px;
+    padding: 12px 24px;
     cursor: pointer;
     transition: opacity 0.15s ease;
-    align-self: flex-start;
+    width: 100%;
   }
 
   .submit-btn:hover {
@@ -249,7 +266,7 @@ Submitted via agenticbuilders.sg/nominate
   .form-result {
     margin-top: 24px;
     padding: 20px;
-    background: var(--panel);
+    background: var(--box-bg);
     border: 1px solid var(--line);
   }
 
@@ -259,18 +276,23 @@ Submitted via agenticbuilders.sg/nominate
 
   .form-result h3 {
     margin: 0 0 8px 0;
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .form-result p {
     margin: 0 0 6px 0;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 1rem;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 700px) {
     .nomination-form {
-      max-width: 100%;
+      grid-template-columns: 1fr;
+    }
+
+    .form-group,
+    .form-group-wide {
+      grid-column: 1;
     }
   }
 </style>

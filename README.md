@@ -38,7 +38,7 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the compact contributor overview.
 
 - **Astro** — static site framework
 - **Astro Content Collections** — typed content and data loading
-- **Single YAML files** — for structured lists (members, organisers, articles, presentations, sponsors, FAQ)
+- **Single YAML files** — for structured lists (members, organisers, articles, presentations, FAQ)
 - **Markdown collections** — for narrative content (events and projects)
 - **No database** — by design (see Philosophy above)
 
@@ -68,7 +68,6 @@ This repo uses two content patterns:
 - `src/content/organisers/organisers.yaml` — Event organisers
 - `src/content/articles/articles.yaml` — Articles, guides, and external writing
 - `src/content/presentations/presentations.yaml` — Talk, demo, and workshop presentation links
-- `src/content/sponsors/sponsors.yaml` — Sponsors
 - `src/content/faq/faq.yaml` — Homepage FAQ
 
 **Markdown files** (add one new file per entry):

@@ -1,9 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
 import { whatsappUrl } from "../../lib/community";
-
-const sponsors = await getCollection("sponsors");
 ---
 
 <BaseLayout
@@ -21,7 +18,7 @@ const sponsors = await getCollection("sponsors");
       We started as "Claude Code Club SG" in September 2025 — a WhatsApp group for Claude Code users in Singapore. As the tool landscape exploded and members adopted Codex, Antigravity, OpenCode, GLM, Kimi, and more, we rebranded to reflect the broader scope.
     </p>
     <p style="margin-top: 12px;">
-      Today we're 800+ <a href="/community/">active members</a> sharing projects, tips, and experiments in a WhatsApp group chat and at monthly meetups around Singapore.
+      Today we're 1000+ <a href="/community/">active members</a> sharing projects, tips, and experiments in a WhatsApp group chat and at monthly meetups around Singapore.
     </p>
   </section>
 
@@ -64,25 +61,6 @@ const sponsors = await getCollection("sponsors");
       </div>
     </div>
   </section>
-
-  {sponsors.length > 0 && (
-    <section>
-      <h3 class="section-label">Venue & Event Sponsors</h3>
-      <div class="list">
-        {sponsors.map((s) => (
-          <div class="list-item">
-            <span class="list-item-title">
-              {s.data.url ? (
-                <a href={s.data.url} target="_blank" rel="noopener">{s.data.name}</a>
-              ) : (
-                s.data.name
-              )}
-            </span>
-          </div>
-        ))}
-      </div>
-    </section>
-  )}
 
   <section>
     <h3 class="section-label">Community Guidelines</h3>
