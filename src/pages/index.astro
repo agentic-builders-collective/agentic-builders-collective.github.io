@@ -5,8 +5,8 @@ import SiteFooter from "../components/SiteFooter.astro";
 import { getCollection } from "astro:content";
 import { whatsappUrl } from "../lib/community";
 import { contributionLinks } from "../lib/contribution-links";
+import { homepageFeature } from "../lib/homepage-feature";
 import { navLinks } from "../lib/navigation";
-import { latestRecap } from "../lib/recaps";
 
 const allEvents = await getCollection("events");
 const allFaq = await getCollection("faq");
@@ -354,10 +354,19 @@ const isCurrent = (href: string) => {
         margin-top: 20px;
       }
 
-      .home-recap-notice {
+      .home-feature-notice {
         background: var(--box-bg);
         margin-top: 32px;
         padding: 20px;
+      }
+
+      .home-feature-notice p {
+        margin: 0;
+      }
+
+      .home-feature-notice .home-feature-description {
+        color: var(--muted);
+        margin-top: 8px;
       }
 
       .home-section {
@@ -495,9 +504,21 @@ const isCurrent = (href: string) => {
           <a class="button button-primary" href={whatsappUrl} target="_blank" rel="noopener">Join the Chat</a>
           <a class="button button-secondary" href="#getting-started">Get Started ↓</a>
         </div>
-        <div class="home-recap-notice">
-          <p>Latest: <a class="muted-link" href={`/events/#${latestRecap.id}`}>Listen to the AI-generated recap: {latestRecap.title.replace(/^#\d+\s*[-–—]\s*/, "")}</a></p>
-        </div>
+        {homepageFeature && (
+          <div class="home-feature-notice">
+            <p>
+              {homepageFeature.label}: <a
+                class="muted-link"
+                href={homepageFeature.href}
+                target={homepageFeature.external ? "_blank" : undefined}
+                rel={homepageFeature.external ? "noopener" : undefined}
+              >{homepageFeature.title}</a>
+            </p>
+            {homepageFeature.description && (
+              <p class="home-feature-description">{homepageFeature.description}</p>
+            )}
+          </div>
+        )}
       </section>
 
       <!-- Upcoming Event -->
