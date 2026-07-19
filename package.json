@@ -12,7 +12,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "astro": "astro"
+    "astro": "astro",
+    "next-release-tag": "node scripts/next-release-tag.mjs"
   },
   "dependencies": {
     "astro": "^6.0.8",
