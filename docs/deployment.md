@@ -27,14 +27,18 @@ After the release commit is merged to `main`, create and push the next version t
 ```sh
 git switch main
 git pull --ff-only origin main
-git tag v1.0.40
-git push origin v1.0.40
+next_tag="$(corepack pnpm run --silent next-release-tag)"
+git tag "$next_tag"
+git push origin "$next_tag"
 ```
 
-Replace `v1.0.40` with the next appropriate `v*` version for the repo state. Check the latest existing tag before tagging:
+`next-release-tag` queries tags from `origin`, finds the highest stable `vMAJOR.MINOR.PATCH` tag, and increments the patch version. For an intentional minor or major release, pass the bump explicitly:
 
 ```sh
-git tag --sort=-version:refname | head -5
+next_tag="$(corepack pnpm run --silent next-release-tag -- minor)"
+# or: corepack pnpm run --silent next-release-tag -- major
+git tag "$next_tag"
+git push origin "$next_tag"
 ```
 
 ## Production notification
