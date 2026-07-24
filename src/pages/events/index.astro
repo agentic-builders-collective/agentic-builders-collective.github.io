@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import QRCode from "../../components/QRCode.astro";
 import { getCollection, render } from "astro:content";
 import { contributionLinks } from "../../lib/contribution-links";
+import { isBeforeToday, isOnOrAfterToday } from "../../lib/event-dates";
 import { buildEventIndex, buildPeopleIndex, getLinkedEvent, resolvePersonRefs } from "../../lib/relations";
 import { recaps } from "../../lib/recaps";
 
@@ -82,21 +83,21 @@ const extraSponsorsByEventId: Record<string, { name: string; url: string }[]> = 
 };
 
 const upcoming = allEvents
-  .filter((e) => e.data.kind !== "external" && (e.data.status === "upcoming" || new Date(e.data.date) >= now))
+  .filter((e) => e.data.kind !== "external" && isOnOrAfterToday(e.data.date, now))
   .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime());
 
 const past = allEvents
-  .filter((e) => e.data.status === "past" && new Date(e.data.date) < now)
+  .filter((e) => e.data.kind !== "external" && isBeforeToday(e.data.date, now))
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
 const pastMeetups = past.filter((event) => event.data.kind === "meetup");
 const pastLearning = past.filter((event) => event.data.kind === "learning");
 const externalEvents = allEvents.filter((event) => event.data.kind === "external");
 const upcomingExternal = externalEvents
-  .filter((e) => e.data.status === "upcoming" || new Date(e.data.date) >= now)
+  .filter((e) => isOnOrAfterToday(e.data.date, now))
   .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime());
 const pastExternal = externalEvents
-  .filter((e) => e.data.status === "past" && new Date(e.data.date) < now)
+  .filter((e) => isBeforeToday(e.data.date, now))
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 const chatDigests = [
   {

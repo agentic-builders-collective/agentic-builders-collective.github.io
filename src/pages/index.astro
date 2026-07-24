@@ -7,14 +7,14 @@ import { whatsappUrl } from "../lib/community";
 import { contributionLinks } from "../lib/contribution-links";
 import { homepageFeature } from "../lib/homepage-feature";
 import { navLinks } from "../lib/navigation";
+import { isOnOrAfterToday } from "../lib/event-dates";
 
 const allEvents = await getCollection("events");
 const allFaq = await getCollection("faq");
 const homepageFaq = allFaq.sort((a, b) => a.data.order - b.data.order);
 
-const now = new Date();
 const upcomingEvent = allEvents
-  .filter((e) => e.data.kind !== "external" && (e.data.status === "upcoming" || new Date(e.data.date) >= now))
+  .filter((e) => e.data.kind !== "external" && isOnOrAfterToday(e.data.date))
   .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime())[0] ?? null;
 
 const getEventHref = (eventId: string) => `/events/#${eventId}`;
