@@ -1,13 +1,13 @@
 ---
 title: "#9 - ABC Local LLMs at AmChamSG"
-date: 2026-08-11
+date: 2026-08-27
 kind: "meetup"
 time: "6:00 PM – 9:00 PM SGT"
 venue: "AmChamSG @ Shaw Centre"
 venueUrl: "https://www.google.com/maps/search/?api=1&query=The%20American%20Chamber%20Of%20Commerce%20in%20Singapore%20%28AmChamSG%29&query_place_id=ChIJeSOUoI0Z2jERwGgwv36RNVo"
 sponsorName: ""
 sponsorUrl: ""
-registrationUrl: "https://luma.com/yra2b4ub"
+registrationUrl: "https://luma.com/pmxamnol"
 attendance: 0
 speakers: []
 hosts:
