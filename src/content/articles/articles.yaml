@@ -38,3 +38,18 @@
     - cybersecurity
     - ai
     - podcast
+- id: code-riff-roger-olofsson-ai-native-recruiting
+  title: "Inside an AI-native recruiting firm's stack | Roger Olofsson (CEO & Co-Founder of Olofsson & Co)"
+  authors:
+    - personId: eric-tan
+    - personId: yaohong-chng
+  url: https://www.youtube.com/watch?v=80-kHxd3gyA
+  publication: code riff
+  date: 2026-07-20
+  summary: a code riff conversation with Roger Olofsson, CEO and Co-Founder of Olofsson Consulting, on running an ai-native executive search firm. includes a live walkthrough of the matching platform his team built across 395,000 candidates, why the whole firm now works in claude code after building their own software, the new roles ai created including an agentic product manager, and the promise he made his team that nobody would lose their job.
+  tags:
+    - recruitment
+    - claude-code
+    - agents
+    - ai
+    - podcast
