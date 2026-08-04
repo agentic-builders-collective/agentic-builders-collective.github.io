@@ -9,6 +9,10 @@
 - [ ] `pnpm check` passes.
 - [ ] `pnpm build` passes.
 
+## Sharing policy
+
+Outside Sharing Sundays, the only permitted share for an accepted job post is the relevant link on [agenticbuilders.sg](https://agenticbuilders.sg/). Do not share the external company or application link, screenshots, copied promotional text, or repeated reposts outside Sharing Sundays.
+
 ## Admin Review
 
 - [ ] Approved for publication on the Agentic Builders Collective website.

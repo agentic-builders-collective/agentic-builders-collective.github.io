@@ -1,0 +1,117 @@
+name: Public-submittal sharing policy
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  notify:
+    name: Notify approved public submittal
+    if: >-
+      github.event.review.state == 'approved' &&
+      contains(fromJson('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.review.author_association)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post sharing policy to the pull request
+        uses: actions/github-script@v7
+        env:
+          SITE_BASE_URL: https://agenticbuilders.sg
+          POLICY_MARKER: abc-public-submittal-sharing-policy-v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const pullNumber = context.payload.pull_request.number;
+            const siteBaseUrl = process.env.SITE_BASE_URL;
+            const policyMarker = process.env.POLICY_MARKER;
+            const publicPathPrefixes = [
+              "src/content/events/",
+              "src/content/projects/",
+              "src/content/articles/",
+              "src/content/presentations/",
+              "src/content/members/",
+              "src/content/jobs/",
+            ];
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner,
+              repo,
+              pull_number: pullNumber,
+              per_page: 100,
+            });
+
+            const publicFiles = files.filter(({ filename }) =>
+              publicPathPrefixes.some((prefix) => filename.startsWith(prefix)),
+            );
+
+            if (publicFiles.length === 0) {
+              core.info("This pull request does not change a public-submittal collection.");
+              return;
+            }
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number: pullNumber,
+              per_page: 100,
+            });
+
+            if (comments.some(({ body = "" }) => body.includes(policyMarker))) {
+              core.info("The public-submittal sharing policy has already been posted.");
+              return;
+            }
+
+            const pageUrls = new Set();
+            for (const { filename } of publicFiles) {
+              const relativePath = filename.replaceAll("\\", "/");
+              const fileName = relativePath.split("/").pop() ?? "";
+              const id = fileName.replace(/\.md$/, "");
+
+              if (relativePath.startsWith("src/content/events/") && id) {
+                pageUrls.add(`${siteBaseUrl}/events/#${id}`);
+              } else if (relativePath.startsWith("src/content/projects/") && id) {
+                pageUrls.add(`${siteBaseUrl}/showcase/#${id}`);
+              } else if (relativePath.startsWith("src/content/jobs/") && id) {
+                pageUrls.add(`${siteBaseUrl}/jobs/${id}/`);
+              } else if (relativePath.startsWith("src/content/articles/")) {
+                pageUrls.add(`${siteBaseUrl}/showcase/#articles`);
+              } else if (relativePath.startsWith("src/content/presentations/")) {
+                pageUrls.add(`${siteBaseUrl}/showcase/#presentations`);
+              } else if (relativePath.startsWith("src/content/members/")) {
+                pageUrls.add(`${siteBaseUrl}/community/`);
+              }
+            }
+
+            if (pageUrls.size === 0) {
+              pageUrls.add(`${siteBaseUrl}/`);
+            }
+
+            const links = [...pageUrls]
+              .map((url) => `- [${url}](${url})`)
+              .join("\n");
+            const contributor = context.payload.pull_request.user.login;
+            const body = [
+              `<!-- ${policyMarker} -->`,
+              `Thanks @${contributor} — this public-submittal pull request has been approved by a maintainer.`,
+              "",
+              "**Sharing policy:** Outside Sharing Sundays, the only permitted share for this accepted submission is the relevant link on `agenticbuilders.sg`.",
+              "",
+              "Please do not share the external event, project, article, registration, or company URL, screenshots, copied promotional text, or repeated reposts outside Sharing Sundays. The external links needed for the listing may still appear on the ABC page itself.",
+              "",
+              "After the submission is published, use the relevant ABC page link:",
+              links,
+              "",
+              "The site page is the permitted off-day share; general promotional sharing remains reserved for Sharing Sundays.",
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: pullNumber,
+              body,
+            });
