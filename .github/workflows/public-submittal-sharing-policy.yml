@@ -1,0 +1,25 @@
+name: Public-submittal sharing policy trigger
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  {}
+
+jobs:
+  approved:
+    name: Observe approved public submittal review
+    if: github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Store pull request identity for the trusted notifier
+        run: echo "${{ github.event.pull_request.number }}" > pull-request-number.txt
+      - name: Upload pull request identity
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-submittal-policy-pr
+          path: pull-request-number.txt
+          retention-days: 1
+      - run: echo "An approval was submitted; the trusted notifier will evaluate it."

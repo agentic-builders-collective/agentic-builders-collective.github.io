@@ -14,6 +14,12 @@ Start with the guide matching the thing you want to add:
 - Add an article: [`docs/add-article.md`](./docs/add-article.md)
 - Agent contribution map (exact paths for coding agents): [`docs/agent-access.md`](./docs/agent-access.md)
 
+## Public-submittal sharing
+
+When a public-submittal pull request is accepted, see [`docs/public-submittal-sharing.md`](./docs/public-submittal-sharing.md) for the sharing policy.
+
+Outside Sharing Sundays, the only permitted share is the relevant link on [`agenticbuilders.sg`](https://agenticbuilders.sg/). Do not share the external event, project, article, registration, or company link, screenshots, copied promotional text, or repeated reposts outside the Sunday window.
+
 ## Beginner Setup
 
 You need:
