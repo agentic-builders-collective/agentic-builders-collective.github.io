@@ -1,0 +1,193 @@
+name: Public-submittal sharing policy notifier
+
+on:
+  workflow_run:
+    workflows: ["Public-submittal sharing policy trigger"]
+    types: [completed]
+
+permissions:
+  actions: read
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: public-submittal-sharing-policy-notifier
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request_review'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Find pull request identity artifact
+        id: artifact
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const { data } = await github.rest.actions.listWorkflowRunArtifacts({
+              owner,
+              repo,
+              run_id: context.payload.workflow_run.id,
+            });
+            const artifact = data.artifacts.find(({ name, expired }) =>
+              name === "public-submittal-policy-pr" && !expired,
+            );
+            core.setOutput("available", String(Boolean(artifact)));
+      - name: Download pull request identity artifact
+        if: steps.artifact.outputs.available == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: public-submittal-policy-pr
+          path: policy-trigger
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Read pull request identity
+        if: steps.artifact.outputs.available == 'true'
+        id: pull-request
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require("node:fs");
+            const value = fs.readFileSync("policy-trigger/pull-request-number.txt", "utf8").trim();
+            if (!/^\d+$/.test(value)) {
+              core.setFailed("The pull request identity artifact was invalid.");
+              return;
+            }
+            core.setOutput("number", value);
+      - name: Post sharing policy to the pull request
+        if: steps.pull-request.outputs.number != ''
+        uses: actions/github-script@v7
+        env:
+          PULL_REQUEST_NUMBER: ${{ steps.pull-request.outputs.number }}
+          SITE_BASE_URL: https://agenticbuilders.sg
+          POLICY_MARKER: abc-public-submittal-sharing-policy-v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const pullNumber = Number(process.env.PULL_REQUEST_NUMBER);
+            const workflowRun = context.payload.workflow_run;
+            const expectedHeadRepository = workflowRun.head_repository?.full_name;
+            const expectedHeadBranch = workflowRun.head_branch;
+            const expectedMergeSha = workflowRun.head_sha;
+            const siteBaseUrl = process.env.SITE_BASE_URL;
+            const policyMarker = process.env.POLICY_MARKER;
+            const publicPathPrefixes = [
+              "src/content/events/",
+              "src/content/projects/",
+              "src/content/articles/",
+              "src/content/presentations/",
+              "src/content/members/",
+              "src/content/jobs/",
+            ];
+
+            const { data: pullRequest } = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: pullNumber,
+            });
+            if (pullRequest.state !== "open") {
+              core.info("The pull request is no longer open.");
+              return;
+            }
+            if (
+              !expectedHeadRepository ||
+              !expectedHeadBranch ||
+              !expectedMergeSha ||
+              pullRequest.head.repo?.full_name !== expectedHeadRepository ||
+              pullRequest.head.ref !== expectedHeadBranch ||
+              pullRequest.merge_commit_sha !== expectedMergeSha
+            ) {
+              core.setFailed("The pull request identity artifact did not match the triggering workflow run.");
+              return;
+            }
+
+            const reviews = await github.paginate(github.rest.pulls.listReviews, {
+              owner,
+              repo,
+              pull_number: pullNumber,
+              per_page: 100,
+            });
+            const latestReviewByUser = new Map();
+            for (const review of reviews) {
+              if (review.user?.login) latestReviewByUser.set(review.user.login, review);
+            }
+            const approvedReviewers = [...latestReviewByUser.values()]
+              .filter((review) => review.state === "APPROVED")
+              .filter((review) => review.user?.login && review.user.login !== pullRequest.user?.login);
+            const permissionLevels = await Promise.all(approvedReviewers.map(async (review) => {
+              const login = review.user.login;
+              const { data } = await github.rest.repos.getCollaboratorPermissionLevel({ owner, repo, username: login });
+              return data.permission;
+            }));
+            if (!permissionLevels.some((permission) => ["admin", "maintain", "write"].includes(permission))) {
+              core.info("No current approval from a repository maintainer was found.");
+              return;
+            }
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner,
+              repo,
+              pull_number: pullNumber,
+              per_page: 100,
+            });
+            const publicFiles = files.filter(({ filename, status }) =>
+              status !== "removed" && publicPathPrefixes.some((prefix) => filename.startsWith(prefix)),
+            );
+            if (publicFiles.length === 0) {
+              core.info("This pull request does not add or update a public-submittal collection.");
+              return;
+            }
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number: pullNumber,
+              per_page: 100,
+            });
+            if (comments.some(({ body = "", user }) => user?.login === "github-actions[bot]" && body.includes(policyMarker))) {
+              core.info("The public-submittal sharing policy has already been posted.");
+              return;
+            }
+
+            const pageUrls = new Set();
+            for (const { filename } of publicFiles) {
+              const relativePath = filename.replaceAll("\\", "/");
+              const fileName = relativePath.split("/").pop() ?? "";
+              const id = fileName.replace(/\.md$/, "");
+              if (relativePath.startsWith("src/content/events/") && id) {
+                pageUrls.add(`${siteBaseUrl}/events/#${id}`);
+              } else if (relativePath.startsWith("src/content/projects/") && id) {
+                pageUrls.add(`${siteBaseUrl}/showcase/#${id}`);
+              } else if (relativePath.startsWith("src/content/jobs/") && id) {
+                pageUrls.add(`${siteBaseUrl}/jobs/${id}/`);
+              } else if (relativePath.startsWith("src/content/articles/")) {
+                pageUrls.add(`${siteBaseUrl}/showcase/#articles`);
+              } else if (relativePath.startsWith("src/content/presentations/")) {
+                pageUrls.add(`${siteBaseUrl}/showcase/#presentations`);
+              } else if (relativePath.startsWith("src/content/members/")) {
+                pageUrls.add(`${siteBaseUrl}/community/`);
+              }
+            }
+            const links = [...pageUrls].map((url) => `- [${url}](${url})`).join("\n");
+            const contributor = pullRequest.user?.login ?? "contributor";
+            const body = [
+              `<!-- ${policyMarker} -->`,
+              `Thanks @${contributor} — this public-submittal pull request has been approved by a maintainer.`,
+              "",
+              "**Sharing policy:** Outside Sharing Sundays, the only permitted share for this accepted submission is the relevant link on `agenticbuilders.sg`.",
+              "",
+              "Please do not share the external event, project, article, registration, or company URL, screenshots, copied promotional text, or repeated reposts outside Sharing Sundays. The external links needed for the listing may still appear on the ABC page itself.",
+              "",
+              "After the submission is published, use the relevant ABC page link:",
+              links,
+              "",
+              "The site page is the permitted off-day share; general promotional sharing remains reserved for Sharing Sundays.",
+            ].join("\n");
+            await github.rest.issues.createComment({ owner, repo, issue_number: pullNumber, body });
