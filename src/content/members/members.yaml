@@ -337,3 +337,18 @@
   github: ""
   addedAt: "2026-07-01T12:01:18Z"
   featured: false
+
+- id: tony-pelosi
+  name: Tony Pelosi
+  aliases:
+    - apelosi
+    - tonypelosi
+  tagline: Full-stack Product Builder
+  company: Arevio Technology Partners, LLC
+  website: https://anthonypelosi.com/
+  linkedin: https://www.linkedin.com/in/apelosi
+  github: https://github.com/apelosi
+  youtube: http://www.youtube.com/user/anthonypelosi
+  twitter: https://twitter.com/apelosi
+  addedAt: "2026-08-09T10:05:52Z"
+  featured: false
