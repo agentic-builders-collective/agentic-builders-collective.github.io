@@ -8,7 +8,7 @@ employmentType: full-time
 applyUrl: https://jobs.ashbyhq.com/cognition/b73fd66a-f43b-4240-95c2-7a76b4ffb0c6
 contactEmail: nathan.wangliao@cognition.ai
 postedAt: 2026-05-21
-expiresAt: 2026-08-19
+expiresAt: 2026-11-19
 submittedBy:
   personId: kevin-lee
 tags:

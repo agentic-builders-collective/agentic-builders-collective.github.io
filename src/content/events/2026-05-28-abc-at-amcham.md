@@ -4,7 +4,7 @@ date: 2026-05-28
 kind: "meetup"
 time: "6:00 PM – 9:00 PM SGT"
 venue: "AmChamSG @ Shaw Centre"
-venueUrl: "https://maps.app.goo.gl/?q=1+Scotts+Rd+Shaw+Centre+Singapore+228208"
+venueUrl: "https://www.google.com/maps/search/?api=1&query=The%20American%20Chamber%20Of%20Commerce%20in%20Singapore%20%28AmChamSG%29&query_place_id=ChIJeSOUoI0Z2jERwGgwv36RNVo"
 sponsorName: "SG Code Campus"
 sponsorUrl: "https://sgcodecampus.com"
 registrationUrl: "https://luma.com/2q4yargk"
