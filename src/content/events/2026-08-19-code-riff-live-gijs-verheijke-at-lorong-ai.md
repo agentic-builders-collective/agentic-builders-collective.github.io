@@ -16,7 +16,7 @@ hosts:
 sharedBy:
   - personId: eric-tan
 tags: ["podcast", "openclaw", "agents", "live-recording"]
-status: "upcoming"
+status: "past"
 ---
 A live recording of the Code Riff podcast at Lorong AI, part of their Off-Script series. Eric Tan and Yaohong Chng talk to Gijs Verheijke, AI Lead at Carousell and previously founder and CEO of Ox Street.
 
