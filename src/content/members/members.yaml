@@ -352,3 +352,16 @@
   twitter: https://twitter.com/apelosi
   addedAt: "2026-08-09T10:05:52Z"
   featured: false
+
+- id: carlos-chacon
+  name: Carlos Chacon
+  aliases:
+    - Carlos
+  tagline: Building agents and multi-agent systems globally, with practical AI workflows for Singapore SMEs.
+  company: Olano AI
+  website: https://olano.ai
+  linkedin: https://www.linkedin.com/in/cchacon
+  github: https://github.com/cchacons
+  twitter: https://x.com/cchakons
+  addedAt: "2026-08-22T06:01:13Z"
+  featured: false
