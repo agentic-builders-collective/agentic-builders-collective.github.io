@@ -4,7 +4,7 @@ date: 2026-08-26
 kind: "external"
 time: "6:30 PM - 10:30 PM SGT"
 venue: "Hopscotch, Gardens by the Bay, Singapore"
-venueUrl: "https://www.google.com/maps/search/?api=1&query=1.2794636441623644%2C103.86104006605811"
+venueUrl: "https://maps.app.goo.gl/kbYreeemodXMhs1o7"
 registrationUrl: "https://luma.com/w2m8byzo"
 hosts:
   - name: "Joseph Douglas"
