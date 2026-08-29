@@ -13,7 +13,7 @@ tags:
   - "mechanical engineering"
   - "hardware"
   - "roundtable"
-status: "upcoming"
+status: "past"
 ---
 
 Most of what gets said about AI and engineering is written by people who have never taken a part to production. This evening is the opposite of that.

@@ -16,7 +16,7 @@ hosts:
   - personId: "jensen-loke"
   - personId: "yj-soon"
 tags: ["meetup", "local-llms", "agentic-coding"]
-status: "upcoming"
+status: "past"
 ---
 Join fellow builders for an evening focused on running local LLMs on your own hardware, with practical tips, applied presentations, hands-on building, and time to connect with Singapore's agentic coding community.
 
