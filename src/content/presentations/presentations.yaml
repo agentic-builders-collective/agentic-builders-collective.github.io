@@ -171,3 +171,22 @@
     - openclaw
     - education
     - agents
+
+- id: local-qwen-real-work
+  title: "Local Qwen, Real Work"
+  speakers:
+    - personId: jensen-loke
+  eventId: 2026-08-27-abc-local-llms-at-amcham
+  url: ""
+  slidesUrl: /showcase/presentations/local-qwen-real-work/
+  videoUrl: ""
+  screenshot: /showcase/presentations/local-qwen-real-work/local-qwen-real-work.png
+  summary: How Qwen 3.8 27B runs on a single DGX Spark, how it plugs into a real coding harness, and how local Qwen compares with Qwen Max on real code-review and product-build tasks.
+  links:
+    - label: Source deck on jensenloke.github.io
+      url: https://jensenloke.github.io/talks/abc-demo-27aug2026/
+  tags:
+    - qwen
+    - local-llms
+    - dgx-spark
+    - evals

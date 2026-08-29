@@ -79,11 +79,14 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
         {eventGroups.map(({ event, presentations }) => (
           <details class="event-group" open>
             <summary class="event-group-header">
-              <span class="event-group-title">
-                {event.data.title.replace(/^#\d+\s*[-–—]\s*/, "")}
-              </span>
-              <span class="event-group-date">
-                {new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}
+              <span class="event-group-title">{event.data.title}</span>
+              <span class="event-group-when">
+                <span class="event-group-date">
+                  {new Date(event.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}
+                </span>
+                {event.data.time && (
+                  <span class="event-group-time">{event.data.time.replace(/\s*SGT$/, "")}</span>
+                )}
               </span>
             </summary>
             <div class="list presentation-list">
@@ -473,8 +476,21 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
     margin: 0;
   }
 
+  .event-group-when {
+    display: grid;
+    gap: 2px;
+    justify-items: end;
+    text-align: right;
+  }
+
   .event-group-date {
     color: var(--muted);
+    justify-self: end;
+  }
+
+  .event-group-time {
+    color: var(--muted);
+    font-size: 0.85em;
     justify-self: end;
   }
 
