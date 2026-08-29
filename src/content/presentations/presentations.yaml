@@ -190,3 +190,28 @@
     - local-llms
     - dgx-spark
     - evals
+
+- id: on-speculative-decoding
+  title: "On Speculative Decoding"
+  speakers:
+    - personId: gaurav-manek
+  eventId: 2026-08-27-abc-local-llms-at-amcham
+  url: https://www.gauravmanek.com/lectures/2026/abc-speculative-decoding/
+  urlLabel: "Lecture"
+  slidesUrl: https://github.com/gauravmm/2026-07-On-Speculative-Decoding/releases
+  videoUrl: ""
+  screenshot: ""
+  summary: A speculative decoder is a small draft model that guesses the next few tokens so the large model can verify several at once. Five rules for when the speedup actually pays off, drawn from 199 benchmark runs on a single DGX Spark.
+  links:
+    - label: Open project
+      url: https://github.com/gauravmm/2026-07-On-Speculative-Decoding
+    - label: Full results
+      url: https://gauravmm.github.io/autobench
+      note: Every figure in the deck is drawn from 199 benchmark runs on a single DGX Spark; each number links back to the config page that produced it.
+    - label: Companion write-up
+      url: https://www.gauravmanek.com/blog/2026/speculative-decoders-are-all-you-need/
+  tags:
+    - speculative-decoding
+    - local-llms
+    - inference
+    - dgx-spark
