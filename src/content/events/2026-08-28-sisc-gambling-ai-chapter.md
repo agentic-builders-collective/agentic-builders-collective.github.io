@@ -12,7 +12,7 @@ tags:
   - ai
   - gambling
   - poker
-status: upcoming
+status: past
 ---
 
 Welcome to The Super-Individual Secret Club — The 1st Human Alliance in the Agentic Era. Builders, thinkers, and explorers who see AI as more than a tool. No noise, no lurking — just sharp questions and real conversations with people who actually use what they talk about.
