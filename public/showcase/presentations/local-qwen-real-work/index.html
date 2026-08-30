@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Local Qwen, Real Work — Jensen</title>
+  <style>
+    @font-face { font-family: "Qwen Futura"; src: url("assets/Futura.ttc") format("truetype"); font-display: swap; }
+    @font-face { font-family: "Qwen Noto"; src: url("assets/NotoSansHans-Regular.otf") format("opentype"); font-weight: 400; font-display: swap; }
+    @font-face { font-family: "Qwen Noto"; src: url("assets/NotoSansHans-Bold.otf") format("opentype"); font-weight: 700 900; font-display: swap; }
+    :root {
+      --ink: #050711;
+      --panel: #0a0e1d;
+      --panel-2: #10162a;
+      --text: #f5f1eb;
+      --muted: #9ca5ba;
+      --coral: #ff796c;
+      --orange: #ff9a62;
+      --qwen: #082dff;
+      --qwen-bright: #5d73ff;
+      --green: #49e1a8;
+      --red: #ff6b75;
+      --line: rgba(255, 139, 108, .28);
+      --blue-line: rgba(93, 115, 255, .35);
+      --shadow: 0 1.2cqw 4cqw rgba(0, 0, 0, .42);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      background: #02030a;
+      color: var(--text);
+      font-family: "Qwen Noto", "Helvetica Neue", Arial, sans-serif;
+    }
+    button { font: inherit; }
+
+    .stage {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 120%, rgba(42, 76, 255, .16), transparent 40%),
+        #02030a;
+    }
+
+    .deck {
+      position: relative;
+      width: min(100vw, calc(100vh * 16 / 9));
+      height: min(100vh, calc(100vw * 9 / 16));
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      container-type: size;
+      background: var(--ink);
+      box-shadow: 0 0 7rem rgba(0,0,0,.8);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      padding: 5.2cqh 5.4cqw 5.2cqh;
+      overflow: hidden;
+      background:
+        linear-gradient(115deg, rgba(255,255,255,.015), transparent 32%),
+        radial-gradient(circle at 91% 12%, rgba(42, 76, 255, .12), transparent 25%),
+        radial-gradient(circle at 8% 86%, rgba(255, 121, 108, .08), transparent 23%),
+        var(--ink);
+    }
+    .slide.active { display: block; animation: enter .32s ease-out; }
+    @keyframes enter {
+      from { opacity: 0; transform: translateX(1.2%); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 1.8cqh 1.2cqw;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 4.8cqw 4.8cqw;
+      opacity: .055;
+      mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2cqw;
+      height: 5cqh;
+      margin-bottom: 2.4cqh;
+      border-bottom: 1px dashed rgba(255, 139, 108, .32);
+      color: var(--muted);
+      font-size: 1.05cqw;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    .abc-lockup { display: flex; align-items: center; gap: .85cqw; }
+    .abc {
+      padding: .42cqh .65cqw;
+      border: 1px solid var(--coral);
+      color: var(--coral);
+      letter-spacing: .18em;
+      line-height: 1;
+    }
+    .slide-no { color: var(--coral); }
+
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, .display {
+      font-family: "Qwen Futura", "Arial Narrow", Impact, sans-serif;
+      font-stretch: condensed;
+      text-transform: uppercase;
+      letter-spacing: .025em;
+    }
+    h1 { font-size: 6.3cqw; line-height: .9; }
+    h2 { font-size: 3.45cqw; line-height: .94; }
+    h3 { font-size: 1.45cqw; line-height: 1.05; text-transform: uppercase; letter-spacing: .06em; }
+    p { font-size: 1.22cqw; line-height: 1.35; }
+    .eyebrow {
+      color: var(--coral);
+      font-size: 1.05cqw;
+      font-weight: 800;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+    .muted { color: var(--muted); }
+    .coral { color: var(--coral); }
+    .blue { color: var(--qwen-bright); }
+    .green { color: var(--green); }
+    .tiny { font-size: .74cqw; line-height: 1.35; }
+    .micro { font-size: .62cqw; line-height: 1.35; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .qwen-mark { width: 5.5cqw; height: 5.5cqw; object-fit: contain; filter: drop-shadow(0 0 1.2cqw rgba(8,45,255,.45)); }
+    .qwen-mark.small { width: 2.25cqw; height: 2.25cqw; }
+    .qwen-lockup { display: flex; align-items: center; gap: 1.2cqw; }
+    .qwen-word { font-size: 3cqw; font-weight: 900; letter-spacing: -.04em; }
+    .official-lockup-plaque { float: right; width: 14cqw; padding: 1.15cqh 1.1cqw; border: 1px solid rgba(255,255,255,.28); background: #f6f3ed; box-shadow: 0 0 2.5cqw rgba(8,45,255,.18); }
+    .official-lockup-plaque img { display: block; width: 100%; height: auto; }
+
+    .panel {
+      position: relative;
+      border: 1px solid rgba(255,255,255,.13);
+      background: linear-gradient(145deg, rgba(17,23,45,.92), rgba(7,10,21,.88));
+      box-shadow: var(--shadow);
+    }
+    .panel.coral-edge { border-left: .35cqw solid var(--coral); }
+    .panel.blue-edge { border-left: .35cqw solid var(--qwen); }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: .38cqh .62cqw;
+      border: 1px solid rgba(255,255,255,.17);
+      border-radius: 100px;
+      color: var(--muted);
+      font-size: .67cqw;
+      font-weight: 800;
+      letter-spacing: .13em;
+      line-height: 1;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .tag.local { border-color: rgba(73,225,168,.45); color: var(--green); }
+    .tag.cloud { border-color: rgba(93,115,255,.55); color: #91a0ff; }
+    .tag.pass { border-color: rgba(73,225,168,.42); color: var(--green); }
+    .tag.fail { border-color: rgba(255,107,117,.45); color: var(--red); }
+
+    .footer-rule {
+      position: absolute;
+      left: 5.4cqw;
+      right: 5.4cqw;
+      bottom: 2.3cqh;
+      display: flex;
+      justify-content: space-between;
+      color: rgba(255,255,255,.42);
+      font-size: .62cqw;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    /* Cover */
+    .cover { padding-top: 5.8cqh; }
+    .cover-grid {
+      display: grid;
+      grid-template-columns: 1.13fr .87fr;
+      gap: 4.2cqw;
+      height: 73cqh;
+      align-items: center;
+    }
+    .cover h1 span { display: block; }
+    .cover h1 .hot {
+      background: linear-gradient(90deg, var(--orange), var(--coral));
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+    .cover-sub {
+      margin-top: 2.2cqh;
+      max-width: 40cqw;
+      color: #d8dbe5;
+      font-size: 1.45cqw;
+    }
+    .speaker-line {
+      display: flex;
+      gap: 1.7cqw;
+      align-items: center;
+      margin-top: 4cqh;
+    }
+    .speaker-name { font-size: 1.25cqw; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .speaker-role { margin-top: .45cqh; color: var(--muted); font-size: .78cqw; letter-spacing: .12em; text-transform: uppercase; }
+    .cover-art { position: relative; height: 61cqh; }
+    .hero-chip {
+      position: absolute;
+      right: 1cqw;
+      top: 4cqh;
+      width: 27cqw;
+      padding: 3.4cqh 2.2cqw;
+      border: 1px solid var(--qwen-bright);
+      background: rgba(8,13,35,.92);
+      box-shadow: 0 0 3cqw rgba(42,76,255,.2), inset 0 0 2cqw rgba(42,76,255,.08);
+    }
+    .hero-chip::before, .hero-chip::after {
+      content: "";
+      position: absolute;
+      width: 2cqw;
+      height: 2cqw;
+      border-color: var(--coral);
+    }
+    .hero-chip::before { left: -.55cqw; top: -.55cqw; border-left: 2px solid; border-top: 2px solid; }
+    .hero-chip::after { right: -.55cqw; bottom: -.55cqw; border-right: 2px solid; border-bottom: 2px solid; }
+    .hero-model { margin-top: 2.2cqh; font-size: 2cqw; font-weight: 900; text-transform: uppercase; }
+    .hero-machine { margin-top: .8cqh; color: var(--muted); font-size: 1cqw; letter-spacing: .1em; text-transform: uppercase; }
+    .chip-stack { position: absolute; right: 0; bottom: 0; width: 31cqw; height: 21cqh; opacity: .72; }
+    .chip-stack i {
+      position: absolute;
+      display: block;
+      width: 8cqw;
+      height: 4.3cqh;
+      border: 1px solid rgba(255,154,98,.62);
+      transform: skewY(-12deg);
+      background: repeating-linear-gradient(90deg, transparent 0 .45cqw, rgba(255,154,98,.18) .45cqw .52cqw);
+      box-shadow: .7cqw .7cqh 0 rgba(255,121,108,.08);
+    }
+    .chip-stack i:nth-child(1) { left: 2cqw; top: 8cqh; }
+    .chip-stack i:nth-child(2) { left: 10.5cqw; top: 3cqh; }
+    .chip-stack i:nth-child(3) { left: 18.8cqw; top: 9cqh; }
+    .chip-stack i:nth-child(4) { left: 11.5cqw; top: 12.5cqh; }
+
+    /* Agenda */
+    .agenda-head { margin-top: 2cqh; }
+    .agenda-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5cqw;
+      margin-top: 6.2cqh;
+    }
+    .agenda-card { min-height: 42cqh; padding: 3.2cqh 2cqw; overflow: hidden; }
+    .agenda-card::after {
+      content: attr(data-num);
+      position: absolute;
+      right: 1cqw;
+      bottom: -3cqh;
+      color: rgba(255,255,255,.035);
+      font-size: 10cqw;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .agenda-icon {
+      display: grid;
+      place-items: center;
+      width: 4.2cqw;
+      height: 4.2cqw;
+      margin-bottom: 3.3cqh;
+      border: 1px solid var(--coral);
+      color: var(--coral);
+      font-size: 1.5cqw;
+      box-shadow: inset 0 0 1.6cqw rgba(255,121,108,.08);
+    }
+    .agenda-card:nth-child(2) .agenda-icon { border-color: var(--qwen-bright); color: var(--qwen-bright); }
+    .agenda-card:nth-child(3) .agenda-icon { border-color: var(--green); color: var(--green); }
+    .agenda-card p { margin-top: 2cqh; color: var(--muted); font-size: 1.05cqw; }
+    .about-agenda-grid { display: grid; grid-template-columns: .78fr 1.22fr; gap: 1.7cqw; margin-top: 4.2cqh; }
+    .bio-panel { min-height: 47cqh; display: grid; grid-template-columns: 10cqw 1fr; gap: 1.5cqw; align-items: center; padding: 2.5cqh 1.8cqw; }
+    .bio-monogram { display: grid; place-items: center; width: 9cqw; height: 9cqw; border: 1px solid var(--coral); color: var(--coral); font-family: "Qwen Futura", sans-serif; font-size: 4.2cqw; font-weight: 900; box-shadow: .6cqw .8cqh 0 rgba(8,45,255,.5); }
+    .bio-copy h3 { font-size: 1.75cqw; }
+    .bio-copy .bio-role { margin-top: .8cqh; color: var(--coral); font-size: .76cqw; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    .bio-copy p { margin-top: 1.7cqh; color: var(--muted); font-size: .86cqw; }
+    .bio-meta { display: grid; gap: .75cqh; margin-top: 2cqh; padding-top: 1.5cqh; border-top: 1px solid rgba(255,255,255,.13); color: #d8dce8; font-size: .68cqw; }
+    .route-panel { min-height: 47cqh; padding: 2.5cqh 1.6cqw; }
+    .route-list { display: grid; gap: 1.15cqh; margin-top: 2.2cqh; }
+    .route-row { display: grid; grid-template-columns: 3cqw 1fr; gap: 1cqw; align-items: center; padding: 1.35cqh 1cqw; border: 1px solid rgba(255,255,255,.13); background: rgba(5,8,18,.55); }
+    .route-row b { display: grid; place-items: center; width: 2.4cqw; height: 2.4cqw; border: 1px solid var(--coral); color: var(--coral); }
+    .route-row:nth-child(2) b { border-color: var(--qwen-bright); color: var(--qwen-bright); }
+    .route-row:nth-child(3) b { border-color: var(--green); color: var(--green); }
+    .route-row strong { display: block; font-size: .9cqw; text-transform: uppercase; }
+    .route-row span { display: block; margin-top: .35cqh; color: var(--muted); font-size: .68cqw; }
+
+    /* Harness */
+    .section-title { margin-top: 1.5cqh; }
+    .section-title .eyebrow { margin-bottom: 1.1cqh; }
+    .harness-flow {
+      display: grid;
+      grid-template-columns: 1fr 5cqw .95fr 5cqw 1.15fr;
+      align-items: center;
+      margin-top: 5cqh;
+    }
+    .flow-column { display: grid; gap: 1.25cqh; }
+    .flow-label { margin-bottom: .5cqh; color: var(--muted); font-size: .72cqw; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+    .flow-box { padding: 1.8cqh 1.25cqw; border: 1px solid rgba(255,255,255,.14); background: rgba(12,17,34,.84); }
+    .flow-box strong { display: block; font-size: 1.1cqw; letter-spacing: .025em; }
+    .flow-box span { display: block; margin-top: .5cqh; color: var(--muted); font-size: .72cqw; }
+    .gateway {
+      padding: 4cqh 1.7cqw;
+      border: 1px solid var(--qwen-bright);
+      text-align: center;
+      box-shadow: 0 0 2.5cqw rgba(42,76,255,.17);
+    }
+    .gateway code { display: block; margin-top: 1cqh; color: #aab5ff; font-size: 1.05cqw; }
+    .arrow { position: relative; height: 1px; background: var(--coral); opacity: .8; }
+    .arrow::after { content: ""; position: absolute; right: 0; top: -.35cqh; border-left: .65cqw solid var(--coral); border-top: .38cqh solid transparent; border-bottom: .38cqh solid transparent; }
+    .harness-callout {
+      margin-top: 4cqh;
+      padding: 1.5cqh 1.3cqw;
+      border-left: .28cqw solid var(--green);
+      background: rgba(73,225,168,.05);
+      font-size: 1.02cqw;
+    }
+
+    /* Architecture */
+    .architecture-grid {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 2.3cqw;
+      margin-top: 3.4cqh;
+      height: 58cqh;
+    }
+    .lab-photo { position: relative; overflow: hidden; }
+    .lab-photo img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.06) saturate(.78); }
+    .lab-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,7,17,.92), transparent 55%); }
+    .photo-caption { position: absolute; z-index: 2; left: 1.5cqw; right: 1.5cqw; bottom: 2.2cqh; }
+    .photo-caption strong { display: block; font-size: 1.15cqw; text-transform: uppercase; }
+    .photo-caption span { display: block; margin-top: .5cqh; color: #c4cad8; font-size: .78cqw; }
+    .arch-panel { padding: 2.7cqh 1.8cqw; }
+    .arch-chain { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7cqw; align-items: stretch; margin-top: 3cqh; }
+    .arch-node {
+      position: relative;
+      min-height: 13cqh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.4cqh .75cqw;
+      border: 1px solid rgba(255,255,255,.16);
+      text-align: center;
+      background: rgba(5,8,18,.7);
+    }
+    .arch-node:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      z-index: 2;
+      right: -.85cqw;
+      top: 5.2cqh;
+      color: var(--coral);
+      font-size: 1.2cqw;
+    }
+    .arch-node strong { font-size: .88cqw; text-transform: uppercase; }
+    .arch-node span { margin-top: .55cqh; color: var(--muted); font-size: .62cqw; line-height: 1.25; }
+    .arch-node.qwen-node { border-color: var(--qwen-bright); box-shadow: inset 0 0 1.8cqw rgba(42,76,255,.09); }
+    .arch-principles { display: grid; grid-template-columns: 1fr 1fr; gap: 1cqw; margin-top: 4cqh; }
+    .principle { padding: 1.45cqh 1cqw; border-top: 1px solid rgba(255,121,108,.32); }
+    .principle strong { display: block; color: var(--coral); font-size: .75cqw; letter-spacing: .12em; text-transform: uppercase; }
+    .principle span { display: block; margin-top: .7cqh; color: var(--muted); font-size: .72cqw; line-height: 1.32; }
+
+    /* Qwen local/cloud */
+    .model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; margin-top: 4cqh; }
+    .model-card { min-height: 45cqh; padding: 3.1cqh 2cqw; }
+    .model-card h3 { margin-top: 2.3cqh; font-size: 1.8cqw; }
+    .model-card .model-name { margin-top: .7cqh; color: var(--muted); font-size: .86cqw; }
+    .model-list { display: grid; gap: 1.2cqh; margin-top: 3.3cqh; }
+    .model-list div { display: flex; gap: .8cqw; align-items: baseline; font-size: .9cqw; }
+    .model-list b { color: var(--coral); }
+    .model-list span { color: #d8dce8; }
+    .model-card.cloud-card { border-color: rgba(93,115,255,.42); }
+    .model-card.cloud-card .model-list b { color: var(--qwen-bright); }
+    .bridge-caption { margin-top: 2.6cqh; text-align: center; color: #ced2de; font-size: 1.02cqw; }
+
+    /* Audit methodology */
+    .method-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 2.4cqw; margin-top: 4cqh; }
+    .method-pipeline { display: grid; gap: 1.2cqh; }
+    .method-step { display: grid; grid-template-columns: 3.2cqw 1fr; gap: 1.1cqw; align-items: center; padding: 1.7cqh 1.2cqw; }
+    .method-step .num { display: grid; place-items: center; width: 2.5cqw; height: 2.5cqw; border: 1px solid var(--coral); color: var(--coral); font-weight: 900; }
+    .method-step strong { display: block; font-size: .94cqw; text-transform: uppercase; }
+    .method-step span { display: block; margin-top: .35cqh; color: var(--muted); font-size: .69cqw; }
+    .rubric { padding: 2.4cqh 1.5cqw; }
+    .rubric-bars { display: grid; gap: 1.35cqh; margin-top: 2.6cqh; }
+    .rubric-row { display: grid; grid-template-columns: 8cqw 1fr 2cqw; gap: .75cqw; align-items: center; font-size: .68cqw; }
+    .rubric-track { height: .7cqh; background: rgba(255,255,255,.08); }
+    .rubric-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--coral), var(--orange)); }
+    .rubric-row:nth-child(2n) .rubric-fill { background: linear-gradient(90deg, var(--qwen), var(--qwen-bright)); }
+    .method-guard { margin-top: 2.3cqh; padding: 1.4cqh 1cqw; border: 1px solid rgba(73,225,168,.32); color: #cdeee1; font-size: .72cqw; line-height: 1.35; }
+
+    /* Audit results */
+    .results-layout { display: grid; grid-template-columns: 1.4fr .6fr; gap: 2cqw; margin-top: 3.4cqh; }
+    .chart { padding: 2.2cqh 1.5cqw; }
+    .bar-row { display: grid; grid-template-columns: 10.5cqw 1fr 3.2cqw; gap: .9cqw; align-items: center; margin: 1.75cqh 0; }
+    .bar-name strong { display: block; font-size: .77cqw; }
+    .bar-name span { display: block; margin-top: .25cqh; color: var(--muted); font-size: .59cqw; }
+    .bar-track { position: relative; height: 2.3cqh; background: rgba(255,255,255,.065); }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, #ff846c, #ffae69); box-shadow: 0 0 1cqw rgba(255,121,108,.12); }
+    .bar-fill.cloudbar { background: linear-gradient(90deg, var(--qwen), #7d8dff); box-shadow: 0 0 1cqw rgba(42,76,255,.2); }
+    .bar-fill.controlbar { background: linear-gradient(90deg, #70798c, #a8b0c1); }
+    .bar-score { font-size: 1.2cqw; font-weight: 900; text-align: right; }
+    .result-chips { display: flex; gap: .5cqw; margin-top: .45cqh; }
+    .result-chips .tag { font-size: .5cqw; padding: .28cqh .42cqw; }
+    .result-callout { display: flex; flex-direction: column; justify-content: space-between; padding: 2.7cqh 1.6cqw; border-color: rgba(93,115,255,.45); }
+    .hero-stat { font-size: 5.2cqw; line-height: .85; font-weight: 900; color: var(--qwen-bright); }
+    .hero-stat-label { margin-top: 1.1cqh; color: #d9dded; font-size: 1.05cqw; line-height: 1.25; }
+    .safety-note { padding-top: 2cqh; border-top: 1px solid rgba(255,255,255,.14); color: var(--muted); font-size: .74cqw; line-height: 1.4; }
+
+    /* Insurance */
+    .insurance-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: 2cqw; margin-top: 2.5cqh; }
+    .insurance-left { display: grid; grid-template-rows: auto auto; gap: 1.3cqh; }
+    .prompt-box { padding: 1.8cqh 1.35cqw; }
+    .prompt-box blockquote { margin: 1.2cqh 0 0; color: #e5e6ed; font-size: .72cqw; line-height: 1.38; }
+    .mini-pipeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: .65cqw; }
+    .mini-step { position: relative; min-height: 9.5cqh; display: flex; align-items: center; justify-content: center; padding: 1cqh .65cqw; border: 1px solid rgba(255,255,255,.14); text-align: center; color: #d9dce7; font-size: .66cqw; line-height: 1.25; }
+    .mini-step:not(:last-child)::after { content: "→"; position: absolute; right: -.66cqw; color: var(--coral); font-size: .9cqw; z-index: 2; }
+    .video-shell { position: relative; height: 46cqh; border: 1px solid var(--qwen-bright); overflow: hidden; background: radial-gradient(circle at 50% 45%, rgba(42,76,255,.2), transparent 55%), #080b18; box-shadow: 0 0 2.5cqw rgba(42,76,255,.18); }
+    .video-shell video { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: contain; background: #050711; }
+    .video-placeholder { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+    .video-placeholder strong { display: block; font-size: 1.5cqw; letter-spacing: .12em; text-transform: uppercase; }
+    .video-placeholder span { display: block; margin-top: 1cqh; color: var(--muted); font-size: .7cqw; }
+    .video-shell.no-video video { display: none; }
+    .score-strip { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr .82fr; gap: 1cqw; margin-top: 1.4cqh; }
+    .score-card { padding: 1.55cqh 1.1cqw; border: 1px solid rgba(255,255,255,.15); background: rgba(10,14,29,.86); }
+    .score-card strong { display: block; font-size: 1.65cqw; color: var(--green); }
+    .score-card span { display: block; margin-top: .4cqh; color: var(--muted); font-size: .64cqw; }
+    .score-card.runtime strong { color: var(--coral); font-size: 1.03cqw; }
+
+    /* Takeaways */
+    .takeaway-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4cqw; margin-top: 5cqh; }
+    .takeaway { min-height: 39cqh; padding: 2.8cqh 1.7cqw; }
+    .takeaway .index { color: var(--coral); font-size: 1cqw; font-weight: 900; letter-spacing: .14em; }
+    .takeaway h3 { margin-top: 2.2cqh; font-size: 1.55cqw; }
+    .takeaway p { margin-top: 1.7cqh; color: var(--muted); font-size: .92cqw; }
+    .takeaway:nth-child(2) { border-top: .3cqh solid var(--qwen); }
+    .takeaway:nth-child(3) { border-top: .3cqh solid var(--green); }
+    .closing-line { margin-top: 3.3cqh; text-align: center; color: #e3e5ec; font-size: 1.15cqw; }
+
+    /* Thank you */
+    .slide.thanks { display: none; place-items: center; text-align: center; }
+    .slide.thanks.active { display: grid; }
+    .thanks::after {
+      content: "";
+      position: absolute;
+      width: 62cqw;
+      height: 62cqw;
+      border: 1px solid rgba(42,76,255,.18);
+      transform: rotate(45deg);
+      box-shadow: 0 0 7cqw rgba(42,76,255,.1), inset 0 0 7cqw rgba(42,76,255,.06);
+    }
+    .thanks-content { position: relative; z-index: 2; }
+    .thanks .qwen-mark { width: 6cqw; height: 6cqw; }
+    .thanks h2 { margin-top: 2.7cqh; font-size: 6cqw; }
+    .thanks .closing-sub { margin-top: 1.8cqh; color: var(--muted); font-size: 1.25cqw; letter-spacing: .08em; }
+    .thanks .identity { margin-top: 4cqh; font-size: .9cqw; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; }
+    .thanks-mascot { position: absolute; z-index: 2; right: 1.2cqw; bottom: .5cqh; width: 13cqw; height: 13cqw; object-fit: contain; filter: drop-shadow(0 1.2cqw 2cqw rgba(0,0,0,.45)); }
+    .thanks .thanks-content { position: absolute; left: 8cqw; top: 23cqh; transform: none; text-align: left; }
+    .thanks-qr { position: absolute; z-index: 3; right: 6.7cqw; top: 13cqh; width: 14.5cqw; padding: 1.15cqw; border: 1px solid rgba(255,255,255,.35); background: #f6f3ed; color: #050711; text-decoration: none; box-shadow: 0 1.2cqw 3cqw rgba(0,0,0,.42), .7cqw .9cqh 0 rgba(8,45,255,.45); }
+    .thanks-qr img { display: block; width: 100%; aspect-ratio: 1; }
+    .thanks-qr strong { display: block; margin-top: 1.2cqh; font-size: .95cqw; text-transform: uppercase; }
+    .thanks-qr span { display: block; margin-top: .35cqh; font-size: .63cqw; }
+    .thanks-socials { display: flex; gap: 1.4cqw; margin-top: 2.2cqh; }
+    .thanks-socials a { color: #b8c1ff; font-size: .78cqw; text-decoration: none; border-bottom: 1px solid rgba(184,193,255,.45); }
+
+    /* Controls and notes */
+    .controls {
+      position: fixed;
+      z-index: 50;
+      left: 50%;
+      bottom: 1.2rem;
+      transform: translateX(-50%);
+      display: flex;
+      gap: .45rem;
+      align-items: center;
+      padding: .45rem .65rem;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      background: rgba(4,6,14,.82);
+      backdrop-filter: blur(12px);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    body:hover .controls, .controls:focus-within { opacity: 1; }
+    .controls button { width: 2rem; height: 2rem; border: 0; border-radius: 50%; color: white; background: rgba(255,255,255,.08); cursor: pointer; }
+    .controls button:hover { background: var(--qwen); }
+    .counter { min-width: 4.2rem; text-align: center; color: var(--muted); font: .76rem ui-monospace, monospace; }
+    .progress { position: fixed; z-index: 60; left: 0; bottom: 0; width: 0; height: 3px; background: linear-gradient(90deg, var(--coral), var(--qwen)); transition: width .25s; }
+    .notes {
+      display: none;
+      position: absolute;
+      z-index: 40;
+      left: 4cqw;
+      right: 4cqw;
+      bottom: 4cqh;
+      max-height: 28cqh;
+      overflow: auto;
+      padding: 1.5cqh 1.2cqw;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(3,5,12,.96);
+      color: #e9eaf0;
+      font-size: .84cqw;
+      line-height: 1.45;
+      box-shadow: var(--shadow);
+    }
+    body.show-notes .slide.active .notes { display: block; }
+
+    @media print {
+      @page { size: 16in 9in; margin: 0; }
+      html, body { width: auto; height: auto; overflow: visible; background: white; }
+      .stage, .deck { display: block; width: 16in; height: auto; overflow: visible; box-shadow: none; }
+      .slide, .slide.active, .slide.thanks, .slide.thanks.active { position: relative; display: block; width: 16in; height: 9in; break-after: page; padding: .52in .86in; animation: none; }
+      .controls, .progress, .notes { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="deck" id="deck" aria-live="polite">
+
+      <!-- 01 — Cover -->
+      <section class="slide cover active" data-title="Local Qwen, Real Work">
+        <div class="topline">
+          <div class="abc-lockup"><span class="abc">ABC</span><span>Agentic Builders Collective</span></div>
+          <span>27 Aug 2026 · Singapore</span>
+        </div>
+        <div class="cover-grid">
+          <div>
+            <div class="eyebrow">The local frontier</div>
+            <h1><span class="hot">Local Qwen.</span><span>Real work.</span></h1>
+            <p class="cover-sub">What Qwen 3.8 can do on one DGX Spark—and beyond.</p>
+            <div class="speaker-line">
+              <svg class="qwen-mark small" viewBox="0 0 232 232" aria-label="Qwen logo"><g fill="#082dff"><path d="M190.69 27.3h-57.11c0-2.43-.63-4.86-1.88-7.03l-7.64-13.24C121.55 2.68 116.91 0 111.88 0H96.59c-5.02 0-9.67 2.68-12.18 7.03L61 47.57c-2.51 4.35-2.51 9.71 0 14.06l7.64 13.24c2.51 4.35 7.15 7.03 12.18 7.03h109.87c5.02 0 9.67-2.68 12.18-7.03l7.64-13.24c2.51-4.35 2.51-9.71 0-14.06l-7.64-13.24c-2.51-4.35-7.15-7.03-12.18-7.03Z"/><path d="M1.88 95.77l28.56 49.46c-2.1 1.21-3.89 2.97-5.15 5.15l-7.64 13.24c-2.51 4.35-2.51 9.71 0 14.06l7.64 13.24c2.51 4.35 7.15 7.03 12.18 7.03h46.82c5.02 0 9.67-2.68 12.18-7.03l7.64-13.24c2.51-4.35 2.51-9.71 0-14.06L49.47 68.47c-2.51-4.35-7.15-7.03-12.18-7.03H22c-5.02 0-9.67 2.68-12.18 7.03L2.18 81.71c-2.51 4.35-2.51 9.71 0 14.06Z"/><path d="M155.58 225.05l28.56-49.46c2.1 1.21 4.52 1.88 7.03 1.88h15.29c5.02 0 9.67-2.68 12.18-7.03l7.64-13.24c2.51-4.35 2.51-9.71 0-14.06l-23.41-40.54c-2.51-4.35-7.15-7.03-12.18-7.03H175.4c-5.02 0-9.67 2.68-12.18 7.03l-54.94 95.15c-2.51 4.35-2.51 9.71 0 14.06l7.64 13.24c2.51 4.35 7.15 7.03 12.18 7.03h15.29c5.02 0 9.71-2.68 12.19-7.03Z"/></g></svg>
+              <div><div class="speaker-name">Jensen Loke</div><div class="speaker-role">CEO, Success IT · Qwen Ambassador</div></div>
+            </div>
+          </div>
+          <div class="cover-art">
+            <div class="hero-chip">
+              <img class="qwen-mark" src="assets/qwen-symbol.png" alt="Qwen">
+              <div class="hero-model">Qwen 3.8 · 27B</div>
+              <div class="hero-machine">One DGX Spark · local capability, live</div>
+            </div>
+            <div class="chip-stack"><i></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+        <div class="footer-rule"><span>Run local. Build together.</span><span>01 / 10</span></div>
+        <aside class="notes">Open with the outcome: this is not a model-installation talk. It is a story about turning a local model into a useful working system, then testing that system on real work.</aside>
+      </section>
+
+      <!-- Reusable inline Qwen symbol -->
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="qwen-symbol" fill="#082dff"><path d="M190.69 27.3h-57.11c0-2.43-.63-4.86-1.88-7.03l-7.64-13.24C121.55 2.68 116.91 0 111.88 0H96.59c-5.02 0-9.67 2.68-12.18 7.03L61 47.57c-2.51 4.35-2.51 9.71 0 14.06l7.64 13.24c2.51 4.35 7.15 7.03 12.18 7.03h109.87c5.02 0 9.67-2.68 12.18-7.03l7.64-13.24c2.51-4.35 2.51-9.71 0-14.06l-7.64-13.24c-2.51-4.35-7.15-7.03-12.18-7.03Z"/><path d="M1.88 95.77l28.56 49.46c-2.1 1.21-3.89 2.97-5.15 5.15l-7.64 13.24c-2.51 4.35-2.51 9.71 0 14.06l7.64 13.24c2.51 4.35 7.15 7.03 12.18 7.03h46.82c5.02 0 9.67-2.68 12.18-7.03l7.64-13.24c2.51-4.35 2.51-9.71 0-14.06L49.47 68.47c-2.51-4.35-7.15-7.03-12.18-7.03H22c-5.02 0-9.67 2.68-12.18 7.03L2.18 81.71c-2.51 4.35-2.51 9.71 0 14.06Z"/><path d="M155.58 225.05l28.56-49.46c2.1 1.21 4.52 1.88 7.03 1.88h15.29c5.02 0 9.67-2.68 12.18-7.03l7.64-13.24c2.51-4.35 2.51-9.71 0-14.06l-23.41-40.54c-2.51-4.35-7.15-7.03-12.18-7.03H175.4c-5.02 0-9.67 2.68-12.18 7.03l-54.94 95.15c-2.51 4.35-2.51 9.71 0 14.06l7.64 13.24c2.51 4.35 7.15 7.03 12.18 7.03h15.29c5.02 0 9.71-2.68 12.19-7.03Z"/></g></defs></svg>
+
+      <!-- 02 — Agenda -->
+      <section class="slide" data-title="Tonight's Route">
+        <div class="topline"><div class="abc-lockup"><span class="abc">ABC</span><span>Local LLMs</span></div><span class="slide-no">02</span></div>
+        <div class="agenda-head"><div class="eyebrow">Your speaker · tonight’s route</div><h2>Who I am.<br>What we will prove.</h2></div>
+        <div class="about-agenda-grid">
+          <article class="bio-panel panel coral-edge">
+            <div class="bio-monogram">JL</div>
+            <div class="bio-copy">
+              <h3>Jensen Loke</h3>
+              <div class="bio-role">CEO · Product builder · Community organiser</div>
+              <p>I design products, workflows and teams that make complex services work better.</p>
+              <div class="bio-meta"><span>CEO, Success IT</span><span>Qwen Ambassador, Singapore</span><span>Co-organiser, Agentic Builders Collective</span></div>
+            </div>
+          </article>
+          <article class="route-panel panel blue-edge">
+            <div class="eyebrow" style="font-size:.7cqw">Three acts · two evals · ten minutes</div>
+            <div class="route-list">
+              <div class="route-row"><b>1</b><div><strong>Build local AI at home</strong><span>My coding harness and the architecture on my desk.</span></div></div>
+              <div class="route-row"><b>2</b><div><strong>Understand Qwen</strong><span>Local Qwen 3.8 27B and Qwen 3.8 Max Preview.</span></div></div>
+              <div class="route-row"><b>3</b><div><strong>Prove it with evals</strong><span>A real codebase audit and a real business brief.</span></div></div>
+            </div>
+          </article>
+        </div>
+        <div class="footer-rule"><span>Setup → Capability → Evidence</span><span>02 / 10</span></div>
+        <aside class="notes">Introduce yourself in one breath: CEO of Success IT, product builder, Qwen Ambassador, and co-organiser of ABC. Then set expectations: the talk has three acts—the system, the model choices, and evidence from two task-specific evaluations.</aside>
+      </section>
+
+      <!-- 03 — Harness -->
+      <section class="slide" data-title="My AI Coding Harness">
+        <div class="topline"><div class="abc-lockup"><span class="abc">01</span><span>Build local AI</span></div><span class="slide-no">03</span></div>
+        <div class="section-title"><div class="eyebrow">My daily interface</div><h2>One harness.<br>Models can change.</h2></div>
+        <div class="harness-flow">
+          <div class="flow-column">
+            <div class="flow-label">Where I work</div>
+            <div class="flow-box"><strong>Terminal</strong><span>cmux · Ghostty · agent CLI</span></div>
+            <div class="flow-box"><strong>macOS harnesses</strong><span>OpenCode · ZCode · Codex</span></div>
+          </div>
+          <div class="arrow"></div>
+          <div class="gateway panel blue-edge">
+            <img class="qwen-mark small" src="assets/qwen-symbol.png" alt="">
+            <h3>Stable gateway</h3>
+            <code>dgx-current</code>
+            <p class="tiny muted" style="margin-top:1cqh">LiteLLM routing</p>
+          </div>
+          <div class="arrow"></div>
+          <div class="flow-column">
+            <div class="flow-label">Where inference runs</div>
+            <div class="flow-box" style="border-color:rgba(73,225,168,.35)"><strong>Qwen 3.8 27B</strong><span>Local · DGX Spark</span></div>
+            <div class="flow-box" style="border-color:rgba(93,115,255,.45)"><strong>Qwen 3.8 Max Preview</strong><span>Cloud · Model Studio</span></div>
+          </div>
+        </div>
+        <div class="harness-callout"><strong>The useful abstraction:</strong> my tools keep the same interface while the model and inference stack evolve underneath.</div>
+        <div class="footer-rule"><span>The harness is the product surface</span><span>03 / 10</span></div>
+        <aside class="notes">Avoid listing every tool. The point is the stable interface: the coding environment stays familiar while local and cloud models can be selected behind it. Alibaba Model Studio remains an independent cloud fallback.</aside>
+      </section>
+
+      <!-- 04 — Architecture + photo -->
+      <section class="slide" data-title="Local AI at Home">
+        <div class="topline"><div class="abc-lockup"><span class="abc">01</span><span>Build local AI</span></div><span class="slide-no">04</span></div>
+        <div class="section-title"><div class="eyebrow">From desk to model</div><h2>What “local”<br>actually looks like.</h2></div>
+        <div class="architecture-grid">
+          <figure class="lab-photo panel">
+            <img src="local-setup.jpeg" alt="Jensen's home local AI hardware setup">
+            <figcaption class="photo-caption"><strong>The actual home lab</strong><span>Compact compute, a Mac mini, networking—and honest cable management.</span></figcaption>
+          </figure>
+          <div class="arch-panel panel blue-edge">
+            <div class="eyebrow" style="font-size:.76cqw">The simple architecture</div>
+            <div class="arch-chain">
+              <div class="arch-node"><strong>Mac</strong><span>Coding harness</span></div>
+              <div class="arch-node"><strong>Tailscale</strong><span>Private encrypted access</span></div>
+              <div class="arch-node"><strong>LiteLLM</strong><span>Stable API<br><span class="mono">dgx-current</span></span></div>
+              <div class="arch-node qwen-node"><strong>DGX Spark</strong><span>Qwen 3.8 27B<br>local inference</span></div>
+            </div>
+            <div class="arch-principles">
+              <div class="principle"><strong>Private by default</strong><span>The backend stays on loopback; remote access stays inside the tailnet.</span></div>
+              <div class="principle"><strong>One stable endpoint</strong><span>Apps do not need to know which inference engine is currently underneath.</span></div>
+              <div class="principle"><strong>Start with one Spark</strong><span>A 27B Qwen model is already enough for useful agentic coding work.</span></div>
+              <div class="principle"><strong>Expand later</strong><span>A second node can add capacity without changing the client interface.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-rule"><span>Compute · Network · Router · Model</span><span>04 / 10</span></div>
+        <aside class="notes">This is the practical home recipe: compute, an inference server, private networking, and a stable API. Qwen 27B runs on one Spark; the rest of the system exists so every client does not need bespoke configuration.</aside>
+      </section>
+
+      <!-- 05 — Qwen local/cloud -->
+      <section class="slide" data-title="Local Qwen and Qwen 3.8 Max Preview">
+        <div class="topline"><div class="abc-lockup"><span class="abc">02</span><span>Understand Qwen</span></div><span class="slide-no">05</span></div>
+        <div class="section-title"><div class="official-lockup-plaque"><img src="assets/qwen-lockup.svg" alt="Qwen"></div><div class="eyebrow">Two operating modes</div><h2>Local control.<br>Cloud frontier.</h2></div>
+        <div class="model-grid">
+          <article class="model-card panel coral-edge">
+            <span class="tag local">Local</span>
+            <h3>Qwen 3.8 · 27B</h3><div class="model-name">Running on one DGX Spark</div>
+            <div class="model-list"><div><b>01</b><span>Private repository analysis</span></div><div><b>02</b><span>Long-context agentic workflows</span></div><div><b>03</b><span>Tool calling through my coding harness</span></div><div><b>04</b><span>Infrastructure and data under my control</span></div></div>
+          </article>
+          <article class="model-card panel cloud-card blue-edge">
+            <span class="tag cloud">Cloud / API</span>
+            <h3>Qwen 3.8 Max Preview</h3><div class="model-name">Alibaba Model Studio</div>
+            <div class="model-list"><div><b>01</b><span>Higher frontier capability</span></div><div><b>02</b><span>No local memory ceiling</span></div><div><b>03</b><span>Faster path to new model releases</span></div><div><b>04</b><span>Independent fallback when local is not the right fit</span></div></div>
+          </article>
+        </div>
+        <p class="bridge-caption">This is not local <span class="coral">versus</span> cloud. It is choosing the right operating mode for the work.</p>
+        <div class="footer-rule"><span>Same family · Different constraints</span><span>05 / 10</span></div>
+        <aside class="notes">Make the distinction explicit: Qwen 3.8 Max Preview is not running on the Spark. Local Qwen is about control and useful private capability; Max is the cloud frontier and an intentional independent fallback.</aside>
+      </section>
+
+      <!-- 06 — Code review methodology -->
+      <section class="slide" data-title="Code Review Eval Method">
+        <div class="topline"><div class="abc-lockup"><span class="abc">03</span><span>Eval 01 · Code review</span></div><img class="qwen-mark small" src="assets/qwen-symbol.png" alt=""><span class="slide-no">06</span></div>
+        <div class="section-title"><div class="eyebrow">A real codebase, not a toy prompt</div><h2>Can Qwen audit<br>a working system?</h2></div>
+        <div class="method-grid">
+          <div class="method-pipeline">
+            <div class="method-step panel coral-edge"><div class="num">1</div><div><strong>Freeze the repository</strong><span>Every candidate receives the same immutable application snapshot.</span></div></div>
+            <div class="method-step panel coral-edge"><div class="num">2</div><div><strong>Hide the answer key</strong><span>Gold findings and the 100-point rubric remain evaluator-only.</span></div></div>
+            <div class="method-step panel coral-edge"><div class="num">3</div><div><strong>Use four bounded reviewers</strong><span>Architecture, security, data/workflow, and evidence—then one synthesis.</span></div></div>
+            <div class="method-step panel coral-edge"><div class="num">4</div><div><strong>Cap the report at 20 findings</strong><span>Evidence, prioritisation, remediation, and calibration matter more than verbosity.</span></div></div>
+          </div>
+          <div class="rubric panel blue-edge">
+            <h3>Frozen 100-point rubric</h3>
+            <div class="rubric-bars">
+              <div class="rubric-row"><span>System model</span><i class="rubric-track"><i class="rubric-fill" style="width:28.6%"></i></i><b>10</b></div>
+              <div class="rubric-row"><span>Critical security</span><i class="rubric-track"><i class="rubric-fill" style="width:100%"></i></i><b>35</b></div>
+              <div class="rubric-row"><span>Architecture</span><i class="rubric-track"><i class="rubric-fill" style="width:42.9%"></i></i><b>15</b></div>
+              <div class="rubric-row"><span>Data / workflow</span><i class="rubric-track"><i class="rubric-fill" style="width:42.9%"></i></i><b>15</b></div>
+              <div class="rubric-row"><span>Evidence</span><i class="rubric-track"><i class="rubric-fill" style="width:28.6%"></i></i><b>10</b></div>
+              <div class="rubric-row"><span>Priority / fix</span><i class="rubric-track"><i class="rubric-fill" style="width:28.6%"></i></i><b>10</b></div>
+              <div class="rubric-row"><span>Calibration</span><i class="rubric-track"><i class="rubric-fill" style="width:14.3%"></i></i><b>5</b></div>
+            </div>
+            <div class="method-guard"><strong>Independent safety gate:</strong> deterministic scanning checks whether the native answer reproduced protected values.</div>
+          </div>
+        </div>
+        <div class="footer-rule"><span>Architecture + security audit · read-only</span><span>06 / 10</span></div>
+        <aside class="notes">Call this a real-world code review, then clarify that the exact task is a read-only architecture and security audit. It is designed to test system understanding, evidence quality, and prioritisation—not patch generation.</aside>
+      </section>
+
+      <!-- 07 — Code review results -->
+      <section class="slide" data-title="Code Review Eval Results">
+        <div class="topline"><div class="abc-lockup"><span class="abc">03</span><span>Eval 01 · Results</span></div><img class="qwen-mark small" src="assets/qwen-symbol.png" alt=""><span class="slide-no">07</span></div>
+        <div class="section-title"><div class="eyebrow">Audit quality · out of 100</div><h2>Local gets close.<br>Max goes further.</h2></div>
+        <div class="results-layout">
+          <div class="chart panel">
+            <div class="bar-row"><div class="bar-name"><strong>Local Qwen 27B · Low</strong><span>38m 11s</span><div class="result-chips"><span class="tag local">Local</span><span class="tag fail">Secret fail</span></div></div><div class="bar-track"><div class="bar-fill" style="width:80%"></div></div><div class="bar-score">80</div></div>
+            <div class="bar-row"><div class="bar-name"><strong>Local Qwen 27B · XHigh</strong><span>45m 37s</span><div class="result-chips"><span class="tag local">Local</span><span class="tag fail">Secret fail</span></div></div><div class="bar-track"><div class="bar-fill" style="width:87.5%"></div></div><div class="bar-score">87.5</div></div>
+            <div class="bar-row"><div class="bar-name"><strong>Hosted control</strong><span>5m 46s</span><div class="result-chips"><span class="tag cloud">Hosted</span><span class="tag pass">Secret pass</span></div></div><div class="bar-track"><div class="bar-fill controlbar" style="width:91%"></div></div><div class="bar-score">91</div></div>
+            <div class="bar-row"><div class="bar-name"><strong>Qwen 3.8 Max Preview</strong><span>14m 08s</span><div class="result-chips"><span class="tag cloud">Cloud</span><span class="tag pass">Secret pass</span></div></div><div class="bar-track"><div class="bar-fill cloudbar" style="width:94%"></div></div><div class="bar-score">94</div></div>
+            <p class="micro muted" style="margin-top:1.3cqh">One repository · one scored run per profile · duration includes agents, tools, waiting, and synthesis—not raw generation speed.</p>
+          </div>
+          <aside class="result-callout panel blue-edge">
+            <div><div class="hero-stat">96%</div><div class="hero-stat-label">Local Qwen reached 96% of the hosted control score.</div></div>
+            <div class="safety-note"><strong class="green">Capability:</strong> local XHigh found every critical security anchor.<br><br><strong class="coral">Safety:</strong> it also reproduced protected values. Quality and safety must be reported separately.</div>
+          </aside>
+        </div>
+        <div class="footer-rule"><span>Qwen 3.8 Max Preview: 94 · Hosted control: 91</span><span>07 / 10</span></div>
+        <aside class="notes">The headline is not parity. Local Qwen reached 87.5 versus the control at 91—96.2% of its score—and found every critical security anchor. Qwen 3.8 Max Preview scored 94. Then state the uncomfortable part: local Qwen failed the separate protected-value check. Real evaluations need both capability and safety.</aside>
+      </section>
+
+      <!-- 08 — Insurance eval -->
+      <section class="slide" data-title="Insurance Eval and Demo">
+        <div class="topline"><div class="abc-lockup"><span class="abc">03</span><span>Eval 02 · Product build</span></div><img class="qwen-mark small" src="assets/qwen-symbol.png" alt=""><span class="slide-no">08</span></div>
+        <div class="section-title"><div class="eyebrow">From a real brief to a working PWA</div><h2>Can Qwen build<br>the product?</h2></div>
+        <div class="insurance-grid">
+          <div class="insurance-left">
+            <div class="prompt-box panel coral-edge"><div class="eyebrow" style="font-size:.68cqw">Initial prompt</div><blockquote>“Build the application described in <span class="mono">spec/REQUIREMENTS.md</span>. The requirement spec and deliverable contract are binding. Place the final static app in the specified run directory. Use the mock data unchanged.”</blockquote></div>
+            <div class="mini-pipeline"><div class="mini-step">Frozen brief<br>+ mock data</div><div class="mini-step">Qwen builds<br>independently</div><div class="mini-step">Playwright<br>390 × 844</div></div>
+          </div>
+          <div class="video-shell no-video" id="videoShell">
+            <video id="demoVideo" src="assets/insurance-demo.mp4" controls preload="metadata" playsinline></video>
+            <div class="video-placeholder"><div><strong>&lt;demo video&gt;</strong><span>40-second four-model build-off walkthrough</span></div></div>
+          </div>
+          <div class="score-strip">
+            <div class="score-card"><strong>130 / 130</strong><span>Local Qwen 3.8 27B · 100 functional + 30 build quality</span></div>
+            <div class="score-card"><strong>130 / 130</strong><span>Qwen 3.8 Max Preview · 100 functional + 30 build quality</span></div>
+            <div class="score-card runtime"><strong>Harness runtime</strong><span>Local 90.7s · Max 84.0s<br>Model build time not recorded</span></div>
+          </div>
+        </div>
+        <div class="footer-rule"><span>Contract compliance · UX reviewed separately</span><span>08 / 10</span></div>
+        <aside class="notes">We turned a redacted real insurance-broker request into one frozen requirements document and unchanged mock data. Every model got the same minimal prompt. The design-agnostic Playwright harness drove real journeys at a 390×844 viewport. Play the 40-second video — four models building the same brief side by side. Both Qwen runs passed all 130 automated points. Say “satisfied this product contract,” not “production-ready.” The 90.7s and 84.0s figures are harness runtime only.</aside>
+      </section>
+
+      <!-- 09 — Takeaways -->
+      <section class="slide" data-title="Three Things I Learned">
+        <div class="topline"><div class="abc-lockup"><span class="abc">ABC</span><span>What I learned</span></div><span class="slide-no">09</span></div>
+        <div class="section-title"><div class="eyebrow">After building and evaluating</div><h2>Three things<br>I would keep.</h2></div>
+        <div class="takeaway-grid">
+          <article class="takeaway panel coral-edge"><div class="index">01 · SYSTEM</div><h3>Local AI is more than a model.</h3><p>The useful product is the complete path: harness, private network, stable API, inference engine, and model.</p></article>
+          <article class="takeaway panel"><div class="index blue">02 · EVIDENCE</div><h3>Evaluate the work you actually do.</h3><p>Repository audits and product builds tell me more than a generic leaderboard ever could.</p></article>
+          <article class="takeaway panel"><div class="index green">03 · JUDGMENT</div><h3>Capability is not the only score.</h3><p>Safety, speed, sustainable agent capacity, and human verification stay part of the decision.</p></article>
+        </div>
+        <p class="closing-line">Local when control matters. Cloud when frontier capability matters. <span class="blue">Evaluate both.</span></p>
+        <div class="footer-rule"><span>Run local. Measure honestly.</span><span>09 / 10</span></div>
+        <aside class="notes">Land the argument: local AI is a system, not just downloaded weights; task-specific evaluations matter; and quality does not cancel safety. Local and cloud are complementary operating modes.</aside>
+      </section>
+
+      <!-- 10 — Thanks -->
+      <section class="slide thanks" data-title="Thank You">
+        <div class="thanks-content">
+          <img class="qwen-mark" src="assets/qwen-symbol.png" alt="Qwen">
+          <h2>Thank you.</h2>
+          <p class="closing-sub">Run local. Build together. Evaluate what matters.</p>
+          <div class="identity">Jensen Loke · CEO, Success IT · Qwen Ambassador</div>
+          <div class="thanks-socials"><a href="https://x.com/jensenloke" target="_blank" rel="noopener">X · @jensenloke</a><a href="https://www.linkedin.com/in/jensenloke/" target="_blank" rel="noopener">LinkedIn · /in/jensenloke</a></div>
+        </div>
+        <a class="thanks-qr" href="https://www.linkedin.com/in/jensenloke/" target="_blank" rel="noopener"><img src="assets/jensen-linkedin-qr.svg" alt="QR code to connect with Jensen Loke on LinkedIn"><strong>Connect with Jensen</strong><span>linkedin.com/in/jensenloke</span></a>
+        <img class="thanks-mascot" src="assets/qwen-capybara-coding.png" alt="Qwen coding capybara">
+        <div class="footer-rule"><span>Agentic Builders Collective · Singapore</span><span>10 / 10</span></div>
+        <aside class="notes">Thank the audience and invite questions. Leave the LinkedIn QR and @jensenloke visible while the conversation continues.</aside>
+      </section>
+    </div>
+  </main>
+
+  <nav class="controls" aria-label="Presentation controls">
+    <button type="button" id="prev" aria-label="Previous slide">←</button>
+    <span class="counter" id="counter">1 / 10</span>
+    <button type="button" id="next" aria-label="Next slide">→</button>
+    <button type="button" id="fullscreen" aria-label="Toggle fullscreen">⛶</button>
+  </nav>
+  <div class="progress" id="progress"></div>
+
+  <script>
+    (() => {
+      const slides = [...document.querySelectorAll('.slide')];
+      const counter = document.getElementById('counter');
+      const progress = document.getElementById('progress');
+      let index = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.replace('#slide-', ''), 10) || 1) - 1));
+
+      function show(next, updateHash = true) {
+        index = Math.max(0, Math.min(slides.length - 1, next));
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+        document.title = `${slides[index].dataset.title} — Jensen`;
+        if (updateHash) history.replaceState(null, '', `#slide-${index + 1}`);
+      }
+
+      document.getElementById('prev').addEventListener('click', () => show(index - 1));
+      document.getElementById('next').addEventListener('click', () => show(index + 1));
+      document.getElementById('fullscreen').addEventListener('click', async () => {
+        if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+        else await document.exitFullscreen();
+      });
+
+      document.addEventListener('keydown', event => {
+        if (['ArrowRight', 'PageDown', 'Enter'].includes(event.key) || (event.key === ' ' && !event.shiftKey)) { event.preventDefault(); show(index + 1); }
+        if (['ArrowLeft', 'PageUp', 'Backspace'].includes(event.key) || (event.key === ' ' && event.shiftKey)) { event.preventDefault(); show(index - 1); }
+        if (event.key === 'Home') show(0);
+        if (event.key === 'End') show(slides.length - 1);
+        if (event.key.toLowerCase() === 'f') document.getElementById('fullscreen').click();
+        if (event.key.toLowerCase() === 'n') document.body.classList.toggle('show-notes');
+      });
+
+      let touchStart = null;
+      document.addEventListener('touchstart', event => { touchStart = event.changedTouches[0].clientX; }, { passive: true });
+      document.addEventListener('touchend', event => {
+        if (touchStart === null) return;
+        const delta = event.changedTouches[0].clientX - touchStart;
+        if (Math.abs(delta) > 50) show(index + (delta < 0 ? 1 : -1));
+        touchStart = null;
+      }, { passive: true });
+
+      const video = document.getElementById('demoVideo');
+      const videoShell = document.getElementById('videoShell');
+      video.addEventListener('loadedmetadata', () => videoShell.classList.remove('no-video'));
+      video.addEventListener('error', () => videoShell.classList.add('no-video'));
+
+      show(index, false);
+    })();
+  </script>
+</body>
+</html>

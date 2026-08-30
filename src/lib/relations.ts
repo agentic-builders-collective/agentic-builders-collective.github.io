@@ -16,6 +16,7 @@ export type EventEntry = {
   data: {
     title: string;
     date: Date | string;
+    time?: string;
   };
 };
 
