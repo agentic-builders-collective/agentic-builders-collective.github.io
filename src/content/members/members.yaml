@@ -365,3 +365,16 @@
   twitter: https://x.com/cchakons
   addedAt: "2026-08-22T06:01:13Z"
   featured: false
+- id: aung-myint-oo
+  name: Aung Myint Oo
+  aliases:
+    - AMO
+  tagline: AI & robotics engineer building perception, agents, and learning systems that compound over time.
+  company: Salesbugle
+  website: https://aungmyintoo.com
+  linkedin: https://www.linkedin.com/in/aung-myint-oo99/
+  github: https://github.com/davidamo9
+  youtube: ""
+  twitter: ""
+  addedAt: "2026-08-31T04:12:14Z"
+  featured: false
