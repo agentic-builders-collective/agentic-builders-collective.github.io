@@ -200,8 +200,8 @@
   urlLabel: "Lecture"
   slidesUrl: https://github.com/gauravmm/2026-07-On-Speculative-Decoding/releases
   videoUrl: ""
-  screenshot: ""
-  summary: A speculative decoder is a small draft model that guesses the next few tokens so the large model can verify several at once. Five rules for when the speedup actually pays off, drawn from 199 benchmark runs on a single DGX Spark.
+  screenshot: /showcase/presentations/on-speculative-decoding.jpg
+  summary: Five rules for when a draft model actually makes your big model faster — and when it doesn't. 199 benchmarks on a DGX Spark.
   links:
     - label: Open project
       url: https://github.com/gauravmm/2026-07-On-Speculative-Decoding
