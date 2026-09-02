@@ -390,6 +390,10 @@ const chatDigests = [
       display: block;
     }
 
+    .events-archive-section {
+      margin-top: 32px;
+    }
+
     .collapsible-heading {
       align-items: center;
       cursor: pointer;
@@ -656,7 +660,9 @@ const chatDigests = [
         <p>No external events listed right now. Have one to share? <a href={contributionLinks.event} target="_blank" rel="noopener">Submit an external event</a>.</p>
       </div>
     ) : (
-      <div class="list">
+      <>
+        {upcomingExternal.length > 0 && (
+          <div class="list">
         {upcomingExternal.map((event) => (
           <div class="list-item" id={event.id}>
             <div class="list-item-header">
@@ -712,55 +718,64 @@ const chatDigests = [
             </div>
           </div>
         ))}
-        {pastExternal.map((event) => (
-          <div class="list-item" id={event.id}>
-            <div class="list-item-header">
-              <a class="list-item-title" href={getEventHref(event.id)}>{event.data.title}</a>
-              <div class="card-meta">
-                <span>{new Date(event.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
-                {event.data.time && <span>{formatTime(event.data.time)}</span>}
-                {event.data.venue && (
-                  <span>
-                    {event.data.venueUrl ? (
-                      <a class="muted-link events-muted-link" href={event.data.venueUrl} target="_blank" rel="noopener">{event.data.venue}</a>
-                    ) : (
-                      event.data.venue
-                    )}
-                  </span>
-                )}
-                {getSharedBy(event).length > 0 && (
-                  <span>
-                    Shared by{" "}
-                    {getSharedBy(event).map((person, index) => (
-                      <>
-                        {person.href ? (
-                          <a class="muted-link events-muted-link" href={person.href}>{person.name}</a>
-                        ) : (
-                          person.name
-                        )}
-                        {index < getSharedBy(event).length - 1 && ", "}
-                      </>
-                    ))}
-                  </span>
-                )}
-              </div>
-            </div>
-            {event.data.tags.length > 0 && (
-              <ul class="tag-list" style="margin-top: 8px;">
-                {event.data.tags.map((tag) => (
-                  <li class="tag">{tag}</li>
-                ))}
-              </ul>
-            )}
-            <div class="list-item-body">
-              {(() => {
-                const Body = eventBodies.get(event.id);
-                return Body ? <Body /> : null;
-              })()}
-            </div>
           </div>
-        ))}
-      </div>
+        )}
+        {pastExternal.length > 0 && (
+          <details class="events-section events-archive-section" id="past-external">
+            <summary class="section-label collapsible-heading">Past External Events</summary>
+            <div class="list">
+              {pastExternal.map((event) => (
+                <div class="list-item" id={event.id}>
+                  <div class="list-item-header">
+                    <a class="list-item-title" href={getEventHref(event.id)}>{event.data.title}</a>
+                    <div class="card-meta">
+                      <span>{new Date(event.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
+                      {event.data.time && <span>{formatTime(event.data.time)}</span>}
+                      {event.data.venue && (
+                        <span>
+                          {event.data.venueUrl ? (
+                            <a class="muted-link events-muted-link" href={event.data.venueUrl} target="_blank" rel="noopener">{event.data.venue}</a>
+                          ) : (
+                            event.data.venue
+                          )}
+                        </span>
+                      )}
+                      {getSharedBy(event).length > 0 && (
+                        <span>
+                          Shared by{" "}
+                          {getSharedBy(event).map((person, index) => (
+                            <>
+                              {person.href ? (
+                                <a class="muted-link events-muted-link" href={person.href}>{person.name}</a>
+                              ) : (
+                                person.name
+                              )}
+                              {index < getSharedBy(event).length - 1 && ", "}
+                            </>
+                          ))}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  {event.data.tags.length > 0 && (
+                    <ul class="tag-list" style="margin-top: 8px;">
+                      {event.data.tags.map((tag) => (
+                        <li class="tag">{tag}</li>
+                      ))}
+                    </ul>
+                  )}
+                  <div class="list-item-body">
+                    {(() => {
+                      const Body = eventBodies.get(event.id);
+                      return Body ? <Body /> : null;
+                    })()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </details>
+        )}
+      </>
     )}
     <p style="margin-top: 16px; color: var(--muted); opacity: 0.65;">
       Want to list an external event? <a href={contributionLinks.event} target="_blank" rel="noopener">Follow the contribution guide</a> and use <code>kind: external</code>.
@@ -839,7 +854,7 @@ const chatDigests = [
     )}
   </details>
 
-  <details class="events-section" id="learning" open>
+  <details class="events-section" id="learning">
     <summary class="section-label collapsible-heading">Learning</summary>
     {pastLearning.length === 0 ? (
       <p>No learning sessions yet. <a class="muted-link" href={contributionLinks.event} target="_blank" rel="noopener">Add a learning event by submitting a pull request</a></p>
