@@ -378,3 +378,17 @@
   twitter: https://x.com/amodev
   addedAt: "2026-08-31T04:12:14Z"
   featured: false
+
+- id: leong-han-wai
+  name: Leong Han Wai
+  aliases:
+    - Han
+  tagline: ""
+  company: IntelWave
+  website: https://www.intelwave.ai
+  linkedin: https://www.linkedin.com/in/hanwai
+  github: ""
+  youtube: ""
+  twitter: ""
+  addedAt: "2026-09-04T03:49:33Z"
+  featured: false
