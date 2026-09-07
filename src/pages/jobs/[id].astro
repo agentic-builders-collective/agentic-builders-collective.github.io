@@ -34,7 +34,7 @@ const formatEmploymentTypes = (job: { data: { employmentType?: string; employmen
   title={`${job.data.title} at ${job.data.company}`}
   description={`${job.data.title} at ${job.data.company}. Submitted to Agentic Builders Collective.`}
 >
-  <p><a class="muted-link" href="/jobs/">Back to jobs</a></p>
+  <p><a class="muted-link job-back-link" href="/jobs/">Back to jobs</a></p>
 
   <article class="job-detail">
     <header class="job-detail-header">
@@ -77,6 +77,20 @@ const formatEmploymentTypes = (job: { data: { employmentType?: string; employmen
 </BaseLayout>
 
 <style>
+  .job-back-link::before {
+    content: "◀";
+    display: inline-block;
+    font-size: 13px;
+    line-height: 1;
+    margin-right: 8px;
+    opacity: 0.5;
+    transform: translateY(-1px);
+  }
+
+  .job-back-link::after {
+    content: none;
+  }
+
   .job-detail {
     display: grid;
     gap: 24px;
