@@ -9,7 +9,7 @@ contactEmail: tech@intelwave.ai
 postedAt: 2026-09-04
 expiresAt: 2026-12-03
 submittedBy:
-  personId: han
+  personId: leong-han-wai
 tags:
   - agentic-ai
   - ai-systems
