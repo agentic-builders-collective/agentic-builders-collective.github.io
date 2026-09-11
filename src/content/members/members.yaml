@@ -392,6 +392,19 @@
   twitter: ""
   addedAt: "2026-09-04T03:49:33Z"
   featured: false
+- id: jan-gasparic-gray
+  name: Jan Gasparic-Gray
+  aliases: []
+  tagline: Learning through Building | Forward Deployed Barista
+  company: Preliminary
+  website: https://preliminary.md
+  linkedin: https://www.linkedin.com/in/jangasparic/
+  github: https://github.com/JGSP1
+  youtube: ""
+  twitter: https://twitter.com/jgasparic
+  addedAt: "2026-09-11T07:13:03Z"
+  featured: false
+
 - id: alex-teo
   name: Alex Teo
   aliases:
