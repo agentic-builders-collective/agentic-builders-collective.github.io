@@ -392,7 +392,6 @@
   twitter: ""
   addedAt: "2026-09-04T03:49:33Z"
   featured: false
-
 - id: jan-gasparic-gray
   name: Jan Gasparic-Gray
   aliases: []
@@ -404,4 +403,19 @@
   youtube: ""
   twitter: https://twitter.com/jgasparic
   addedAt: "2026-09-11T07:13:03Z"
+  featured: false
+
+- id: alex-teo
+  name: Alex Teo
+  aliases:
+    - Alex T
+  tagline: >-
+    Tinkerer and teacher. Building things I personally want: AI voice
+    rehearsals, agent-native travel planning, a custom agent team...
+    Probably spends too much time talking to my agents.
+  company: Extraudinary / Skyward Works
+  website: https://alexteo.com
+  linkedin: https://www.linkedin.com/in/alexgteo/
+  github: https://github.com/agteo
+  addedAt: "2026-09-09T05:05:00Z"
   featured: false
