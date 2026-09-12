@@ -419,3 +419,16 @@
   github: https://github.com/agteo
   addedAt: "2026-09-09T05:05:00Z"
   featured: false
+
+- id: pavel-piankov
+  name: Pavel Piankov
+  tagline: >-
+    Builds control and evidence for AI that acts inside a business: a
+    kernel-level read gate, a secrets guard that fires before paste, a policy
+    gateway, and a ledger that records what each agent was asked to do and
+    whether it did it. Singapore company, Johor desk.
+  company: Obsta Labs
+  website: https://obstalabs.dev
+  github: https://github.com/ppiankov
+  addedAt: "2026-09-12T07:20:00Z"
+  featured: false
