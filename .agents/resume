@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# This static Astro site has no services or credentials to restore on wake.
+exit 0

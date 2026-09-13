@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+started_at=$SECONDS
+
+step() {
+  printf '\n==> %s\n' "$1"
+}
+
+step "Checking Node.js"
+node_version="$(node --version | sed 's/^v//')"
+if [[ "$(printf '%s\n' '22.12.0' "$node_version" | sort -V | head -n1)" != "22.12.0" ]]; then
+  printf 'Node.js 22.12.0 or newer is required; found %s\n' "$node_version" >&2
+  exit 1
+fi
+
+step "Activating pnpm 10.24.0"
+corepack enable pnpm
+corepack prepare pnpm@10.24.0 --activate
+
+step "Initializing repository submodules"
+git submodule update --init --recursive
+
+step "Installing locked dependencies"
+corepack pnpm install --frozen-lockfile
+
+printf '\nSetup complete in %ss.\n' "$((SECONDS - started_at))"

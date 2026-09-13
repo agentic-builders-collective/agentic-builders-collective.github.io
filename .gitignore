@@ -28,3 +28,6 @@ pnpm-debug.log*
 
 # local planning artifacts
 /projects/
+
+# Amp orb portal metadata
+.amp/portals/
