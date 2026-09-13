@@ -1,16 +1,22 @@
 // Mirrored from `logo-generator/app.js` so the site and generator share the same palette set.
 export const logoGradients = [
-  { key: "sunset", name: "Sunset", colors: ["#ff9966", "#ff5e62"] },
-  { key: "ocean", name: "Ocean", colors: ["#667eea", "#764ba2"] },
-  { key: "fire", name: "Fire", colors: ["#ff0844", "#ffb199"] },
-  { key: "matrix", name: "Matrix", colors: ["#00ff41", "#008f11"] },
-  { key: "nebula", name: "Nebula", colors: ["#654ea3", "#eaafc8"] },
+  { key: "sunset", name: "Sunset", colors: ["#ffb36b", "#ff5f6d"] },
+  { key: "ocean", name: "Ocean", colors: ["#7aa2ff", "#a78bfa"] },
+  { key: "fire", name: "Fire", colors: ["#ff335f", "#ff9a62"] },
+  { key: "matrix", name: "Matrix", colors: ["#00ff41", "#00a82d"] },
+  { key: "nebula", name: "Nebula", colors: ["#9b7bff", "#f09cc4"] },
   { key: "gold", name: "Gold", colors: ["#f7971e", "#ffd200"] },
-  { key: "forest", name: "Forest", colors: ["#134e5e", "#71b280"] },
-  { key: "mint", name: "Mint", colors: ["#00d2ff", "#3a7bd5"] },
-  { key: "ice", name: "Ice", colors: ["#e0eafc", "#cfdef3"] },
-  { key: "coral", name: "Coral", colors: ["#ff9a9e", "#fad0c4"] },
-  { key: "aurora", name: "Aurora", colors: ["#a8ff78", "#78ffd6"] }
+  { key: "forest", name: "Forest", colors: ["#42b883", "#79d2a6"] },
+  { key: "mint", name: "Mint", colors: ["#25d9ff", "#5b8cff"] },
+  { key: "ice", name: "Ice", colors: ["#78b5ff", "#a5d8ff"] },
+  { key: "coral", name: "Coral", colors: ["#ff7e8b", "#ffb3a7"] },
+  { key: "aurora", name: "Aurora", colors: ["#b2ff7a", "#68e6c2"] },
+  { key: "neon", name: "Neon", colors: ["#f472ff", "#60a5fa"] },
+  { key: "ink", name: "Ink", colors: ["#0f172a", "#334155"] },
+  { key: "cobalt", name: "Cobalt", colors: ["#1d4ed8", "#0f172a"] },
+  { key: "evergreen", name: "Evergreen", colors: ["#14532d", "#0f766e"] },
+  { key: "berry", name: "Berry", colors: ["#86198f", "#9f1239"] },
+  { key: "ruby", name: "Ruby", colors: ["#991b1b", "#b91c1c"] }
 ] as const;
 
 export type LogoGradient = (typeof logoGradients)[number];
