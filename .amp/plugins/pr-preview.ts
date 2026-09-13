@@ -107,6 +107,10 @@ export default async function (amp: PluginAPI) {
     return;
   }
   const workspaceRoot = amp.helpers.filePathFromURI(workspaceURI);
+  const previewAgent = amp.createAgent({
+    extends: "low",
+    display: { label: "PR Preview", color: "#ef4444" },
+  });
 
   const registration = await amp.createWebhook({
     key: "github-pr-preview-v1",
@@ -129,10 +133,8 @@ export default async function (amp: PluginAPI) {
       }
 
       try {
-        const agent = await ctx.thread.agent();
-        const child = await agent.createThread({
+        const child = await previewAgent.createThread({
           executor: "orb",
-          parentThreadID: ctx.thread.id,
           visibility: "private",
           multiplayerTTLSeconds: null,
         });

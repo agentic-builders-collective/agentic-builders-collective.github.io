@@ -1,6 +1,6 @@
 # Pull request preview automation
 
-Amp starts a private orb thread when GitHub sends an `opened`, `reopened`, or `synchronize` pull request event. The owning plugin is `.amp/plugins/pr-preview.ts`.
+Amp starts a private, top-level orb thread in Low mode when GitHub sends an `opened`, `reopened`, or `synchronize` pull request event. The owning plugin is `.amp/plugins/pr-preview.ts`. Preview threads use a red `PR Preview` agent label so they stand out in Amp; the Plugin API does not currently expose the color of the entire thread row.
 
 ## Preview phase
 
