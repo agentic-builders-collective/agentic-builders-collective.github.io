@@ -113,7 +113,7 @@ export default async function (amp: PluginAPI) {
   });
 
   const registration = await amp.createWebhook({
-    key: "github-pr-preview-v1",
+    key: "github-pr-preview-v2",
     headers: ["x-github-event", "x-github-delivery", "x-hub-signature-256"],
     handler: async (event: WebhookEvent, ctx) => {
       if (event.headers["x-github-event"] !== "pull_request") return;
