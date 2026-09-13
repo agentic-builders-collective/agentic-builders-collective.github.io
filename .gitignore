@@ -26,6 +26,10 @@ pnpm-debug.log*
 # local agent notes
 .codex/
 
+# local Amp runtime state
+.amp/portals/
+.amp/runtime/
+
 # local planning artifacts
 /projects/
 

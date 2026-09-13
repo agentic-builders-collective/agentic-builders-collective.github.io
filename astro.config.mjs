@@ -23,6 +23,6 @@ export default defineConfig({
   site: "https://www.agenticbuilders.sg",
   server: {
     host: true,
-    allowedHosts: ["yjmbpro", "yjmbpro.local"],
+    allowedHosts: ["yjmbpro", "yjmbpro.local", ".onamp.dev"],
   },
 });
