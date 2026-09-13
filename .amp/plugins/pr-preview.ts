@@ -1,6 +1,7 @@
+// @amp-agent-mode {"key":"pr-preview-low","label":"PR Preview","color":"#ef4444"}
 import type { PluginAPI, WebhookEvent } from "@ampcode/plugin";
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { mkdir, open, rm, writeFile } from "node:fs/promises";
+import { mkdir, open, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export const description = "Starts a private preview orb for signed GitHub pull request events.";
@@ -100,16 +101,24 @@ async function claimEvent(root: string, eventID: string): Promise<{ path: string
 }
 
 export default async function (amp: PluginAPI) {
-  const secret = process.env.ABC_GITHUB_WEBHOOK_SECRET;
+  const environmentSecret = process.env.ABC_GITHUB_WEBHOOK_SECRET;
   const workspaceURI = amp.system.workspaceRoot;
-  if (!secret || !workspaceURI || amp.system.executor.kind !== "remote") {
+  if (!environmentSecret || !workspaceURI || amp.system.executor.kind !== "remote") {
     amp.logger.log("PR preview webhook inactive: it requires an orb and ABC_GITHUB_WEBHOOK_SECRET.");
     return;
   }
   const workspaceRoot = amp.helpers.filePathFromURI(workspaceURI);
+  const runtimeSecretPath = join(workspaceRoot, ".amp", "runtime", "github-webhook-secret");
   const previewAgent = amp.createAgent({
     extends: "low",
     display: { label: "PR Preview", color: "#ef4444" },
+  });
+  amp.registerAgentMode({
+    key: "pr-preview-low",
+    label: "PR Preview",
+    description: "Reviews pull requests in a fresh top-level Low-mode orb with a preview portal.",
+    color: "#ef4444",
+    agent: previewAgent.definition,
   });
 
   const registration = await amp.createWebhook({
@@ -118,6 +127,7 @@ export default async function (amp: PluginAPI) {
     handler: async (event: WebhookEvent, ctx) => {
       if (event.headers["x-github-event"] !== "pull_request") return;
       const signature = event.headers["x-hub-signature-256"] ?? "";
+      const secret = await readFile(runtimeSecretPath, "utf8").then((value) => value.trim()).catch(() => environmentSecret);
       if (!verifyGitHubSignature(event.body, signature, secret)) {
         ctx.logger.log("Rejected GitHub webhook with an invalid signature", event.id);
         return;
