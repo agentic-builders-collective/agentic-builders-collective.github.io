@@ -8,11 +8,11 @@ builtWith:
   - SwiftUI
   - Model Context Protocol
 featured: false
-summary: Secret redaction on the way out — an agent's file reads, shell commands, and outbound API traffic are scanned locally and replaced with typed placeholders before they reach a model.
+summary: Secret redaction for AI coding agents — file reads and outbound API requests are rewritten with typed placeholders before they leave the machine, and shell commands carrying credentials are blocked before they run.
 date: 2026-09-14
 ---
 
-Every coding agent ships file contents, command output, and tool results to a cloud API. Pastewatch sits on the paths where that happens. Its MCP server returns redacted file reads and restores the originals in the file it writes back, so the agent edits code it never actually saw. A pre-execution hook blocks shell commands that carry a connection string or a token. A local proxy scans Anthropic-shaped request bodies and redacts whatever the hooks missed, including traffic from subagents.
+Every coding agent ships file contents, command output, and tool results to a cloud API. Pastewatch sits on the paths where that happens. Its MCP server returns redacted file reads and restores the originals in the file it writes back, so the agent edits code it never actually saw. A pre-execution hook blocks shell commands that carry a connection string or a token — those come from the model rather than travelling to it, so they are stopped before execution rather than rewritten. A local proxy scans Anthropic-shaped request bodies and redacts whatever the hooks missed, including traffic from subagents.
 
 Detection is regex across about thirty pattern types. Mutation fires only on intrinsic evidence — a sourced provider token, a complete private key, a Luhn-valid card — and `--severity` changes how much it tells you, never what it rewrites. Ambiguous matches are reported and left untouched. The asymmetry is deliberate: a false positive corrupts a working agent response, so the tool would rather miss.
 
