@@ -1,5 +1,5 @@
 // @amp-agent-mode {"key":"pr-preview-low","label":"PR Preview","color":"#ef4444"}
-import type { PluginAPI, WebhookEvent } from "@ampcode/plugin";
+import type { PluginAPI, ThreadID, WebhookEvent } from "@ampcode/plugin";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { mkdir, open, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -100,6 +100,35 @@ async function claimEvent(root: string, eventID: string): Promise<{ path: string
   }
 }
 
+export async function claimPullRequest(root: string, pullRequest: number): Promise<{ path: string; claimed: boolean }> {
+  const directory = join(root, ".amp", "runtime", "pr-preview-pull-requests");
+  await mkdir(directory, { recursive: true });
+  const path = join(directory, `${pullRequest}.json`);
+  try {
+    const file = await open(path, "wx", 0o600);
+    await file.close();
+    return { path, claimed: true };
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "EEXIST") return { path, claimed: false };
+    throw error;
+  }
+}
+
+export async function readPreviewThreadID(path: string): Promise<ThreadID> {
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    const contents = await readFile(path, "utf8");
+    if (contents.trim()) {
+      const threadID: unknown = JSON.parse(contents).threadID;
+      if (typeof threadID === "string" && /^T-[0-9a-f-]+$/.test(threadID)) {
+        return threadID as ThreadID;
+      }
+      throw new Error("Stored PR preview thread ID is invalid.");
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  throw new Error("Timed out waiting for the PR preview thread to be created.");
+}
+
 export default async function (amp: PluginAPI) {
   const environmentSecret = process.env.ABC_GITHUB_WEBHOOK_SECRET;
   const workspaceURI = amp.system.workspaceRoot;
@@ -142,21 +171,39 @@ export default async function (amp: PluginAPI) {
         return;
       }
 
+      const pullRequestClaim = await claimPullRequest(workspaceRoot, request.number);
       try {
-        const child = await previewAgent.createThread({
-          executor: "orb",
-          visibility: "private",
-          multiplayerTTLSeconds: null,
-        });
-        await child.appendUserMessage({ type: "user-message", content: buildPreviewPrompt(request) });
+        let threadID: ThreadID;
+        if (pullRequestClaim.claimed) {
+          const child = await previewAgent.createThread({
+            executor: "orb",
+            visibility: "private",
+            multiplayerTTLSeconds: null,
+          });
+          threadID = child.id;
+          await writeFile(
+            pullRequestClaim.path,
+            `${JSON.stringify({ pullRequest: request.number, threadID })}\n`,
+            { mode: 0o600 },
+          );
+          await child.appendUserMessage({ type: "user-message", content: buildPreviewPrompt(request) });
+          ctx.logger.log("Started PR preview thread", threadID, `for #${request.number}`);
+        } else {
+          threadID = await readPreviewThreadID(pullRequestClaim.path);
+          await amp.threads.get(threadID).appendUserMessage(
+            { type: "user-message", content: buildPreviewPrompt(request) },
+            { steer: true },
+          );
+          ctx.logger.log("Updated PR preview thread", threadID, `for #${request.number}`);
+        }
         await writeFile(
           claim.path,
-          `${JSON.stringify({ eventID: event.id, deliveryID, pullRequest: request.number, headSha: request.headSha, threadID: child.id })}\n`,
+          `${JSON.stringify({ eventID: event.id, deliveryID, pullRequest: request.number, headSha: request.headSha, threadID })}\n`,
           { mode: 0o600 },
         );
-        ctx.logger.log("Started PR preview thread", child.id, `for #${request.number}`);
       } catch (error) {
         await rm(claim.path, { force: true });
+        if (pullRequestClaim.claimed) await rm(pullRequestClaim.path, { force: true });
         throw error;
       }
     },

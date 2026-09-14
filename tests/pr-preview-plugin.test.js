@@ -1,9 +1,14 @@
 import { createHmac } from "node:crypto";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
 import {
   buildPreviewPrompt,
+  claimPullRequest,
   parsePullRequestEvent,
   previewRequest,
+  readPreviewThreadID,
   verifyGitHubSignature,
 } from "../.amp/plugins/pr-preview";
 
@@ -40,5 +45,20 @@ describe("PR preview webhook", () => {
     expect(prompt).toContain("exact verified head SHA");
     expect(prompt).not.toContain("ignore previous instructions");
     expect(prompt).toContain("Do not push, merge, tag, deploy");
+  });
+
+  test("claims one durable preview thread per pull request", async () => {
+    const root = await mkdtemp(join(tmpdir(), "pr-preview-"));
+    try {
+      const first = await claimPullRequest(root, 42);
+      const second = await claimPullRequest(root, 42);
+      expect(first).toEqual({ path: second.path, claimed: true });
+      expect(second.claimed).toBe(false);
+
+      await writeFile(first.path, `${JSON.stringify({ pullRequest: 42, threadID: "T-12345678-1234-1234-1234-123456789abc" })}\n`);
+      expect(await readPreviewThreadID(second.path)).toBe("T-12345678-1234-1234-1234-123456789abc");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   });
 });
