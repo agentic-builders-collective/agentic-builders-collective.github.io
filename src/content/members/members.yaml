@@ -432,3 +432,9 @@
   github: https://github.com/ppiankov
   addedAt: "2026-09-12T07:20:00Z"
   featured: false
+
+- id: vaughn-tan
+  name: Vaughn Tan
+  company: Tangent
+  addedAt: "2026-09-24T11:08:54Z"
+  featured: false
