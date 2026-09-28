@@ -23,7 +23,7 @@ tags:
   - "careers"
   - "AI"
   - "thought leadership"
-status: upcoming
+status: past
 ---
 
 Session 1 of the Lifelong Learning Singapore Thought Leadership Series explores how people can build sustainable, agile careers as AI reshapes the workplace.

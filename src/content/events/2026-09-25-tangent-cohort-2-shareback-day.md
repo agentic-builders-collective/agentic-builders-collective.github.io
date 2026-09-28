@@ -15,7 +15,7 @@ tags:
   - "founders"
   - "incubator"
   - "demo day"
-status: "upcoming"
+status: "past"
 ---
 
 [Tangent](https://tangent.org.sg/) is a not-for-profit incubator for unconventional entrepreneurs in Singapore. Its second cohort ends on Friday 25 September, and the teams are sharing what they built in their four weeks at Tangent and what comes next. Each startup gets six minutes.
