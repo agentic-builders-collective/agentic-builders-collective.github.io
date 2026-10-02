@@ -225,7 +225,7 @@
   urlLabel: "Essay"
   slidesUrl: ""
   videoUrl: ""
-  screenshot: ""
+  screenshot: /showcase/presentations/two-brains-one-operator.png
   summary: How /remember and /recall route personal and company second brains to the right destination, running on local Qwen 3.8 Flash Next, and where harness-switching primitives are headed next.
   links: []
   tags:
@@ -243,7 +243,7 @@
   urlLabel: "Deck"
   slidesUrl: https://qwen38-local-ai-deck.netlify.app/
   videoUrl: ""
-  screenshot: ""
+  screenshot: /showcase/presentations/fast-is-not-the-same-as-finished.png
   summary: ABC's first MLX demo — running Qwen3.8 Flash-Next agents on a Mac Studio M3 Ultra across oMLX, Unsloth llama-server, and antirez's ds4, and what each engine did with a 30-minute poster job versus a 5-hour OMR build.
   links: []
   tags:
