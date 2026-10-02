@@ -556,22 +556,26 @@ const chatDigests = [
                     <div class="card-meta">
                       <span>{new Date(event.data.date).toLocaleDateString("en-SG", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</span>
                       {event.data.time && <span>{formatTime(event.data.time)}</span>}
-                      {event.data.sponsorName && (
+                      {(event.data.sponsorName || event.data.photoGallery) && (
                         <span>
-                          {event.data.sponsorUrl ? (
-                            <a class="muted-link events-muted-link" href={event.data.sponsorUrl} target="_blank" rel="noopener">{event.data.sponsorName}</a>
-                          ) : (
-                            event.data.sponsorName
-                          )}
-                          {(extraSponsorsByEventId[event.id] ?? []).map((sponsor) => (
+                          {event.data.sponsorName && (
                             <>
-                              {" + "}
-                              <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                              {event.data.sponsorUrl ? (
+                                <a class="muted-link events-muted-link" href={event.data.sponsorUrl} target="_blank" rel="noopener">{event.data.sponsorName}</a>
+                              ) : (
+                                event.data.sponsorName
+                              )}
+                              {(extraSponsorsByEventId[event.id] ?? []).map((sponsor) => (
+                                <>
+                                  {" + "}
+                                  <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                                </>
+                              ))}
                             </>
-                          ))}
+                          )}
                           {event.data.photoGallery && (
                             <>
-                              {" + "}
+                              {event.data.sponsorName ? " + " : ""}
                               <a class="muted-link events-muted-link" href={event.data.photoGallery.href}>{event.data.photoGallery.label}</a>
                             </>
                           )}
@@ -960,22 +964,26 @@ const chatDigests = [
               <div class="card-meta">
                 <span>{new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
                 {event.data.time && <span>{formatTime(event.data.time)}</span>}
-                {event.data.sponsorName && (
+                {(event.data.sponsorName || event.data.photoGallery) && (
                   <span>
-                    {event.data.sponsorUrl ? (
-                      <a class="muted-link events-muted-link" href={event.data.sponsorUrl} target="_blank" rel="noopener">{event.data.sponsorName}</a>
-                    ) : (
-                      event.data.sponsorName
-                    )}
-                    {(extraSponsorsByEventId[event.id] ?? []).map((sponsor) => (
+                    {event.data.sponsorName && (
                       <>
-                        {" + "}
-                        <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                        {event.data.sponsorUrl ? (
+                          <a class="muted-link events-muted-link" href={event.data.sponsorUrl} target="_blank" rel="noopener">{event.data.sponsorName}</a>
+                        ) : (
+                          event.data.sponsorName
+                        )}
+                        {(extraSponsorsByEventId[event.id] ?? []).map((sponsor) => (
+                          <>
+                            {" + "}
+                            <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                          </>
+                        ))}
                       </>
-                    ))}
+                    )}
                     {event.data.photoGallery && (
                       <>
-                        {" + "}
+                        {event.data.sponsorName ? " + " : ""}
                         <a class="muted-link events-muted-link" href={event.data.photoGallery.href}>{event.data.photoGallery.label}</a>
                       </>
                     )}
@@ -1068,22 +1076,26 @@ const chatDigests = [
               <div class="card-meta">
                 <span>{new Date(event.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short", day: "numeric" })}</span>
                 {event.data.time && <span>{formatTime(event.data.time)}</span>}
-                {event.data.sponsorName && (
+                {(event.data.sponsorName || event.data.photoGallery) && (
                   <span>
-                    {event.data.sponsorUrl ? (
-                      <a class="muted-link events-muted-link" href={event.data.sponsorUrl} target="_blank" rel="noopener">{event.data.sponsorName}</a>
-                    ) : (
-                      event.data.sponsorName
-                    )}
-                    {(extraSponsorsByEventId[event.id] ?? []).map((sponsor) => (
+                    {event.data.sponsorName && (
                       <>
-                        {" + "}
-                        <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                        {event.data.sponsorUrl ? (
+                          <a class="muted-link events-muted-link" href={event.data.sponsorUrl} target="_blank" rel="noopener">{event.data.sponsorName}</a>
+                        ) : (
+                          event.data.sponsorName
+                        )}
+                        {(extraSponsorsByEventId[event.id] ?? []).map((sponsor) => (
+                          <>
+                            {" + "}
+                            <a class="muted-link events-muted-link" href={sponsor.url} target="_blank" rel="noopener">{sponsor.name}</a>
+                          </>
+                        ))}
                       </>
-                    ))}
+                    )}
                     {event.data.photoGallery && (
                       <>
-                        {" + "}
+                        {event.data.sponsorName ? " + " : ""}
                         <a class="muted-link events-muted-link" href={event.data.photoGallery.href}>{event.data.photoGallery.label}</a>
                       </>
                     )}

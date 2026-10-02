@@ -215,3 +215,39 @@
     - local-llms
     - inference
     - dgx-spark
+
+- id: two-brains-one-operator
+  title: "Two Brains, One Operator"
+  speakers:
+    - personId: jensen-loke
+  eventId: 2026-09-29-abc-mini-edition
+  url: https://jensenloke.github.io/essays/two-brains-one-operator.html
+  urlLabel: "Essay"
+  slidesUrl: ""
+  videoUrl: ""
+  screenshot: ""
+  summary: How /remember and /recall route personal and company second brains to the right destination, running on local Qwen 3.8 Flash Next, and where harness-switching primitives are headed next.
+  links: []
+  tags:
+    - qwen
+    - local-llms
+    - memory
+    - agents
+
+- id: fast-is-not-the-same-as-finished
+  title: "Fast is not the same as finished"
+  speakers:
+    - personId: joshua-goh
+  eventId: 2026-09-29-abc-mini-edition
+  url: https://qwen38-local-ai-deck.netlify.app/
+  urlLabel: "Deck"
+  slidesUrl: https://qwen38-local-ai-deck.netlify.app/
+  videoUrl: ""
+  screenshot: ""
+  summary: ABC's first MLX demo — running Qwen3.8 Flash-Next agents on a Mac Studio M3 Ultra across oMLX, Unsloth llama-server, and antirez's ds4, and what each engine did with a 30-minute poster job versus a 5-hour OMR build.
+  links: []
+  tags:
+    - mlx
+    - local-llms
+    - qwen
+    - benchmarks
