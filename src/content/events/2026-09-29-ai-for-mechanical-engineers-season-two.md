@@ -14,7 +14,7 @@ tags:
   - "mechanical engineering"
   - "hardware"
   - "networking"
-status: "upcoming"
+status: "past"
 ---
 
 The second edition of **AI for Mechanical Engineers** is a private evening for engineering, manufacturing and technology leaders to explore the next wave of Industrial and Physical AI over pizza, cocktails and craft beer.
