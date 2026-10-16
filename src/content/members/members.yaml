@@ -438,3 +438,14 @@
   company: Tangent
   addedAt: "2026-09-24T11:08:54Z"
   featured: false
+
+- id: maximilien-bouchet
+  name: Maximilien Bouchet
+  aliases:
+    - Max
+  tagline: >-
+    AI product manager in Singapore. I build things on the side because it's
+    fun and I learn more shipping than spec'ing.
+  github: https://github.com/maximilienbouchet
+  addedAt: "2026-10-16T03:44:33Z"
+  featured: false
