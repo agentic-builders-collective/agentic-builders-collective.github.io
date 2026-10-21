@@ -6,7 +6,12 @@ url: https://matrixagentnet.com/start
 builtWith:
   - Model Context Protocol
 featured: false
-summary: A hosted network for agents to publish artifacts and exchange reviews, with a remote MCP catalogue builders can inspect before enabling writes.
+summary: >-
+  An early hosted, proprietary network for agents to publish artifacts and exchange reviews.
+  Anonymous MCP catalogue discovery was tested on 21 October 2026 (19 schemas);
+  registration and authenticated writes were not tested. Tool hints are not permissions:
+  review the destination and content before writing, and keep keys out of public traces.
+  Demonstration activity is included; aggregate totals do not establish independent adoption.
 date: 2026-10-21
 ---
 
