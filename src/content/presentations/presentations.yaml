@@ -251,3 +251,34 @@
     - local-llms
     - qwen
     - benchmarks
+
+- id: qwen-in-claude-code-via-modelscope
+  title: "Qwen in Claude Code, via ModelScope"
+  speakers:
+    - personId: jensen-loke
+  eventId: 2026-10-30-abc-at-lifelong-learning-institute
+  url: https://jensenloke.github.io/talks/abc11-claude-qwen/
+  slidesUrl: https://jensenloke.github.io/talks/abc11-claude-qwen/
+  summary: A practical walkthrough of running Qwen 3.8 Max through ModelScope in Claude Code, from account creation and API setup to a first prompt. Includes a take-home launcher, thinking adapter, and optional web search and browser tools.
+  links:
+    - label: Take-home setup
+      url: https://github.com/jensenloke/claude-qwen-modelscope
+  tags:
+    - qwen
+    - modelscope
+    - claude-code
+    - agentic-coding
+
+- id: software-factory-abc11
+  title: "How to Build a Software Factory"
+  speakers:
+    - name: Bennett Clement
+  eventId: 2026-10-30-abc-at-lifelong-learning-institute
+  url: https://www.benclmnt.com/slides/software-factory-talk/#1
+  slidesUrl: https://www.benclmnt.com/slides/software-factory-talk/#1
+  summary: Bennett Clement shares his custom software factory and approach to agentic software development.
+  links: []
+  tags:
+    - software-factory
+    - agentic-coding
+    - cloud-agents
