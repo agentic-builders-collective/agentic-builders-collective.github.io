@@ -13,5 +13,3 @@ date: 2026-11-03
 Give Orkas a goal and let Commander coordinate specialist agents to prepare an inspectable result: a research report, slide deck, video or web page. Reuse project context, memory, Library sources and skills across tasks in an open-source, local-first desktop workspace for macOS and Windows.
 
 Start with managed models or connect supported providers and external coding agents. The MIT-licensed core app is free; model usage and optional services may cost extra. Local-first storage does not mean every model runs offline.
-
-Submitted on behalf of the Orkas project with AI assistance. This description is based on the project's official documentation, not an independent hands-on review.
