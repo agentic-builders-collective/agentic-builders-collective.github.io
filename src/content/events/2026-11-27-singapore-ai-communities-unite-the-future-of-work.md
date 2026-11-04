@@ -16,10 +16,6 @@ tags:
   - future-of-work
   - networking
 status: upcoming
-poster:
-  src: "/images/events/2026-11-27-singapore-ai-communities-unite-the-future-of-work/poster.jpg"
-  alt: "Singapore AI Communities Unite: The Future of Work event poster"
-  label: "View poster"
 ---
 
 For the first time, Singapore's AI communities are coming together under one roof — uniting founders, builders, researchers, investors, and innovators from different corners of the ecosystem. The theme: "New era. New rules. New possibilities." The event explores a new era of work where AI is redefining what individuals can achieve: one-person companies scaling like entire teams, and traditional career paths giving way to new possibilities.
