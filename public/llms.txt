@@ -14,6 +14,12 @@ This file helps AI agents discover the most useful public and repository context
 - Events: https://www.agenticbuilders.sg/events/
 - Articles: https://www.agenticbuilders.sg/articles/
 
+## Logo generation
+- Generator: https://www.agenticbuilders.sg/logo-generator/
+- Browser API documentation: https://www.agenticbuilders.sg/logo-generator/API.md
+- In the loaded generator page, `await window.logoGenerator.generate()` returns an ABC PNG as base64; custom text, seven ASCII fonts, HTML, plain text and settings JSON are also supported. This is a browser JavaScript API, not an HTTP generation endpoint or MCP server.
+- WebMCP-enabled browsers can discover `generate_abc_logo` (no required arguments) and `generate_logo` (requires text), with optional font, palette and output controls. These tools run entirely client-side; other browsers keep the JavaScript API.
+
 ## Repository
 - Repository: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io
 - Project overview: https://github.com/agentic-builders-collective/agentic-builders-collective.github.io/blob/main/README.md
