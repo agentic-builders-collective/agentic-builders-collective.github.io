@@ -5,10 +5,11 @@ kind: external
 time: "7:00 PM - 9:00 PM SGT"
 venue: "Singapore (Central Area, exact address shared with registered guests)"
 venueUrl: ""
-registrationUrl: "https://lu.ma/kxld1xck"
+registrationUrl: "https://luma.com/kxld1xck"
 hosts:
-  - name: "Hannah Wu"
+  - name: "Alibaba Cloud Singapore"
   - name: "QwenWork"
+  - name: "Hashmeta AI"
 sharedBy:
   - name: "Febria Roositadwi"
 poster:
