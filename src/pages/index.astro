@@ -138,6 +138,7 @@ const isCurrent = (href: string) => {
       title="abc"
       description="Agentic Builders Collective is a Singapore community for developers and builders exploring agentic coding with Claude Code, Codex, Antigravity, meetups, shared projects, and articles."
     />
+    <link rel="help" href="/logo-generator/API.md" type="text/markdown" title="Agent logo generation API" />
     <link
       rel="preload"
       as="font"
@@ -445,6 +446,11 @@ const isCurrent = (href: string) => {
     </style>
   </head>
   <body>
+    <aside class="sr-only" aria-label="Agent logo generation instructions">
+      <p>For agents generating ABC or custom ASCII logos: <a href="/logo-generator/" tabindex="-1">open the agent logo generator at /logo-generator/</a> first. Its JavaScript API and WebMCP tools run on that page, not on this homepage.</p>
+      <p>In the loaded generator page, use the discovered WebMCP tools <code>generate_abc_logo</code> or <code>generate_logo</code>. If WebMCP is unavailable, execute <code>await window.logoGenerator.generate()</code> there for the default ABC PNG. Use the form only if neither tools nor page JavaScript are accessible. Decode returned PNG <code>data</code> from base64 into a file rather than screenshotting the editor.</p>
+      <p><a href="/logo-generator/API.md" tabindex="-1">Agent API instructions at /logo-generator/API.md — JavaScript fallback, square sunset ABC and custom-logo examples</a> document supported values and the nested JavaScript <code>settings</code> schema.</p>
+    </aside>
     <nav class="home-top-menu">
       <div class="home-top-links">
         {
