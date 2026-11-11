@@ -5,9 +5,11 @@ kind: external
 time: "6:00 PM - 9:00 PM SGT"
 venue: "Singapore (Queenstown, exact address shared with registered guests)"
 venueUrl: ""
-registrationUrl: "https://lu.ma/oezyv35j"
+registrationUrl: "https://luma.com/oezyv35j"
 hosts:
-  - name: "Hannah Wu"
+  - name: "Alibaba Cloud Singapore"
+  - name: "Moomoo"
+  - name: "Qoder"
 sharedBy:
   - name: "Febria Roositadwi"
 poster:
