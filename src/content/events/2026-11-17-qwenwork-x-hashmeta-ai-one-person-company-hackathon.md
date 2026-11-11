@@ -12,6 +12,7 @@ hosts:
   - name: "Hashmeta AI"
 sharedBy:
   - name: "Febria Roositadwi"
+  - personId: jensen-loke
 poster:
   src: "/images/events/2026-11-17-qwenwork-x-hashmeta-ai-one-person-company-hackathon/poster.jpg"
   alt: "Poster for the QwenWork x Hashmeta AI One-Person Company (OPC) Hackathon on 17 November 2026"

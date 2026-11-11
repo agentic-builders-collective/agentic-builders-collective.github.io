@@ -12,6 +12,7 @@ hosts:
   - name: "Qoder"
 sharedBy:
   - name: "Febria Roositadwi"
+  - personId: jensen-loke
 poster:
   src: "/images/events/2026-11-16-moomoo-x-qoder-ai-trading-agent-challenge/poster.jpg"
   alt: "Poster for the Moomoo x Qoder AI Trading Agent Challenge on 16 November 2026"
