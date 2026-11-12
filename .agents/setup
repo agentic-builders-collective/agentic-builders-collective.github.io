@@ -18,6 +18,10 @@ if [[ "$(printf '%s\n' '22.12.0' "$node_version" | sort -V | head -n1)" != "22.1
 fi
 
 step "Activating pnpm 10.24.0"
+if ! command -v corepack >/dev/null 2>&1; then
+  npm install --global --prefix "$HOME/.local" corepack
+  export PATH="$HOME/.local/bin:$PATH"
+fi
 corepack enable pnpm
 corepack prepare pnpm@10.24.0 --activate
 
