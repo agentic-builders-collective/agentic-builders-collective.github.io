@@ -8,7 +8,7 @@ builtWith:
   - React
   - MediaPipe Face Landmarker
   - Codex
-summary: Smile or blink while texting a friend and your avatar does the same on their screen.
+summary: Can a friend tell you laughed before you hit send? ProxyChat reads facial movements on your phone and animates your avatar in your friend's chat. Try a straight-face challenge on iPhone, Android or the web.
 date: 2026-11-13
 ---
 
