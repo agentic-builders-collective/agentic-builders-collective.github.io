@@ -44,6 +44,9 @@ html {
   font-size: 15px;
   min-height: 100%;
   overflow-x: hidden;
+  /* Stop iOS Safari enlarging long wrapped text in landscape; all text stays 1rem. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
