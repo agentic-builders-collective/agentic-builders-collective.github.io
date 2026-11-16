@@ -2,7 +2,6 @@
 title: Pastewatch
 makers:
   - personId: pavel-piankov
-github: https://github.com/ppiankov/pastewatch
 builtWith:
   - Swift
   - SwiftUI
@@ -16,4 +15,4 @@ Every coding agent ships file contents, command output, and tool results to a cl
 
 Detection is regex across about thirty pattern types. Mutation fires only on intrinsic evidence — a sourced provider token, a complete private key, a Luhn-valid card — and `--severity` changes how much it tells you, never what it rewrites. Ambiguous matches are reported and left untouched. The asymmetry is deliberate: a false positive corrupts a working agent response, so the tool would rather miss.
 
-Placeholders are typed and numbered. Only the MCP layer keeps a map — in process memory, for the session — because only it has to put a real value back into a local file. Nothing is restored on the wire: clipboard and proxy replacement are one-way. Runs offline: no telemetry, no accounts. `brew install ppiankov/tap/pastewatch`, then `pastewatch-cli launch claude`. The menubar app is macOS; the CLI runs on macOS and Linux. MIT.
+Placeholders are typed and numbered. Only the MCP layer keeps a map — in process memory, for the session — because only it has to put a real value back into a local file. Nothing is restored on the wire: clipboard and proxy replacement are one-way. Runs offline: no telemetry, no accounts. Start it with `pastewatch-cli launch claude`. The menubar app is macOS; the CLI runs on macOS and Linux. MIT.

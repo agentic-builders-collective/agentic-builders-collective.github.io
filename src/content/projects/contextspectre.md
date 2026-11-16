@@ -2,7 +2,6 @@
 title: ContextSpectre
 makers:
   - personId: pavel-piankov
-github: https://github.com/ppiankov/contextspectre
 builtWith:
   - Go
   - Bubble Tea
