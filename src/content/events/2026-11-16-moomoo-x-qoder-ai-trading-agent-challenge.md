@@ -22,7 +22,7 @@ tags:
   - ai
   - qoder
   - trading
-status: upcoming
+status: past
 ---
 
 Stop staring at charts. Let AI agents do the heavy lifting and win over S$8,500. Moomoo and Qoder are calling algo traders, AI builders and developers to turn trading ideas into working AI agents.
