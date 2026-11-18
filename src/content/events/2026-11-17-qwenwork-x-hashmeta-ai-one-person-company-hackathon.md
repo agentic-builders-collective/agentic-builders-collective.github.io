@@ -22,7 +22,7 @@ tags:
   - ai
   - qwenwork
   - one-person-company
-status: upcoming
+status: past
 ---
 
 One founder. Zero employees. QwenWork and Hashmeta AI are calling founders, solopreneurs and AI innovators to build a one-person company that runs, grows and scales — with QwenWork agents as your entire workforce. Turn the challenges of running a business alone into production-ready solutions.
