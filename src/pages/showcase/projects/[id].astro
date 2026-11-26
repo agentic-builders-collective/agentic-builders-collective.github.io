@@ -22,7 +22,7 @@ const makers = resolvePersonRefs(project.data.makers, peopleById, `project "${pr
 
 <BaseLayout
   title={project.data.title}
-  description={project.data.summary ?? `${project.data.title}, a project in the Agentic Builders Collective showcase.`}
+  description={project.data.summary || `${project.data.title}, a project in the Agentic Builders Collective showcase.`}
 >
   <p><a class="muted-link project-back-link" href={`/showcase/#${project.id}`}>Back to showcase</a></p>
 
@@ -72,7 +72,6 @@ const makers = resolvePersonRefs(project.data.makers, peopleById, `project "${pr
   .project-back-link::before {
     content: "◀";
     display: inline-block;
-    font-size: 13px;
     line-height: 1;
     margin-right: 8px;
     opacity: 0.5;
