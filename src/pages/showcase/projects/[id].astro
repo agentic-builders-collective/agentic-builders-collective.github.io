@@ -1,0 +1,122 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { buildPeopleIndex, resolvePersonRefs } from "../../../lib/relations";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const allMembers = await getCollection("members");
+const organisers = await getCollection("organisers");
+const peopleById = buildPeopleIndex([...organisers, ...allMembers]);
+const makers = resolvePersonRefs(project.data.makers, peopleById, `project "${project.id}" makers`);
+---
+
+<BaseLayout
+  title={project.data.title}
+  description={project.data.summary ?? `${project.data.title}, a project in the Agentic Builders Collective showcase.`}
+>
+  <p><a class="muted-link project-back-link" href={`/showcase/#${project.id}`}>Back to showcase</a></p>
+
+  <article class="project-detail">
+    <header class="project-detail-header">
+      <h1 class="page-title">{project.data.title}</h1>
+      <div class="card-meta">
+        {makers.length > 0 && (
+          <span>
+            {makers.map((maker, index) => (
+              <>
+                {maker.href ? <a href={maker.href}>{maker.name}</a> : maker.name}
+                {index < makers.length - 1 && ", "}
+              </>
+            ))}
+          </span>
+        )}
+        <span>{new Date(project.data.date).toLocaleDateString("en-SG", { year: "numeric", month: "short" })}</span>
+      </div>
+      {project.data.summary && <p>{project.data.summary}</p>}
+      {(project.data.url || project.data.github) && (
+        <div class="project-actions">
+          {project.data.url && (
+            <a class="button button-primary" href={project.data.url} target="_blank" rel="noopener">Live site</a>
+          )}
+          {project.data.github && (
+            <a class="button button-secondary" href={project.data.github} target="_blank" rel="noopener">GitHub</a>
+          )}
+        </div>
+      )}
+      {project.data.builtWith.length > 0 && (
+        <ul class="tag-list">
+          {project.data.builtWith.map((tool) => (
+            <li class="tag">{tool}</li>
+          ))}
+        </ul>
+      )}
+    </header>
+
+    <div class="project-body">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-back-link::before {
+    content: "◀";
+    display: inline-block;
+    font-size: 13px;
+    line-height: 1;
+    margin-right: 8px;
+    opacity: 0.5;
+    transform: translateY(-1px);
+  }
+
+  .project-back-link::after {
+    content: none;
+  }
+
+  .project-detail {
+    display: grid;
+    gap: 24px;
+  }
+
+  .project-detail-header {
+    border-left: 3px solid var(--line);
+    display: grid;
+    gap: 14px;
+    padding-left: 22px;
+  }
+
+  .project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .project-body {
+    display: grid;
+    gap: 16px;
+  }
+
+  .project-body :global(ul),
+  .project-body :global(ol) {
+    color: var(--muted);
+    display: grid;
+    font-size: 1rem;
+    gap: 8px;
+    margin: 0;
+    padding-left: 24px;
+  }
+
+  .project-body :global(a) {
+    color: var(--accent);
+  }
+</style>

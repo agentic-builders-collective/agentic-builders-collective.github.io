@@ -213,6 +213,7 @@ const eventGroups = Array.from(presentationsByEvent.values()).sort(
             </div>
             {project.data.summary && <p>{project.data.summary}</p>}
             <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <a class="muted-link" href={`/showcase/projects/${project.id}/`}>Details</a>
               {project.data.url && (
                 <a class="muted-link" href={project.data.url} target="_blank" rel="noopener">Live site</a>
               )}

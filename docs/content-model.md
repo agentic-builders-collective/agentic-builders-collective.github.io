@@ -238,7 +238,7 @@ See `docs/surveys.md` for detailed survey setup instructions.
 
 Directory: `src/content/projects/`
 
-Use Markdown for projects that need summaries, links, and body copy.
+Use Markdown for projects that need summaries, links, and body copy. The showcase card shows the frontmatter and links to the project's page at `/showcase/projects/<id>/`, which shows the frontmatter and the body.
 
 ```md
 ---
