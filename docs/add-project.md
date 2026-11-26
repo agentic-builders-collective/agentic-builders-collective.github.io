@@ -54,4 +54,5 @@ Short write-up here.
 
 - `personId` must match an entry in `members` or `organisers`; otherwise `pnpm build` fails.
 - Use `name` for makers who are not listed on the Community page.
+- The `summary` appears on the showcase card. The body appears only on the project's page at `/showcase/projects/<project-id>/`, so put install steps, demos and other details there.
 - Do not use random numeric suffixes. If the project title collides, add the maker or organisation to the filename.
