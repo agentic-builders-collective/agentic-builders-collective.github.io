@@ -274,8 +274,9 @@
   speakers:
     - name: Bennett Clement
   eventId: 2026-10-30-abc-at-lifelong-learning-institute
-  url: https://www.benclmnt.com/slides/software-factory-talk/#1
-  slidesUrl: https://www.benclmnt.com/slides/software-factory-talk/#1
+  url: https://www.benclmnt.com/how-to-build-a-software-factory/?utm_source=agenticbuilders
+  urlLabel: "Blog Post"
+  slidesUrl: https://www.benclmnt.com/slides/software-factory-talk/?utm_source=agenticbuilders#1
   summary: Bennett Clement shares his custom software factory and approach to agentic software development.
   links: []
   tags:
