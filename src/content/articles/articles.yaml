@@ -53,3 +53,15 @@
     - agents
     - ai
     - podcast
+- id: how-to-build-a-software-factory
+  title: How to Build a Software Factory
+  authors:
+    - name: Bennett Clement
+  url: https://www.benclmnt.com/how-to-build-a-software-factory/?utm_source=agenticbuilders
+  publication: benclmnt.com
+  date: 2026-11-27
+  summary: "Written version of the ABC #11 talk on turning a codebase into an agentic software factory by fixing the codebase, closing the testing loop, and building autonomous gardening and ops loops."
+  tags:
+    - software-factory
+    - agentic-coding
+    - cloud-agents
